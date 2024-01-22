@@ -101,3 +101,41 @@ Did they provide sufficient details regarding their skills and knowledge? Explai
 What was missing from their response? 
 Were they honest about weaknesses? Yes, he is honest.
 
+
+# Final Biography
+I am Josmi Jose, currently in the final semester of my two-year postgraduate programme in Digital Design and Development at North Island College. This programme easily connects with my experience as a seasoned software developer, developing a comprehensive approach to my technical skill.
+
+My academic experience has been a dynamic exploration of various educational systems, which has considerably aided my personal and professional development. The curriculum's emphasis on UI/UX foundations, digital graphics, and the completion of a comprehensive Capstone project, in which I established a brand identity for a responsive hair salon website using React.js, have all helped shape my design and development skills.
+
+Over the span of two years, I improved my web development skills, culminating in a front-end Capstone project using React.js. I gained hands-on expertise through various minor projects involving CSS, SCSS, Bootstrap, JavaScript, and WordPress, along with proficiency in PHP for front-end and database functionality. Assignments that included mood boards, mock-ups, and wireframes underscored the importance of maintaining well-structured, refactored code and becoming familiar with version control using GitHub. Additionally, my knowledge of PHP, Java, MIT App Inventor, and tools such as Adobe Illustrator and Photoshop further expanded my technical knowledge base.
+
+In my Capstone project, I designed a full system for a hair salon using React.js, demonstrating my ability to translate design thoughts into a practical web presence. The PHP project required me to create a feature-rich food recipe application with both front-end and back-end functionality, displaying my PHP and database administration skills.
+
+I completed internship at Sprint Technologies Pvt. Ltd ('14), focusing on HTML, CSS, JavaScript, jQuery, SQL, C#, MVC, and a mini project.
+
+I have a rich and diverse professional background that spans several years, showcasing a progression of roles and responsibilities in the field of web development and software engineering:
+
+Assyst International (May ‘16 – Dec’16):
+Designed the user interface for Federal Bank's POS and PG applications, and a user portal for Bank of Montreal.
+
+Orion India System (Dec '16 – April’19):
+Contributed to OLICR and RDCD projects for CISCE/India, offering live evaluation and research functionalities.
+
+Cognizant - Talent Roster (June’19 – Nov’19):
+Managed WWE's talent roster, facilitating admin users in talent assignments and providing public users with visibility into board details.
+
+Cognizant - Techdata (Nov’19 – Jan ‘21):
+Maintained a comprehensive shopping site for Techdata/US, overseeing ordering, billing, and provisioning services for various products.
+
+Cognizant – Software Engineer (Jan’21-Dec ‘21):
+Developed applications addressing water supply and recycling services for over six million customers in England for AWG/UK.
+
+Infosys – Technical Lead (Jan’22-July ‘22):
+Maintained and developed features for vessel contract operations and tracking for CMA CGM, demonstrating strong leadership skills, and applying web development expertise.
+
+Aspiring to be a full-stack engineer specialising in design and development with a focus on database administration, I intend to keep developing my talents. My self-taught React.js experience for the Capstone project demonstrates my versatility, and I'm committed to remaining current on emerging technologies.
+
+For my upcoming Capstone project, I am planning to develop a Stock Record Application with React.js and database approaches. This project is designed to satisfy the specialised inventory management demands of organisations, particularly nursing homes. The major goal is to centralise and simplify stock data across divisions. By including subcategories inside each division, such as eating, cooking, serving, cleaning, bistro, and dishwashing in the kitchen sector, the programme will successfully address the complex task of tracking a wide range of commodities.
+
+The primary purpose of this project is to provide a uniform platform for each division to maintain accurate and real-time stock information, hence minimising shortages and eliminating excess inventory. I aim to use React.js to create an accessible and simple user interface. Simultaneously, the database will be significantly expanded to efficiently manage dynamic stock data. This project is a good fit for my career aspirations because it allows me to exhibit my full-stack programming talents while also achieving a measurable organisational requirement. Through this project, I wish to exhibit my ability to develop realistic solutions while emphasising usability and scalability in a real-world environment.
+
