@@ -1,0 +1,100 @@
+/* LandingPage.css */
+
+.landing-page {
+  text-align: center;
+}
+
+.hero-section {
+  position: relative;
+  height: 500px; /* Adjust based on your design */
+  background-image: url('../images/Hero.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+/* HomePageContent.css */
+.welcome-section {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #184487; /* Dark blue background */
+  color: white;
+}
+
+.welcome-text, .testimonial {
+  flex-basis: 48%;
+}
+
+.testimonial blockquote {
+  font-style: italic;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+}
+
+.testimonial-author img {
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.features-section {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background-color: #90bce5; /* Light blue background */
+}
+
+.feature {
+  text-align: center;
+}
+
+.feature h3 {
+  margin: 10px 0;
+}
+
+.cta-section {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.cta-button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  background-color: #184487; /* Dark blue background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+}
+
+.cta-button:hover {
+  background-color: #90bce5; /* Lighter blue for hover state */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .welcome-section, .features-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .welcome-text, .testimonial, .feature {
+    flex-basis: 100%;
+  }
+
+  .testimonial-author {
+    justify-content: center;
+  }
+}
