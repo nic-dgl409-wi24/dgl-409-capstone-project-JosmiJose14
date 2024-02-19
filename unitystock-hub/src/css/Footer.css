@@ -1,0 +1,69 @@
+/* Footer.css */
+
+.footer {
+  background-color: #184487; /* Dark blue background */
+  display: flex;
+  flex-direction: column;
+}
+
+.footerAboutUS {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around; /* Evenly space out the columns */
+  align-items: center; /* Vertically align the items in the middle */
+  flex-wrap: wrap; /* Allow the items to wrap on smaller screens */
+  padding: 20px 0; /* Add some vertical padding */
+}
+
+.column {
+  display: flex; /* Use flex for the layout */
+  flex-direction: column; /* Stack children vertically */
+  align-items: center; /* Center items horizontally */
+  background-color: #90bce5; /* Lighter blue background */
+  flex: 1; /* Allow each column to grow equally */
+  margin: 20px; /* Add some space between columns */
+  padding: 20px; /* Add padding inside the columns */
+  border-radius: 10px; /* Optional: add rounded corners to the columns */
+}
+
+.footerHeading {
+  font-weight: bold;
+  margin-bottom: 0.5rem; /* Space below the heading */
+}
+
+.footerSub {
+  display: flex; /* Flex container for the icons */
+  justify-content: center; /* Center icons horizontally */
+  align-items: center; /* Center icons vertically */
+  margin-top: 10px; /* Space above the icons */
+  margin-bottom: 10px;
+}
+
+.footerSub p {
+  margin: 0 10px; /* Horizontal space between icons */
+}
+
+.footer-bottom {
+  background-color: #184487; /* Dark blue background */
+  padding: 10px 0;
+  text-align: center;
+  color: white; /* Text color */
+  font-size: 0.75rem; /* Smaller font size for the bottom text */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .footerAboutUS {
+    flex-direction: column;
+    padding: 20px; /* Increase padding on smaller screens */
+  }
+
+  .column {
+    width: 80%; /* Full width on small screens */
+    margin-bottom: 10px; /* Add vertical space between columns */
+  }
+
+  .footer-bottom {
+    padding: 20px; /* Increase padding on smaller screens */
+  }
+}

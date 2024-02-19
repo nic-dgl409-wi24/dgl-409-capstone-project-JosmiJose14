@@ -1,23 +1,24 @@
-/* Header.css */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1em;
-  background-color: #f8f8f8; /* Replace with actual color from your design */
-  /* Add other styles */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 100%;
 }
 
-.logo img {
-  height: 50px; /* Adjust as needed */
-  /* Add other styles */
+body* {
+  font-family: "Lato", sans-serif;
+  line-height: 1.4;
 }
 
-.navigation .nav-link {
-  margin-right: 1em;
-  color: #000; /* Replace with actual color from your design */
-  text-decoration: none;
-  /* Add other styles */
+img {
+  max-width: 100%;
+  height: auto;
 }
 
-/* Add responsive or state-specific styles as needed */
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Nunito", sans-serif;
+  line-height: 1;
+}
