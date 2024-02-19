@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from "../images/logo-unitystockhub.png";
-// import './Header.css'; // Make sure to create a Header.css file for styling
-
+import '../css/Header.css'; // Make sure to create a Header.css file for stylings
 const Header = () => {
   return (
     <header className="header">
