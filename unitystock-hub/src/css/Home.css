@@ -1,65 +1,144 @@
-/* LandingPage.css */
-
-.landing-page {
-  text-align: center;
+/* HomePageContent.css */
+.home-page-content {
+  color: #fff;
+  font-family: "Arial", sans-serif;
+  backdrop-filter: blur(5px);
+  /* Blur effect for background */
+  border-radius: 10px;
+  /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Box shadow for depth */
 }
 
 .hero-section {
   position: relative;
-  height: 500px; /* Adjust based on your design */
-  background-image: url('../images/Hero.jpg');
+  height: 500px;
+  /* Adjust based on your design */
+  background-image: url("../images/Hero.jpg");
   background-size: cover;
   background-position: center;
 }
 
-.overlay-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-}
-
-/* HomePageContent.css */
 .welcome-section {
   display: flex;
   justify-content: space-between;
   padding: 20px;
-  background-color: #184487; /* Dark blue background */
-  color: white;
 }
 
-.welcome-text, .testimonial {
-  flex-basis: 48%;
+.welcome-text {
+  width: 50%;
+  background-color: #184487;
+  /* Lighter blue background */
+  margin: 20px;
+  /* Add so184487me space between columns */
+  padding: 20px;
+  /* Add padding inside the columns */
+  border-radius: 10px;
+  /* Optional: add rounded corners to the columns */
 }
 
-.testimonial blockquote {
-  font-style: italic;
+.feature,
+.welcome-text,
+.testimonial-section {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
 }
 
-.testimonial-author {
+.feature:hover,
+.welcome-text:hover,
+.testimonial-section:hover {
+  transform: translateY(-5px);
+  /* Slight lift effect on hover */
+}
+
+/* Add a pseudo-element for a sleek underline effect on headings */
+.welcome-section h2::after,
+.feature h3::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #90bce5;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.welcome-section h2:hover::after,
+.feature h3:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.testimonial-section {
+  background-color: #184487;
+  /* Dark blue background */
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: 20px;
+  /* Add so184487me space between columns */
+  border-radius: 10px;
+}
+
+.testimonial-container {
   display: flex;
   align-items: center;
+  justify-content: space-around;
+  width: 100%;
 }
 
-.testimonial-author img {
-  border-radius: 50%;
+.testimonial-text {
+  flex: 1;
   margin-right: 10px;
+  /* Add some space between the text and the image */
+  padding: 20px;
+  color: white;
+  font-style: italic;
+  quotes: "“" "”" "‘" "’";
 }
 
+.testimonial-image {
+  flex: 0 0 auto;
+  /* Do not grow or shrink */
+  width: 100px;
+  /* Adjust as needed */
+  height: 100px;
+  /* Adjust as needed */
+  border-radius: 50%;
+  /* Circular image */
+  margin-left: 10px;
+  /* Add some space between the image and the text */
+}
+
+/* HomePageContent.css */
 .features-section {
   display: flex;
   justify-content: space-around;
   padding: 20px;
-  background-color: #90bce5; /* Light blue background */
 }
 
 .feature {
   text-align: center;
+  margin: 10px;
+  flex-basis: calc(30% - 20px);
+  /* Subtract the total margin from the width */
+  padding: 10px;
+  background-color: #184487;
+  /* Light blue background */
+  border-radius: 10px;
+  /* Optional rounded corners */
 }
 
-.feature h3 {
-  margin: 10px 0;
+.feature-icon {
+  font-size: 2em;
+  /* Adjust icon size as needed */
+  margin-bottom: 10px;
 }
 
 .cta-section {
@@ -69,32 +148,60 @@
 }
 
 .cta-button {
-  margin: 0 10px;
-  padding: 10px 20px;
-  background-color: #184487; /* Dark blue background */
-  color: white;
+  background-color: #90bce5;
   border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
   border-radius: 5px;
   cursor: pointer;
-  outline: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
 }
 
 .cta-button:hover {
-  background-color: #90bce5; /* Lighter blue for hover state */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  background-color: #184487;
+  color: #ffffff;
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
-  .welcome-section, .features-section {
+
+  .welcome-section,
+  .features-section,
+  .cta-section,
+  .testimonial-container {
     flex-direction: column;
-    text-align: center;
   }
 
-  .welcome-text, .testimonial, .feature {
-    flex-basis: 100%;
-  }
+  .cta-button,
+  .feature,
+  .testimonial-section,
+  .welcome-text {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
 
-  .testimonial-author {
-    justify-content: center;
+  }
+  .cta-button{width: auto}
+
+  .testimonial-image {
+    margin-left: 0;
+    margin-top: 10px;
+    /* Add space above the image */
+  }
+}
+
+/* Ensure that the feature boxes do not wrap on small margins */
+@media (min-width: 768px) {
+  .features-section {
+    flex-wrap: nowrap;
   }
 }
