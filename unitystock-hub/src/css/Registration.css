@@ -1,0 +1,113 @@
+h2 {
+    margin: auto;
+}
+
+.registration-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.registration-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* This class is for the column with the profile image, job title, and division */
+.left-column {
+    grid-column: 1 / 2;
+}
+
+/* This class is for the column with the name, contact number, etc. */
+.right-column {
+    grid-column: 2 / 3;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* Input fields and dropdown styles */
+.registration-form input[type="text"],
+.registration-form input[type="email"],
+.registration-form input[type="password"],
+.registration-form select {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+.btnRegister {
+    background-color: #90bce5;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.btnRegister:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+    background-color: #184487;
+    color: #ffffff;
+}
+
+.divButton {
+    width: auto;
+}
+
+label {
+    font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .registration-form {
+        grid-template-columns: 1fr;
+    }
+
+    .left-column,
+    .right-column {
+        grid-column: auto;
+    }
+
+    .registration-form button {
+        width: 100%;
+        margin-left: 0;
+    }
+}

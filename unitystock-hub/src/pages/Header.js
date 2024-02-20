@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useMatch, useResolvedPath, useLocation } from "react-router-dom"
+import { Link, useMatch, useResolvedPath } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHamburger } from "@fortawesome/free-solid-svg-icons";
 import logo from "../images/logo-unitystockhub.png";
 import '../css/Header.css'; // Make sure to create a Header.css file for stylings
 export default function Header() {
-  const location = useLocation();
   const [isNavExpanded, setIsNavExpanded] = useState(false);
   return (
     <header className="header">

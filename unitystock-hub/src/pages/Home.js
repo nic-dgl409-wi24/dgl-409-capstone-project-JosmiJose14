@@ -1,5 +1,6 @@
 // LandingPage.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../css/Home.css';  // Ensure you have a LandingPage.css file for styling
 import { FaShieldAlt, FaUserFriends, FaBoxes }from 'react-icons/fa'; 
 import customerImage from "../images/Renu.JPG";
@@ -44,8 +45,8 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="cta-section">
-        <button className="cta-button join-now">Join Now</button>
+      <section className="cta-section">   
+       <Link to="/Registration" className="cta-button join-now">Join Now</Link>
         <button className="cta-button welcome-back">Welcome Back</button>
       </section>
     </div>
