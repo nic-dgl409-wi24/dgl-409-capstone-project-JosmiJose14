@@ -10,7 +10,144 @@
   
   .logo img {
     height: 100px;
-    width: 100px 
-;
+    width: 100px;
+  }
+  #divHeader,.logo {
+    width:50% ;
   }
   
+  h1 {
+    text-align: center;
+    margin: 0;
+    padding: 10px;
+    font-size: 56px;
+  }
+  
+  .navigation {
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0.5rem 0rem;
+    color: black;
+  }
+  
+  .navigation-menu {
+    margin-left: auto;
+  }
+  
+  .navigation-menu ul {
+    display: flex;
+    padding: 0;
+  }
+  
+  .navigation-menu li {
+    list-style-type: none;
+    margin: 0 1rem;
+    padding: 15px;
+  }
+  
+  .navigation-menu li a {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+  }
+  
+  .hamburger {
+    border: 0;
+    height: 40px;
+    width: 40px;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background-color: #90bce5;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    position: absolute;
+    top: 65%;
+    right: 25px;
+    transform: translateY(-50%);
+    display: none;
+  }
+  .navigation-menu.expanded ul {
+    display: flex;
+    flex-direction: column;
+    position: fixed; /* Fixed positioning to keep the menu at the top */
+    top: 60px; /* Align to the top */
+    left: 0; /* Align to the left */
+    width: 100%; /* Full width */
+    background-color: #184487; /* Dark blue background */
+    height: 100vh; /* Full viewport height */
+    z-index: 10; /* Ensure it's above other content */
+  }
+  
+  .navigation-menu li.active {
+    background-color: #90bce5;
+    border-radius: 9px;
+    color: #000000;
+  
+  }
+  .navigation-menu li.active a {
+    color: #000000;
+  
+  }
+  
+  .navigation-menu li:hover {
+    background-color: #90bce5;;
+    border-radius: 20px;
+      color: #000000;
+  }
+  
+
+  @media screen and (max-width: 768px) {
+    .hamburger {
+      display: block;
+    }
+  
+  
+    .navigation {
+      height: 45px;
+    }
+  
+    .navigation-menu ul {
+      position: absolute;
+      left: 0;
+      flex-direction: column;
+      width: 100%;
+      height: calc(100vh - 77px);
+      background-color: #f4f4f4;
+      top: 0px;
+      margin-top: 36px;
+    }
+  
+    .navigation-menu li {
+      text-align: center;
+      margin: 0;
+      border: 1px solid #edcece;
+    }
+  
+    .navigation-menu li a {
+      width: 100%;
+      font-weight: bold;
+      font-size: 22px;
+    }
+  
+    .navigation-menu li.active {
+      border-radius: 0px;
+    }
+  
+    .navigation-menu li:hover {
+      background-color: #d0d0d0;
+    }
+  
+    .navigation-menu ul {
+      display: none;
+    }
+  
+    .navigation-menu.expanded ul {
+      display: block;
+      height: auto;
+    }
+  }
