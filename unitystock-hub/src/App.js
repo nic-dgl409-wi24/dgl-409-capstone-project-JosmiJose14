@@ -6,7 +6,7 @@ import Footer from './pages/Footer';
 import Home from './pages/Home';
 import Registration from './pages/Registration';
 import Login from './pages/Login';
-
+import Division from './pages/Division';
 
 
 function App() {
@@ -18,7 +18,8 @@ function App() {
         <Route path="/Home" element={<Home />} />
         <Route path="/Registration" element={<Registration />} />
         <Route path="/Login" element={<Login />} />
-      </Routes>
+
+        <Route path="/Division" element={<Division />} />      </Routes>
       <Footer />
     </Router>
   );

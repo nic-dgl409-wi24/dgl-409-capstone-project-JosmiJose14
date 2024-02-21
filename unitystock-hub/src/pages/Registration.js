@@ -129,7 +129,7 @@ const RegistrationForm = () => {
             {/* Other options */}
           </select>
           <div className="divButton">
-            <button className="btnRegister" onClick={handleSubmit}>Register</button>
+            <button className="btn btnRegister" onClick={handleSubmit}>Register</button>
           </div>
         </div>
 

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/Login.css'; // Ensure you have the CSS file for styling
 import loginImage from "../images/login-image.png";
 import axios from 'axios';
 const LoginPage = () => {
+    const navigate = useNavigate();
     // The `useState` hook is used here to define `credentials` and `setCredentials`
     const [credentials, setCredentials] = useState({
         email: '',
@@ -26,7 +28,12 @@ const handleSubmit = async (event) => {
         password: credentials.password
       });
       console.log(response.data);
-      // Handle the response from the server here
+         // Check if the login is successful
+         if (response.data.message === 'Login successful') {
+            navigate('/Division'); // Redirect on success
+          } else {
+            // Handle other responses
+          }
     } catch (error) {
       console.error('Login error', error.response);
       // Handle errors here

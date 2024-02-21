@@ -60,29 +60,6 @@
     border-radius: 4px;
 }
 
-
-.btnRegister {
-    background-color: #90bce5;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
-}
-
-.btnRegister:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-    background-color: #184487;
-    color: #ffffff;
-}
-
 .divButton {
     width: auto;
 }

@@ -1,0 +1,76 @@
+#divHeader
+{
+  display: block !important;
+}
+.division-container {
+    width: 80%;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.division-cards {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 20px; /* Adjust the space between the cards */
+}
+
+.division-card {
+    background: #90bce5;
+    border-radius: 10px;
+    padding: 20px;
+    width: 30%;
+    margin-right: 20px;
+}
+
+
+.division-icon-container {
+    flex-shrink: 0; /* Prevents the icon container from shrinking */
+    margin-right: 20px; /* Adds space between the icon and the text */
+}
+
+.division-icon {
+    width: auto; /* Set the width of the icon */
+    height: 400px; /* Set the height of the icon */
+    background-size: cover; /* Ensures the icon covers the area */
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.divAddDivision {
+    display: flex;
+    justify-content: flex-end; /* Aligns children (buttons/links) to the start of the container */
+    align-items: center; /* Centers children vertically within the container */
+    padding: 10px 0; /* Gives some padding above and below the buttons/links */
+}
+.kitchen-icon {
+    background-image: url('../images/default.jpg');
+}
+
+.housekeeping-icon {
+    background-image: url('../images/default.jpg');
+}
+
+.recreation-icon {
+    background-image: url('../images/default.jpg');
+}
+
+.division-info h3 {
+    margin: 10px 0;
+}
+
+.division-actions button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    /* Add more styles for buttons */
+}
+@media (max-width: 768px) { /* Adjust the breakpoint as needed */
+    .division-cards {
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .division-card {
+      
+        width:100%;
+    }
+}
