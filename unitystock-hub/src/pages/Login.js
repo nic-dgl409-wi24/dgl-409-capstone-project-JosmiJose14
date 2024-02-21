@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import '../css/Login.css'; // Ensure you have the CSS file for styling
 import loginImage from "../images/login-image.png";
+import axios from 'axios';
 const LoginPage = () => {
+    // The `useState` hook is used here to define `credentials` and `setCredentials`
     const [credentials, setCredentials] = useState({
-        username: '',
+        email: '',
         password: ''
     });
 
@@ -15,11 +17,23 @@ const LoginPage = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Login logic here
-        console.log(credentials);
-    };
+// ...
+const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3001/login', {
+        email: credentials.email, // Ensure the field names match the backend expectations
+        password: credentials.password
+      });
+      console.log(response.data);
+      // Handle the response from the server here
+    } catch (error) {
+      console.error('Login error', error.response);
+      // Handle errors here
+    }
+  };
+  // ...
+  
 
     return (
         <div className="login">
@@ -34,25 +48,39 @@ const LoginPage = () => {
                 </div>
                 <div className="login-form">
                     <p>Please sign in to access your inventory management dashboard and streamline your business operations. Manage your inventory with ease and efficiency. Let's get started</p>
-                    <form>
-                        <label htmlFor="email">Email</label>
-                        <input type="email" placeholder="email" />
-                        <label htmlFor="password">Password</label>
-                        <input type="password" placeholder="Password" />
+                    <form onSubmit={handleSubmit}>
+                <label htmlFor="email">Email</label>
+                <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={credentials.email} // Bind input to state
+                    placeholder="Email"
+                    onChange={handleChange} // Set up change handler
+                />
+                <label htmlFor="password">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    value={credentials.password} // Bind input to state
+                    placeholder="Password"
+                    onChange={handleChange} // Set up change handler
+                />
 
-                        <div className="divButton">
-                            <button type="submit" className='btn btnLogin'>Login</button>
-                        </div>
-                    </form>
+                <div className="divButton">
+                    <button type="submit" className='btn btnLogin'>Login</button>
+                </div>
+            </form>
                 </div>
             </div>
             <div className="join-container">
-                    <p>Don’t you have account?  </p>
-                    <button className="btn join-now-button">Join Now</button>
-                </div>
-                <div className="login-footer">
-                    <p>Welcome back to UnityStock Hub! Please sign in to access your inventory management dashboard and streamline your business operations. Manage your inventory with ease and efficiency. Let's get started</p>
-                </div>
+                <p>Don’t you have account?  </p>
+                <button className="btn join-now-button">Join Now</button>
+            </div>
+            <div className="login-footer">
+                <p>Welcome back to UnityStock Hub! Please sign in to access your inventory management dashboard and streamline your business operations. Manage your inventory with ease and efficiency. Let's get started</p>
+            </div>
         </div>
     );
 };

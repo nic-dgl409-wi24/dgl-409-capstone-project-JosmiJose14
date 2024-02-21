@@ -31,6 +31,7 @@ app.listen(PORT, () => {
 });
 // ...
 
+  
 app.post('/register', (req, res) => {
     const { name, email, password, roleId, divisionId, imageUrl, jobTitle } = req.body;
   
@@ -47,5 +48,27 @@ app.post('/register', (req, res) => {
     });
   });
   
-  // ...
+// Login endpoint
+// Login endpoint
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  // Use the query method instead
+  const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
+  connection.query(query, [email, password], (error, results) => {
+    if (error) {
+      // Handle error
+      return res.status(500).json({ message: 'Error querying the database', error });
+    }
+
+    if (results.length > 0) {
+      // User found
+      res.status(200).json({ message: 'Login successful', user: results[0] });
+    } else {
+      // User not found
+      res.status(401).json({ message: 'Invalid email or password' });
+    }
+  });
+});
+  
   
