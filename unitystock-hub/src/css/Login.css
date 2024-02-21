@@ -1,43 +1,46 @@
 /* src/components/Login.css */
-.login{
-    margin-top: 20px;
-    margin-bottom: 20px;
+.login {
+    margin-top: 20px !important;
+    margin-bottom: 20px;    
+    width: 80%;
+    margin: auto;
 }
+
 .login-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-    width: 80%;
-    margin: auto;
-    padding-top:0;
-  }
+    box-sizing: border-box;  
+    padding-top: 0;
+}
 
-  .login-image {
+.login-image {
     height: 450px;
     width: 450px;
-  }
-  .login-info,
-  .login-form {
+}
+
+.login-info,
+.login-form {
     flex: 1;
-  }
-  
-  .login-form form {
+}
+
+.login-form form {
     display: flex;
     flex-direction: column;
-  }
-  label {
+}
+
+label {
     font-weight: 600;
 }
 
-  input {
+input {
     margin-bottom: 10px;
     padding: 10px;
     font-size: 16px;
-  }
-  .login-footer{
+}
+
+.login-footer {
     background-color: #184487;
     /* Dark blue background */
     padding: 20px;
@@ -48,10 +51,11 @@
     /* Add so184487me space between columns */
     border-radius: 10px;
     padding: 20px;
-  color: white;
-  font-style: italic;
-  }
-.btnLogin {
+    color: white;
+    font-style: italic;
+}
+
+.btn {
     background-color: #184487;
     border: none;
     padding: 10px 20px;
@@ -66,19 +70,27 @@
     color: #ffffff;
 }
 
-.btnLogin:hover {
+.btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
     background-color: #90bce5;
     color: black;
-  
+
 }
 
-  /* Responsive styling */
-  @media (max-width: 768px) {
-    .login-container {
-      flex-direction: column;
-    }
+/* JoinNowButton.css */
+.join-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 10px; /* this creates space between the elements inside the flex container */
   }
+/* Responsive styling */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
   
+}
