@@ -22,7 +22,11 @@
     padding: 10px;
     font-size: 56px;
   }
-  
+  h2{
+    margin: auto;
+    text-align: center;
+    color: #184487;
+  }
   .navigation {
     height: 70px;
     width: 100%;

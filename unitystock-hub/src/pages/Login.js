@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../css/Login.css'; // Ensure you have the CSS file for styling
-
+import loginImage from "../images/login-image.png";
 const LoginPage = () => {
   const [credentials, setCredentials] = useState({
     username: '',
@@ -22,31 +22,36 @@ const LoginPage = () => {
   };
 
   return (
+    <div className="login">
+           <h2>Welcome Back</h2> {/* Heading for the form */}
     <div className="login-container">
-      <div className="login-header">
-        {/* Add your graphics and images here */}
+      <div className="login-info">
+      <img
+              className="login-image"
+              src={loginImage} // Placeholder image path
+              alt="Login"
+            />
       </div>
-      <form className="login-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={credentials.username}
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={credentials.password}
-          onChange={handleChange}
-        />
-        <button type="submit" className="login-button">Login</button>
-        <button type="button" className="join-button">Join Now</button>
-      </form>
+      <div className="login-form">
+   
+         <p>Please sign in to access your inventory management dashboard and streamline your business operations. Manage your inventory with ease and efficiency. Let's get started</p>
+        <form>
+          <label htmlFor="email">Email</label>
+          <input type="email" placeholder="email" />
+          <label htmlFor="password">Password</label>
+          <input type="password" placeholder="Password" />
+         
+          <div className="divButton">
+          <button type="submit" className='btnLogin'>Login</button>
+          </div>
+        </form>
+      </div>
+
+
       <div className="login-footer">
         <p>Welcome back to UnityStock Hub! Please sign in to access your inventory management dashboard and streamline your business operations. Manage your inventory with ease and efficiency. Let's get started</p>
       </div>
+    </div>
     </div>
   );
 };
