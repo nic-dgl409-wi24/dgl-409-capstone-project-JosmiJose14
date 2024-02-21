@@ -47,7 +47,8 @@ const Home = () => {
 
       <section className="cta-section">   
        <Link to="/Registration" className="cta-button join-now">Join Now</Link>
-        <button className="cta-button welcome-back">Welcome Back</button>
+       <Link to="/Login" className="cta-button welcome-back">Welcome Back</Link>
+      
       </section>
     </div>
     </div>

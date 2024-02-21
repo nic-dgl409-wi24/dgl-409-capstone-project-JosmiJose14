@@ -1,0 +1,53 @@
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-header {
+    text-align: center;
+    margin-bottom: 20px;
+    /* Here you would add styles or classes relevant to the graphic elements you have */
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .login-form input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .login-button, .join-button {
+    padding: 10px;
+    margin-bottom: 10px; /* Add some space between the buttons */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .login-button {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .join-button {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .login-footer {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #666;
+  }
+  

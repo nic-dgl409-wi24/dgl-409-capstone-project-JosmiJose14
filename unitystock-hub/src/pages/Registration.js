@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../css/Registration.css'; // Ensure you have the CSS file for styling
 import defaultImage from "../images/default.jpg";
-
+import axios from 'axios';
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -30,12 +30,23 @@ const RegistrationForm = () => {
     }
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Submit logic here
+  //   console.log(formData);
+  // };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Submit logic here
-    console.log(formData);
+    axios.post('http://localhost:3001/register', formData)
+      .then(response => {
+        console.log(response.data);
+        // Handle success
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+        // Handle error
+      });
   };
-
   return (
     <div className="registration-container">
       <h2>User Registration</h2> {/* Heading for the form */}

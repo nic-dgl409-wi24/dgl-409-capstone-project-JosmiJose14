@@ -5,6 +5,10 @@ import Header from './pages/Header';
 import Footer from './pages/Footer';
 import Home from './pages/Home';
 import Registration from './pages/Registration';
+import Login from './pages/Login';
+
+
+
 function App() {
   return (
     <Router>
@@ -13,7 +17,7 @@ function App() {
         <Route path="/" element={<Navigate to="/Home" replace />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/Registration" element={<Registration />} />
-         {/*<Route path="/Appointments" element={<Appointments />} /> */}
+        <Route path="/Login" element={<Login />} />
       </Routes>
       <Footer />
     </Router>
