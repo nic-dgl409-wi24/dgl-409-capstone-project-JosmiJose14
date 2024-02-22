@@ -8,6 +8,7 @@ import Registration from './pages/Registration';
 import Login from './pages/Login';
 import Division from './pages/Division';
 import AddDivision from './pages/AddDivision';
+import Logout from './pages/Logout';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/Division" element={<Division />} /> 
         <Route path="/AddDivision" element={<AddDivision />} />
+        <Route path="/Logout" element={<Logout />} />
      </Routes>
       <Footer />
     </Router>

@@ -1,8 +1,4 @@
 
-#divHeader
-{
-  display: none;
-}
 /* HomePageContent.css */
 .home-page-content {
   color: #fff;
@@ -14,7 +10,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   /* Box shadow for depth */
 }
-
 .hero-section {
   position: relative;
   height: 500px;
@@ -163,12 +158,13 @@ label {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   font-size: 16px;
-  font-weight: bold;
+    font-weight: bold;
   letter-spacing: 1px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
   color: #ffffff;
   text-decoration: none;
+  margin-left: 0px;
 }
 
 .btn:hover {
