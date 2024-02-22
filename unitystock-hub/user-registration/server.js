@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
+const { google } = require('googleapis');
 const app = express();
 
 app.use(cors());
@@ -22,8 +22,17 @@ connection.connect(error => {
   console.log("Successfully connected to the database.");
 });
 
-// Define routes here
-// ...
+const sheets = google.sheets('v4');
+const spreadsheetId = '1-GYq6o3zJ_MlMCqHCmU9XRFyVCyi2gRx8e-kkN2DIaI'; // Replace with your actual spreadsheet ID
+const path = require('path');
+const filePath = path.join(__dirname, 'unitystock-hub-google.json');
+
+// Set up authentication with the service account
+const auth = new google.auth.GoogleAuth({
+  keyFile: filePath, // The file path to your service account credentials
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
@@ -31,24 +40,23 @@ app.listen(PORT, () => {
 });
 // ...
 
-  
+
 app.post('/register', (req, res) => {
-    const { name, email, password, roleId, divisionId, imageUrl, jobTitle } = req.body;
-  
-    // Hash password here if you want to store hashed passwords
-    
-    const query = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    
-    connection.query(query, [name, email, password, roleId, divisionId, imageUrl, jobTitle], (error, results) => {
-      if (error) {
-        res.status(500).send({ message: error.message });
-      } else {
-        res.status(201).send({ message: 'User registered successfully', userId: results.insertId });
-      }
-    });
+  const { name, email, password, roleId, divisionId, imageUrl, jobTitle } = req.body;
+
+  // Hash password here if you want to store hashed passwords
+
+  const query = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle) VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+  connection.query(query, [name, email, password, roleId, divisionId, imageUrl, jobTitle], (error, results) => {
+    if (error) {
+      res.status(500).send({ message: error.message });
+    } else {
+      res.status(201).send({ message: 'User registered successfully', userId: results.insertId });
+    }
   });
-  
-// Login endpoint
+});
+
 // Login endpoint
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -70,5 +78,63 @@ app.post('/login', (req, res) => {
     }
   });
 });
-  
-  
+
+app.post('/save-division', async (req, res) => {
+  const { division, supervisor } = req.body;
+  const authClient = await auth.getClient();
+  try {
+    // Fetch the last ID from the sheet
+    const getLastIdRequest = {
+      spreadsheetId: spreadsheetId,
+      range: 'Sheet1!A:A', // Assuming IDs are in column A
+      auth: authClient,
+    };
+    const lastIdResponse = await sheets.spreadsheets.values.get(getLastIdRequest);
+    const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
+    // If there are no existing records, start ID at 1, else increment last ID
+    let newId;
+    if (lastRow === 0) {
+      newId = 1;
+    } else {
+      const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
+      newId = lastId + 1;
+    }
+
+    const appendRequest = {
+      spreadsheetId: spreadsheetId,
+      range: 'Sheet1', // Adjust the range as necessary
+      valueInputOption: 'USER_ENTERED',
+      resource: {
+        values: [[newId, division, supervisor]], // Include new ID
+      },
+      auth: authClient,
+    };
+
+    // Append the new row
+    const response = await sheets.spreadsheets.values.append(appendRequest);
+    res.status(200).json({ success: true, data: response.data });
+  } catch (error) {
+    console.error(error.response.data);
+    console.error(error.response.status);
+    console.error(error.response.headers);
+    console.error(JSON.stringify(error, null, 2));
+    res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
+  }
+});
+app.get('/get-divisions', async (req, res) => {
+  const authClient = await auth.getClient();
+
+  const request = {
+    spreadsheetId: spreadsheetId,
+    range: 'Sheet1', // Replace with your actual range
+    auth: authClient,
+  };
+
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    res.status(200).json({ success: true, data: response.data.values });
+  } catch (error) {
+    console.error('Error fetching from Google Sheets:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+  }
+});

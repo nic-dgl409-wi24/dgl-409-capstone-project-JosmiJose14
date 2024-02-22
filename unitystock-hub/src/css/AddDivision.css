@@ -1,0 +1,80 @@
+#divHeader
+{
+  display: block !important;
+}
+.division-container {
+    width: 80%;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 20px;
+}
+
+.image-column {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* Adds space between the image and form on small screens */
+}
+
+.form-column {
+    flex: 2; /* Takes twice the space of the image column, adjust as needed */
+    margin: auto;
+}
+
+.image-container img {
+    border-radius: 50%;
+    width:450px;
+    height:450px;
+}
+
+.form-fields label {
+    display: block;
+    margin-top: 10px;
+}
+
+.form-fields input,
+.form-fields select {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%; /* Ensure action buttons don't overflow the form column */
+}
+/* Responsive styles */
+@media (max-width: 768px) {
+    .form-container {
+        flex-direction: column;
+    }
+
+    .image-column,
+    .form-column {
+        max-width: 100%;
+    }
+
+    .form-actions {
+        flex-direction: column; /* Stack buttons on top of each other on small screens */
+    }
+
+    .btn {
+        margin-bottom: 10px; /* Space between stacked buttons */
+    }
+
+    .btn:last-child {
+        margin-bottom: 0; /* No bottom margin for the last button */
+    }
+}

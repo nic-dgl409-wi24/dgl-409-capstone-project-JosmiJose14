@@ -7,7 +7,7 @@ import Home from './pages/Home';
 import Registration from './pages/Registration';
 import Login from './pages/Login';
 import Division from './pages/Division';
-
+import AddDivision from './pages/AddDivision';
 
 function App() {
   return (
@@ -18,8 +18,9 @@ function App() {
         <Route path="/Home" element={<Home />} />
         <Route path="/Registration" element={<Registration />} />
         <Route path="/Login" element={<Login />} />
-
-        <Route path="/Division" element={<Division />} />      </Routes>
+        <Route path="/Division" element={<Division />} /> 
+        <Route path="/AddDivision" element={<AddDivision />} />
+     </Routes>
       <Footer />
     </Router>
   );

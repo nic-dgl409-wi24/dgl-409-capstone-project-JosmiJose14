@@ -151,7 +151,9 @@
   justify-content: center;
   padding: 20px;
 }
-
+label {
+  font-weight: 600;
+}
 .btn {
   background-color: #184487;
   border: none;  

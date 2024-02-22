@@ -63,11 +63,6 @@
 .divButton {
     width: auto;
 }
-
-label {
-    font-weight: 600;
-}
-
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .registration-form {

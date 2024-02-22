@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "unitystock-hub",
+  "private_key_id": "892ae33137ae46a21ef6b2a2d3eed45c7b9c2311",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCVY8aIfjzEbbhk\n26G5tENK38FmGWMUXgvgD8sS0ysg/tpOyFLm2Xy/c36wGygPLU18fMBcxsz3qoyw\ngn3aBCA0Lib80NXr2zWNrRX+ZbwKMeQ94bEvR7TypygQzrz7kdwSqOEvtxAgsEwC\nrbIhrdXrDAVs6BxUo17XF0FACbJaV8wBeCsGvrHobzeEH5Div3+NG3Up3pl/hv8e\nNmHuyjqBqz9+4b2j05ZF/gpbZXHfJiGoaFwlSdO5EEpqkohWyP4CQedfj8J4LqM7\n/p0vGOSniV2QTK7UTa2mtFo21r6IJ6B5rUVJoVOChIJf4mJMl5v5QDvhwFY0Wc+x\netfNE+OpAgMBAAECggEAPbNkAGQDPS4EBsQf2890K6yW+FBr97GQPg7H1RKasZoR\nGJDsjKQvPfO504qj1QDlDBGKccc6SOCMEysSR8WEd4jIWYr3j96OE+H1P4lNTPim\nSFi7EcgQGFip16dLrqvjtWFDAK4fXyDxg/mxpO9jdx0T8JM9gEepmDTmokhe/ai7\n7K2RcGzJCzM3kZ3vjDMvZAaJ6aDm+KXHho7rDGk05YW4lwEiAr1ULbUPXE+4Phkb\nq1oDbm5XDGC6nTe1eBP6yRJGGlCdDK+Hryt7WzwoLfjTF9Rhd2RJLQd1F8S/7WNR\ns+3mxWaHhKFYnNTbkwBA3eZzDMkuMQgHZgo+UojX8QKBgQDG9ewcg42OuMOQYtd1\noqe2x3sf8DfjhK2pBevdZyPN/zUeTY/QWllap/6d3gOiIC+UbeTk0K/aOAlQYSm/\ncPFpg6pFJPWNveowZjn15nYFQF8uJpsA1j9KrLE9RbsGOsqXCmIkcKM2MLovM3Pr\nLDWFCFSI5PAwCphPVzlH5HdyAwKBgQDAN8HLRMAV6GUl7jIxBUc6TykI1/IjtkFB\nZfjdLGZwm3sHFShhFnzt2LL+61OeqZN03H0L4yFuo8u0ow4xWap1dqNLGW/hJb0f\n9dtAle3Ia24edWOCYDXNAOQvcsY5vQvvwT0HnwYWjkX7RbnvA15iKnezj+8uDH3k\n2Vn/UAKZ4wKBgAd0v9xxsaRfmDSY/6oQ5mgbIaoYvn9wQXHMHwK1Esptffgcv/72\n49JZ6VjRMSGqQx404BcTGwP6hZ7VhVL/UIy7um3M7MbbDyOxMQreEB4yQ17fY3+s\nh8Ksphe9vTyGh4ERiowDDJrDSLbsHrP5fCf4H/LhYX7rZrnScvsWvMMxAoGBAJLK\nweu64Dqa1IwIATqgfknQZFUFnTyalfEcr9Ywbzb19hltlf23D8cQI3o8OwrDFAI9\n1B084q481ndnwpH7mQrFhGT40xENIgaDWmJTXVkeeeU23ryVPuEFGj4GF83GSpRZ\nbYMhdaPKGTWQhTM7zluHdQyjEhSHo6keN/Wbo7DjAoGBAJgGGMCm5fxDO9R7dxcI\nCck/lb78FtegDl3GdoIkkt6Fsveyfgj4hfzdGk+X3BGO/FnYb6NNOiwk0FSzRYA3\nNWO5MHhMLAIWhpbfiEfnLoGiPv5tVqn1ycdSW166ZRgGtFjANbAgQCXA3JPf21s9\nf0pKaNr/AURREjK5mwYrK/Dk\n-----END PRIVATE KEY-----\n",
+  "client_email": "unitystock-hub@unitystock-hub.iam.gserviceaccount.com",
+  "client_id": "114249625651598116390",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/unitystock-hub%40unitystock-hub.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
