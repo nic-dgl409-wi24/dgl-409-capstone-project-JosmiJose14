@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/Registration.css'; // Ensure you have the CSS file for styling
 import defaultImage from "../images/default.jpg";
 import axios from 'axios';
@@ -9,12 +9,51 @@ const RegistrationForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    jobTitle: 'Kitchen Manager',
+    jobTitle: 0,
     role: 'Administrator',
     division: 'Kitchen',
     profileImage: '', // Assuming this will be a base64 encoded string or a URL
   });
+  const [roles, setRoles] = useState([]);
+  const [jobTitles, setJobTitles] = useState([]);
+  const [divisions, setDivisions] = useState([]);
 
+  
+         // Function to fetch division data
+    const fetchDivisions = async () => {
+      try {
+          const response = await axios.get('http://localhost:3001/get-divisions'); // Adjust the URL to your backend endpoint
+          // Target the 'data' property within the response data
+          const divisionData = response.data.data.slice(1).map(row => ({
+              id: row[0],
+              name: row[1],
+          }));
+          setDivisions(divisionData);
+      } catch (error) {
+          console.error('Error fetching divisions:', error);
+      }
+  };
+
+  const fetchJobTitles = async () => {
+    try {
+        const response = await axios.get('http://localhost:3001/get-jobtitles'); // Adjust the URL to your backend endpoint
+        // Assuming the first row is headers, skip it
+        // Target the 'data' property within the response data
+        const jobData = response.data.data; 
+        setJobTitles(jobData);
+    } catch (error) {
+        console.error('Error fetching job:', error);
+    }
+};
+const fetchRoles = async () => {
+  try {
+      const response = await axios.get('http://localhost:3001/get-roles'); // Adjust the URL to your backend endpoint
+      const roleData =  response.data.data;  
+      setRoles(roleData);
+  } catch (error) {
+      console.error('Error fetching roles:', error);
+  }
+};
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -30,11 +69,6 @@ const RegistrationForm = () => {
     }
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Submit logic here
-  //   console.log(formData);
-  // };
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post('http://localhost:3001/register', formData)
@@ -47,6 +81,12 @@ const RegistrationForm = () => {
         // Handle error
       });
   };
+  
+  useEffect(() => {
+    fetchRoles();
+    fetchJobTitles();
+    fetchDivisions();
+  }, []); // Add an empty dependency array here
   return (
     <div className="registration-container">
       <h2>User Registration</h2> {/* Heading for the form */}
@@ -68,13 +108,14 @@ const RegistrationForm = () => {
           </div>
           <label htmlFor="jobTitle">Job Title</label>
           <select id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange}>
-            <option value="Kitchen Manager">Kitchen Manager</option>
-            {/* Other options */}
-          </select>
+            {jobTitles.map(jobTitle => (
+              <option key={jobTitle.id} value={jobTitle.name}>{jobTitle.name}</option>
+            ))}</select>
           <label htmlFor="division">Division</label>
           <select id="division" name="division" value={formData.division} onChange={handleChange}>
-            <option value="Kitchen">Kitchen</option>
-            {/* Other options */}
+            {divisions.map(division => (
+              <option key={division.id} value={division.name}>{division.name}</option>
+            ))}
           </select>
         </div>
         <div className="form-column right-column">
@@ -125,8 +166,9 @@ const RegistrationForm = () => {
           />
           <label htmlFor="role">Role</label>
           <select id="role" name="role" value={formData.role} onChange={handleChange}>
-            <option value="Administrator">Administrator</option>
-            {/* Other options */}
+            {roles.map(role => (
+              <option key={role.id} value={role.name}>{role.name}</option>
+            ))}
           </select>
           <div className="divButton">
             <button className="btn btnRegister" onClick={handleSubmit}>Register</button>

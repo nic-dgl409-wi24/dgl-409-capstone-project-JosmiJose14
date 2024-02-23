@@ -40,7 +40,48 @@ app.listen(PORT, () => {
 });
 // ...
 
+// app.get('/get-roles', async (req, res) => {
+//   try {
+//     const roles = await connection.query('SELECT id, name FROM role'); // Adjust the query according to your DB schema
+//     res.status(200).json({ success: true, data: roles });
+//   } catch (error) {
+//     console.error('Error fetching roles:', error);
+//     res.status(500).json({ success: false, error: 'Failed to fetch roles' });
+//   }
+// });
+// app.get('/get-jobtitles', async (req, res) => {
+//   try {
+//     const jobTitles = await connection.query('SELECT id, name FROM jobtitles'); // Adjust the query according to your DB schema
+//     res.status(200).json({ success: true, data: jobTitles });
+//   } catch (error) {
+//     console.error('Error fetching job titles:', error);
+//     res.status(500).json({ success: false, error: 'Failed to fetch job titles' });
+//   }
+// });
+const util = require('util');
 
+// Promisify the query method
+connection.query = util.promisify(connection.query);
+
+app.get('/get-roles', async (req, res) => {
+  try {
+    const roles = await connection.query('SELECT id, name FROM role'); // Adjust the query according to your DB schema
+    res.status(200).json({ success: true, data: roles });
+  } catch (error) {
+    console.error('Error fetching roles:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch roles' });
+  }
+});
+
+app.get('/get-jobtitles', async (req, res) => {
+  try {
+    const jobTitles = await connection.query('SELECT id, name FROM jobtitles'); // Adjust the query according to your DB schema
+    res.status(200).json({ success: true, data: jobTitles });
+  } catch (error) {
+    console.error('Error fetching job titles:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch job titles' });
+  }
+});
 app.post('/register', (req, res) => {
   const { name, email, password, roleId, divisionId, imageUrl, jobTitle } = req.body;
 
