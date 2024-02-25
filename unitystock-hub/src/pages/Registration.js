@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../css/Registration.css'; // Ensure you have the CSS file for styling
 import defaultImage from "../images/default.jpg";
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -9,14 +10,15 @@ const RegistrationForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    jobTitle: 0,
-    role: 'Administrator',
-    division: 'Kitchen',
-    profileImage: '', // Assuming this will be a base64 encoded string or a URL
+    jobTitle: '',
+    roleId: '',
+    divisionId: '',
+    imageUrl: '', // Assuming this will be a base64 encoded string or a URL
   });
   const [roles, setRoles] = useState([]);
   const [jobTitles, setJobTitles] = useState([]);
   const [divisions, setDivisions] = useState([]);
+  const navigate = useNavigate();
 
   
          // Function to fetch division data
@@ -54,27 +56,43 @@ const fetchRoles = async () => {
       console.error('Error fetching roles:', error);
   }
 };
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({ ...prev, [name]: value }));
+};
 
   const handleImageChange = (e) => {
+    console.log(e);
     if (e.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.onload = (upload) => {
-        setFormData(prev => ({ ...prev, profileImage: upload.target.result }));
-      };
-      reader.readAsDataURL(e.target.files[0]);
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append('imageUrl', file);
+  
+      // Send the file to your server
+      axios.post('http://localhost:3001/upload-profile-image', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(response => {
+        // Handle the response, e.g., setting the image URL received from the server
+        setFormData(prev => ({ ...prev, imageUrl: response.data.imageUrl }));
+     
+      })
+      .catch(error => {
+        console.error('Error uploading image:', error);
+      });
     }
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post('http://localhost:3001/register', formData)
       .then(response => {
         console.log(response.data);
-        // Handle success
+        navigate('/Division');
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -108,13 +126,15 @@ const fetchRoles = async () => {
           </div>
           <label htmlFor="jobTitle">Job Title</label>
           <select id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange}>
+          <option value="" disabled>Select a job</option>
             {jobTitles.map(jobTitle => (
-              <option key={jobTitle.id} value={jobTitle.name}>{jobTitle.name}</option>
+              <option key={jobTitle.id} value={jobTitle.id}>{jobTitle.name}</option>
             ))}</select>
-          <label htmlFor="division">Division</label>
-          <select id="division" name="division" value={formData.division} onChange={handleChange}>
+          <label htmlFor="divisionId">Division</label>
+          <select id="division" name="divisionId" value={formData.divisionId} onChange={handleChange}>
+          <option value="" disabled>Select a division</option>
             {divisions.map(division => (
-              <option key={division.id} value={division.name}>{division.name}</option>
+              <option key={division.id} value={division.id}>{division.name}</option>
             ))}
           </select>
         </div>
@@ -164,10 +184,11 @@ const fetchRoles = async () => {
             value={formData.confirmPassword}
             onChange={handleChange}
           />
-          <label htmlFor="role">Role</label>
-          <select id="role" name="role" value={formData.role} onChange={handleChange}>
+          <label htmlFor="roleId">Role</label>
+          <select id="role" name="roleId" value={formData.roleId} onChange={handleChange}>
+          <option value="" disabled>Select a role</option>
             {roles.map(role => (
-              <option key={role.id} value={role.name}>{role.name}</option>
+              <option key={role.id} value={role.id}>{role.name}</option>
             ))}
           </select>
           <div className="divButton">
