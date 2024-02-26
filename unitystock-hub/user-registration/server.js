@@ -6,6 +6,7 @@ const cors = require('cors');
 const { google } = require('googleapis');
 const app = express();
 const fs = require('fs');
+const util = require('util');
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -40,40 +41,32 @@ app.listen(PORT, () => {
 });
 
 //Register save image
-
 // Function to check directory existence and create if doesn't exist
 function ensureDirSync(dirPath) {
   try {
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
-    } else {
     }
   } catch (err) {
     console.error(`Error in creating directory: ${err.message}`);
   }
 }
 
+// Configure multer storage
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    const dirPath = path.join(__dirname, './images/profile/');
-    // Ensure directory exists
-    ensureDirSync(dirPath);
-
-    fs.access(dirPath, fs.constants.W_OK, (err) => {
-      if (err) {
-        cb(err);
-      } else {
-        cb(null, dirPath);
-      }
-    });
+    // Use multer memory storage to temporarily hold the file
+    cb(null, '/tmp/');
   },
   filename: function(req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
+// Configure multer
 const upload = multer({ storage: storage }).single('imageUrl');
 
+// Endpoint for image upload
 app.post('/upload-profile-image', (req, res) => {
   upload(req, res, (err) => {
     if (err) {
@@ -85,20 +78,25 @@ app.post('/upload-profile-image', (req, res) => {
       return res.status(400).send({ message: 'No file uploaded' });
     }
 
-    const filePath = path.join(__dirname, './images/profile/', req.file.filename);
+    // Now req.body.dirPath is accessible
+    let dirPathFromRequest = req.body.dirPath || './images/profile/';
+    const dirPath = path.join(__dirname, dirPathFromRequest);
+    ensureDirSync(dirPath);
 
-    fs.access(filePath, fs.constants.F_OK, (fileErr) => {
-      if (fileErr) {
-        return res.status(500).send({ message: 'File upload failed, file not saved' });
-      } else {
-        res.send({ imageUrl: `${filePath}` });
+    // Move file from temporary location to desired location
+    const finalPath = path.join(dirPath, req.file.filename);
+    fs.rename('/tmp/' + req.file.filename, finalPath, function(err) {
+      if (err) {
+        console.error(`Error in moving file: ${err.message}`);
+        return res.status(500).send({ message: 'Error occurred while moving the file' });
       }
+
+      // Send the file path as a response
+      res.send({ imageUrl: finalPath });
     });
   });
 });
 
-
-const util = require('util');
 
 // Promisify the query method
 connection.query = util.promisify(connection.query);
@@ -120,6 +118,16 @@ app.get('/get-jobtitles', async (req, res) => {
   } catch (error) {
     console.error('Error fetching job titles:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch job titles' });
+  }
+});
+
+app.get('/get-users', async (req, res) => {
+  try {
+    const roles = await connection.query('SELECT * FROM users'); // Adjust the query according to your DB schema
+    res.status(200).json({ success: true, data: roles });
+  } catch (error) {
+    console.error('Error fetching roles:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch roles' });
   }
 });
 app.post('/register', (req, res) => {
@@ -161,7 +169,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/save-division', async (req, res) => {
-  const { division, supervisor } = req.body;
+  const { division, supervisor,imageUrl } = req.body;
   const authClient = await auth.getClient();
   try {
     // Fetch the last ID from the sheet
@@ -186,7 +194,7 @@ app.post('/save-division', async (req, res) => {
       range: 'Sheet1', // Adjust the range as necessary
       valueInputOption: 'USER_ENTERED',
       resource: {
-        values: [[newId, division, supervisor]], // Include new ID
+        values: [[newId, division, supervisor,imageUrl]], // Include new ID
       },
       auth: authClient,
     };

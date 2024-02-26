@@ -68,7 +68,7 @@ const handleChange = (e) => {
       const file = e.target.files[0];
       const formData = new FormData();
       formData.append('imageUrl', file);
-  
+      formData.append('dirPath', './images/profile/');
       // Send the file to your server
       axios.post('http://localhost:3001/upload-profile-image', formData, {
         headers: {
