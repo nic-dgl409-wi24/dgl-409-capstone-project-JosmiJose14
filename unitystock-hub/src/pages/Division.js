@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link ,useHistory} from 'react-router-dom';
 import '../css/Division.css'; // Ensure you have the CSS file for styling
 import axios from 'axios';
 
+
 export default function Division() {
     const [divisions, setDivisions] = useState([]); // State to store divisions
-
+    const history = useHistory();
     // Function to fetch division data
     const fetchDivisions = async () => {
         try {
             const response = await axios.get('http://localhost:3001/get-divisions'); // Adjust the URL to your backend endpoint
             // Assuming the first row is headers, skip it
-            console.log("API Response:", response.data); // Log the response data
             // Target the 'data' property within the response data
             const divisionData = response.data.data.slice(1).map(row => ({
                 id: row[0],
@@ -19,7 +19,9 @@ export default function Division() {
                 supervisorId: row[2] || '',
                 imageUrl: row[3] || ''
             }));
+            debugger
             setDivisions(divisionData);
+
         } catch (error) {
             console.error('Error fetching divisions:', error);
         }
@@ -29,25 +31,39 @@ export default function Division() {
     useEffect(() => {
         fetchDivisions();
     }, []);
-
+    function handleEdit(divisionId) {
+        // Logic to handle edit action for the division with the given id
+        history.push(`/division/edit/${divisionId}`);
+        console.log(`Edit division with ID: ${divisionId}`);
+    }
+    
+    function handleDelete(divisionId) {
+        // Logic to handle delete action for the division with the given id
+        console.log(`Delete division with ID: ${divisionId}`);
+    }
+    
     return (
         <div className="division-container">
             <h2>Division</h2>
             <div className="divAddDivision">
-                <Link to="/AddDivision" className="btn">Add Division</Link>
+                <Link to="/AddDivision/add" className="btn">Add Division</Link>
             </div>
             <div className="division-cards">
                 {divisions.map((division, index) => (
                     <div className="division-card" key={index}>
                         <div className="division-icon-container">
-                            {/* <div className="division-icon" style={{ backgroundImage: `url(${division.imageUrl})` }}></div> */}
-                            <div className="division-icon kitchen-icon"></div>
+                            <div  className="division-icon">
+                            <img src={`http://localhost:3001/${(division.imageUrl)}`} alt={division.name} />
+
+                            </div>
                         </div>
                         <div className="division-info">
                             <h3>{division.name}</h3>
                             <div className="division-actions">
-                                <button className='btn'>Edit</button>
-                                <button className='btn'>Delete</button>
+                             {/* Bind division.id to the onClick event for the Edit button */}
+                    <button className='btn' onClick={() => handleEdit(division.id)}>Edit</button>
+                    {/* Bind division.id to the onClick event for the Delete button */}
+                    <button className='btn' onClick={() => handleDelete(division.id)}>Delete</button>
                             </div>
                         </div>
                     </div>

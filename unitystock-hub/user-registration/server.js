@@ -9,7 +9,8 @@ const fs = require('fs');
 const util = require('util');
 app.use(cors());
 app.use(bodyParser.json());
-
+const path = require('path');
+app.use('/images/division', express.static(path.join(__dirname, '/images/division')));
 // MySQL database connection
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -26,7 +27,7 @@ connection.connect(error => {
 
 const sheets = google.sheets('v4');
 const spreadsheetId = '1-GYq6o3zJ_MlMCqHCmU9XRFyVCyi2gRx8e-kkN2DIaI'; // Replace with your actual spreadsheet ID
-const path = require('path');
+
 const filePath = path.join(__dirname, 'unitystock-hub-google.json');
 
 // Set up authentication with the service account
@@ -84,7 +85,8 @@ app.post('/upload-profile-image', (req, res) => {
     ensureDirSync(dirPath);
 
     // Move file from temporary location to desired location
-    const finalPath = path.join(dirPath, req.file.filename);
+    const finalPath = path.join(dirPathFromRequest, req.file.filename);
+    console.log(finalPath);
     fs.rename('/tmp/' + req.file.filename, finalPath, function(err) {
       if (err) {
         console.error(`Error in moving file: ${err.message}`);
@@ -92,6 +94,7 @@ app.post('/upload-profile-image', (req, res) => {
       }
 
       // Send the file path as a response
+
       res.send({ imageUrl: finalPath });
     });
   });
@@ -181,12 +184,14 @@ app.post('/save-division', async (req, res) => {
     const lastIdResponse = await sheets.spreadsheets.values.get(getLastIdRequest);
     const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
     // If there are no existing records, start ID at 1, else increment last ID
-    let newId;
+    let Id;
     if (lastRow === 0) {
-      newId = 1;
+    Id = 1;
     } else {
       const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
-      newId = lastId + 1;
+      console.log(lastId);
+      Id = lastId + 1;
+      console.log(Id);
     }
 
     const appendRequest = {
@@ -194,7 +199,7 @@ app.post('/save-division', async (req, res) => {
       range: 'Sheet1', // Adjust the range as necessary
       valueInputOption: 'USER_ENTERED',
       resource: {
-        values: [[newId, division, supervisor,imageUrl]], // Include new ID
+        values: [[Id, division, supervisor,imageUrl]], // Include new ID
       },
       auth: authClient,
     };

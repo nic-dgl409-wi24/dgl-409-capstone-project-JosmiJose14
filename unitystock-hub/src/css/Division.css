@@ -20,7 +20,11 @@
   flex-basis: calc(30% - 20px);
     margin-bottom: 20px; /* Add space between rows */
 }
-
+img{
+object-fit: cover;
+    width: 300px;
+    height: 300px;
+}
 
 .division-icon-container {
     flex-shrink: 0; /* Prevents the icon container from shrinking */
@@ -40,10 +44,6 @@
     align-items: center; /* Centers children vertically within the container */
     padding: 10px 0; /* Gives some padding above and below the buttons/links */
 }
-.kitchen-icon {
-    background-image: url('../images/default.jpg');
-}
-
 .housekeeping-icon {
     background-image: url('../images/default.jpg');
 }
