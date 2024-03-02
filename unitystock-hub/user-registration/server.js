@@ -10,7 +10,11 @@ const util = require('util');
 app.use(cors());
 app.use(bodyParser.json());
 const path = require('path');
+const sheets = google.sheets('v4');
 app.use('/images/division', express.static(path.join(__dirname, '/images/division')));
+app.use('/images/subdivision', express.static(path.join(__dirname, '/images/subdivision')));
+app.use('/images/profile', express.static(path.join(__dirname, '/images/profile')));
+app.use('/images/inventory', express.static(path.join(__dirname, '/images/inventory')));
 // MySQL database connection
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -25,9 +29,9 @@ connection.connect(error => {
   console.log("Successfully connected to the database.");
 });
 
-const sheets = google.sheets('v4');
-const spreadsheetId = '1-GYq6o3zJ_MlMCqHCmU9XRFyVCyi2gRx8e-kkN2DIaI'; // Replace with your actual spreadsheet ID
 
+const spreadsheetId = '1-GYq6o3zJ_MlMCqHCmU9XRFyVCyi2gRx8e-kkN2DIaI'; // Replace with your actual spreadsheet ID
+const subspreadsheetId = '12_hbBZt7NU8nj-JfInDxLMvBjpYps82Vw4k2-SHjEXU';
 const filePath = path.join(__dirname, 'unitystock-hub-google.json');
 
 // Set up authentication with the service account
@@ -55,11 +59,11 @@ function ensureDirSync(dirPath) {
 
 // Configure multer storage
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     // Use multer memory storage to temporarily hold the file
     cb(null, '/tmp/');
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
   }
 });
@@ -68,7 +72,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('imageUrl');
 
 // Endpoint for image upload
-app.post('/upload-profile-image', (req, res) => {
+app.post('/upload-image', (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       console.error(`Error in multer upload: ${err.message}`);
@@ -87,7 +91,7 @@ app.post('/upload-profile-image', (req, res) => {
     // Move file from temporary location to desired location
     const finalPath = path.join(dirPathFromRequest, req.file.filename);
     console.log(finalPath);
-    fs.rename('/tmp/' + req.file.filename, finalPath, function(err) {
+    fs.rename('/tmp/' + req.file.filename, finalPath, function (err) {
       if (err) {
         console.error(`Error in moving file: ${err.message}`);
         return res.status(500).send({ message: 'Error occurred while moving the file' });
@@ -134,13 +138,13 @@ app.get('/get-users', async (req, res) => {
   }
 });
 app.post('/register', (req, res) => {
-  const { name, email, password, roleId, divisionId, imageUrl, jobTitle } = req.body;
+  const { name, email, password, roleId, divisionId, imageUrl, jobTitle,contactNumber } = req.body;
 
   // Hash password here if you want to store hashed passwords
 
-  const query = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle,ContactNumber) VALUES (?, ?, ?, ?, ?, ?, ?,?)';
 
-  connection.query(query, [name, email, password, roleId, divisionId, imageUrl, jobTitle], (error, results) => {
+  connection.query(query, [name, email, password, roleId, divisionId, imageUrl, jobTitle,contactNumber], (error, results) => {
     if (error) {
       res.status(500).send({ message: error.message });
     } else {
@@ -171,50 +175,93 @@ app.post('/login', (req, res) => {
   });
 });
 
+
 app.post('/save-division', async (req, res) => {
-  const { division, supervisor,imageUrl } = req.body;
+  const { id, division, supervisor, imageUrl } = req.body; // Step 1: Extract ID
   const authClient = await auth.getClient();
   try {
-    // Fetch the last ID from the sheet
-    const getLastIdRequest = {
-      spreadsheetId: spreadsheetId,
-      range: 'Sheet1!A:A', // Assuming IDs are in column A
-      auth: authClient,
-    };
-    const lastIdResponse = await sheets.spreadsheets.values.get(getLastIdRequest);
-    const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
-    // If there are no existing records, start ID at 1, else increment last ID
-    let Id;
-    if (lastRow === 0) {
-    Id = 1;
+    const range = 'Sheet1'; // Adjust as necessary. Assuming 'Sheet1' is where your data is stored.
+    debugger
+    // If an ID is provided, attempt to update an existing division
+    if (id) {
+
+      // Fetch all rows to find the one to update
+      const getRequest = {
+        spreadsheetId: spreadsheetId,
+        range: range,
+        auth: authClient,
+      };
+      const getResponse = await sheets.spreadsheets.values.get(getRequest);
+      const rows = getResponse.data.values || [];
+      let foundRowIndex = rows.findIndex(row => row[0] === id); // Assuming ID is in the first column
+
+      if (foundRowIndex !== -1) {
+        // Calculate the actual row index in the sheet, adjusting for header row if present
+        const sheetRowIndex = foundRowIndex + 1; // Adjust based on your sheet's header presence
+        const updateRange = `${range}!A${sheetRowIndex}:D${sheetRowIndex}`;
+
+        const updateRequest = {
+          spreadsheetId: spreadsheetId,
+          range: updateRange,
+          valueInputOption: 'USER_ENTERED',
+          resource: {
+            values: [[id, division, supervisor, imageUrl]],
+          },
+          auth: authClient,
+        };
+
+        // Update the existing row
+        await sheets.spreadsheets.values.update(updateRequest);
+        res.status(200).json({ success: true, message: 'Division updated successfully' });
+      } else {
+        // Handle case where ID is provided but not found
+        res.status(404).json({ success: false, error: 'Division not found with provided ID' });
+      }
     } else {
-      const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
-      console.log(lastId);
-      Id = lastId + 1;
-      console.log(Id);
+      try {
+        // Fetch the last ID from the sheet
+        const getLastIdRequest = {
+          spreadsheetId: spreadsheetId,
+          range: 'Sheet1!A:A', // Assuming IDs are in column A
+          auth: authClient,
+        };
+        const lastIdResponse = await sheets.spreadsheets.values.get(getLastIdRequest);
+        const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
+        // If there are no existing records, start ID at 1, else increment last ID
+        let Id;
+        if (lastRow === 0) {
+          Id = 1;
+        } else {
+          const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
+
+          Id = lastId + 1;
+          console.log(Id);
+        }
+
+        const appendRequest = {
+          spreadsheetId: spreadsheetId,
+          range: 'Sheet1', // Adjust the range as necessary
+          valueInputOption: 'USER_ENTERED',
+          resource: {
+            values: [[Id, division, supervisor, imageUrl]], // Include new ID
+          },
+          auth: authClient,
+        };
+
+        // Append the new row
+        const response = await sheets.spreadsheets.values.append(appendRequest);
+        res.status(200).json({ success: true, data: response.data });
+      } catch (error) {
+
+        res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
+      }
     }
-
-    const appendRequest = {
-      spreadsheetId: spreadsheetId,
-      range: 'Sheet1', // Adjust the range as necessary
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: [[Id, division, supervisor,imageUrl]], // Include new ID
-      },
-      auth: authClient,
-    };
-
-    // Append the new row
-    const response = await sheets.spreadsheets.values.append(appendRequest);
-    res.status(200).json({ success: true, data: response.data });
   } catch (error) {
-    console.error(error.response.data);
-    console.error(error.response.status);
-    console.error(error.response.headers);
     console.error(JSON.stringify(error, null, 2));
     res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
   }
 });
+
 app.get('/get-divisions', async (req, res) => {
   const authClient = await auth.getClient();
 
@@ -227,6 +274,165 @@ app.get('/get-divisions', async (req, res) => {
   try {
     const response = await sheets.spreadsheets.values.get(request);
     res.status(200).json({ success: true, data: response.data.values });
+  } catch (error) {
+    console.error('Error fetching from Google Sheets:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+  }
+});
+app.get('/get-division/:divisionId', async (req, res) => {
+  const divisionId = req.params.divisionId;
+  const authClient = await auth.getClient();
+
+  const request = {
+    spreadsheetId: spreadsheetId,
+    range: 'Sheet1', // Adjust as necessary
+    auth: authClient,
+  };
+
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    const rows = response.data.values || [];
+    // Assuming ID is the first column in each row
+    const division = rows.find(row => row[0] === divisionId);
+
+    if (division) {
+      res.status(200).json({ success: true, data: division });
+    } else {
+      res.status(404).json({ success: false, message: 'Division not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching from Google Sheets:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+  }
+});
+
+
+app.post('/save-subdivision', async (req, res) => {
+  console.log("hi")
+  const { id, subdivision, selectedDivision, imageUrl } = req.body; // Step 1: Extract ID
+  const authClient = await auth.getClient();
+  try {
+    const range = 'Sheet1'; // Adjust as necessary. Assuming 'Sheet1' is where your data is stored.
+    debugger
+    // If an ID is provided, attempt to update an existing division
+    if (id) {
+
+      // Fetch all rows to find the one to update
+      const getRequest = {
+        spreadsheetId: subspreadsheetId,
+        range: range,
+        auth: authClient,
+      };
+      const getResponse = await sheets.spreadsheets.values.get(getRequest);
+      const rows = getResponse.data.values || [];
+      let foundRowIndex = rows.findIndex(row => row[0] === id); // Assuming ID is in the first column
+
+      if (foundRowIndex !== -1) {
+        // Calculate the actual row index in the sheet, adjusting for header row if present
+        const sheetRowIndex = foundRowIndex + 1; // Adjust based on your sheet's header presence
+        const updateRange = `${range}!A${sheetRowIndex}:D${sheetRowIndex}`;
+
+        const updateRequest = {
+          spreadsheetId: subspreadsheetId,
+          range: updateRange,
+          valueInputOption: 'USER_ENTERED',
+          resource: {
+            values: [[id, subdivision, selectedDivision, imageUrl]],
+          },
+          auth: authClient,
+        };
+
+        // Update the existing row
+        await sheets.spreadsheets.values.update(updateRequest);
+        res.status(200).json({ success: true, message: 'Sub-Division updated successfully' });
+      } else {
+        // Handle case where ID is provided but not found
+        res.status(404).json({ success: false, error: 'Sub-Division not found with provided ID' });
+      }
+    } else {
+      try {
+        // Fetch the last ID from the sheet
+        const getLastIdRequest = {
+          spreadsheetId: subspreadsheetId,
+          range: 'Sheet1!A:A', // Assuming IDs are in column A
+          auth: authClient,
+        };
+        const lastIdResponse = await sheets.spreadsheets.values.get(getLastIdRequest);
+        const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
+        // If there are no existing records, start ID at 1, else increment last ID
+        let Id;
+        if (lastRow === 0) {
+          Id = 1;
+        } else {
+          const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
+
+          Id = lastId + 1;
+          console.log(Id);
+        }
+
+        const appendRequest = {
+          spreadsheetId: subspreadsheetId,
+          range: 'Sheet1', // Adjust the range as necessary
+          valueInputOption: 'USER_ENTERED',
+          resource: {
+            values: [[Id, subdivision, selectedDivision, imageUrl]], // Include new ID
+          },
+          auth: authClient,
+        };
+
+        // Append the new row
+        const response = await sheets.spreadsheets.values.append(appendRequest);
+        res.status(200).json({ success: true, data: response.data });
+      }
+
+      catch (error) {
+        console.error('Error:', error.response ? error.response.data : error);
+        res.status(500).json({ success: false, error: 'Failed to save to Google Sheets', details: error.message });
+      }
+  }} catch (error) {
+    console.error(JSON.stringify(error, null, 2));
+    res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
+  }
+});
+
+app.get('/get-subdivisions/:divisionId', async (req, res) => {
+  const authClient = await auth.getClient();
+
+  const request = {
+    spreadsheetId: subspreadsheetId,
+    range: 'Sheet1', // Replace with your actual range
+    auth: authClient,
+  };
+
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    res.status(200).json({ success: true, data: response.data.values });
+  } catch (error) {
+    console.error('Error fetching from Google Sheets:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+  }
+});
+app.get('/get-subdivision/:Id', async (req, res) => {
+  const divisionId = req.params.Id;
+  const authClient = await auth.getClient();
+
+  const request = {
+    spreadsheetId: subspreadsheetId,
+    range: 'Sheet1', // Adjust as necessary
+    auth: authClient,
+  };
+
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    const rows = response.data.values || [];
+    // Assuming ID is the first column in each row
+    const division = rows.find(row => row[0] === divisionId);
+
+    if (division) {
+      res.status(200).json({ success: true, data: division });
+    } else {
+      res.status(404).json({ success: false, message: 'Division not found' });
+    }
   } catch (error) {
     console.error('Error fetching from Google Sheets:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
