@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import defaultImage from "../images/default.jpg";
+import config from '../common/config';
 import '../css/AddDivision.css';
 
 export default function Division() {
@@ -8,15 +10,21 @@ export default function Division() {
     const [supervisor, setSupervisor] = useState('');
     const [imageUrl, setImageUrl] = useState(""); // State to store image URL
     const [users, setUsers] = useState([]);
+    const { id } = useParams(); // Use useParams to get the id from URL
+    const navigate = useNavigate(); // Use useHistory for navigation
+
     useEffect(() => {
         fetchusers();
-    }, []); // Add an empty dependency array here
+        if (id) {
+            fetchDivisionDetails(id); // Fetch division details if id is present
+        }
+    }, [id]); // Add an empty dependency array here
     const handleChange = (e) => {
         const { name, value } = e.target;
-        
-    if (name === 'supervisor') {
-        setSupervisor(value);
-    }
+
+        if (name === 'supervisor') {
+            setSupervisor(value);
+        }
     };
     const handleImageChange = (e) => {
         if (e.target.files.length > 0) {
@@ -24,16 +32,17 @@ export default function Division() {
             const formData = new FormData();
             formData.append('imageUrl', file);
             formData.append('dirPath', './images/division/');
-           
-            setImageUrl(URL.createObjectURL(file));
+
             // Send the file to your server
             debugger
-            axios.post('http://localhost:3001/upload-profile-image', formData, {
+            axios.post(`${config.server.baseUrl}/upload-image`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
                 .then(response => {
+
+                    setImageUrl(response.data.imageUrl);
                 })
                 .catch(error => {
                     console.error('Error uploading image:', error);
@@ -43,13 +52,14 @@ export default function Division() {
     const handleSave = async () => {
         // Construct the data object you want to send
         const data = {
+            id,
             division,
             supervisor,
             imageUrl
         };
 
         // The URL of your backend endpoint
-        const endpoint = 'http://localhost:3001/save-division';
+        const endpoint = `${config.server.baseUrl}/save-division`;
 
         try {
             // Send a POST request to your backend service
@@ -76,7 +86,7 @@ export default function Division() {
     };
     const fetchusers = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/get-users'); // Adjust the URL to your backend endpoint
+            const response = await axios.get(`${config.server.baseUrl}/get-users`); // Adjust the URL to your backend endpoint
             // Assuming the first row is headers, skip it
             // Target the 'data' property within the response data
             console.log(response.data.data);
@@ -86,6 +96,22 @@ export default function Division() {
             console.error('Error fetching job:', error);
         }
     };
+    const fetchDivisionDetails = async (divisionId) => {
+        try {
+            // Replace URL with your endpoint to fetch division details by id
+            const response = await axios.get(`${config.server.baseUrl}/get-division/${divisionId}`);
+            if (response.data && response.data.data) {
+                debugger
+                const [id,divisionName, supervisor, imageUrl] = response.data.data;
+
+                setDivision(divisionName || ''); // Provide fallback value
+                setSupervisor(supervisor || ''); // Provide fallback value
+                setImageUrl(imageUrl || defaultImage);  // Use fetched imageUrl or defaultImage if null
+            }
+        } catch (error) {
+            console.error('Error fetching division details:', error);
+        }
+    };
     return (
         <div className="division-container">
             <div className="form-container">
@@ -93,9 +119,10 @@ export default function Division() {
                     <div className="image-container">
                         <img
                             className="division-image"
-                            src={imageUrl || defaultImage} // Use imageUrl state here
+                            src={imageUrl ? `${config.server.baseUrl}/${imageUrl}` : defaultImage}
                             alt="division"
                         />
+
                         <input
                             type="file"
                             id="divisionImage"
@@ -107,7 +134,7 @@ export default function Division() {
                 </div>
                 <div className="form-column">
                     <div className="form-fields">
-                        <h2>Add Division</h2>
+                        <h2>{id ? 'Edit Division' : 'Add Division'}</h2>
                         <label htmlFor="division">Division</label>
                         <input
                             type="text"
@@ -125,8 +152,8 @@ export default function Division() {
                         </select>
                     </div>
                     <div className="form-actions">
-                        <button className="btn save" onClick={handleSave}>Save</button>
-                        <button className="btn back">Back</button>
+                        <button className="btn save" onClick={handleSave}>{id ? 'Update' : 'Save'}</button>
+                        <button className="btn back" onClick={() => navigate(-1)}>Back</button>
                     </div>
                 </div>
             </div>

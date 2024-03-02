@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import '../css/Registration.css'; // Ensure you have the CSS file for styling
 import defaultImage from "../images/default.jpg";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../pages/auth/AuthContext'; // Adjust the path as necessary
+import config from '../common/config';
 import axios from 'axios';
 const RegistrationForm = () => {
+  const { user } = useAuth(); // Access global user data
   const [formData, setFormData] = useState({
     name: '',
     contactNumber: '',
@@ -20,47 +23,47 @@ const RegistrationForm = () => {
   const [divisions, setDivisions] = useState([]);
   const navigate = useNavigate();
 
-  
-         // Function to fetch division data
-    const fetchDivisions = async () => {
-      try {
-          const response = await axios.get('http://localhost:3001/get-divisions'); // Adjust the URL to your backend endpoint
-          // Target the 'data' property within the response data
-          const divisionData = response.data.data.slice(1).map(row => ({
-              id: row[0],
-              name: row[1],
-          }));
-          setDivisions(divisionData);
-      } catch (error) {
-          console.error('Error fetching divisions:', error);
-      }
+
+  // Function to fetch division data
+  const fetchDivisions = async () => {
+    try {
+      const response = await axios.get(`${config.server.baseUrl}/get-divisions`); // Adjust the URL to your backend endpoint
+      // Target the 'data' property within the response data
+      const divisionData = response.data.data.slice(1).map(row => ({
+        id: row[0],
+        name: row[1],
+      }));
+      setDivisions(divisionData);
+    } catch (error) {
+      console.error('Error fetching divisions:', error);
+    }
   };
 
   const fetchJobTitles = async () => {
     try {
-        const response = await axios.get('http://localhost:3001/get-jobtitles'); // Adjust the URL to your backend endpoint
-        // Assuming the first row is headers, skip it
-        // Target the 'data' property within the response data
-        const jobData = response.data.data; 
-        setJobTitles(jobData);
+      const response = await axios.get(`${config.server.baseUrl}/get-jobtitles`); // Adjust the URL to your backend endpoint
+      // Assuming the first row is headers, skip it
+      // Target the 'data' property within the response data
+      const jobData = response.data.data;
+      setJobTitles(jobData);
     } catch (error) {
-        console.error('Error fetching job:', error);
+      console.error('Error fetching job:', error);
     }
-};
-const fetchRoles = async () => {
-  try {
-      const response = await axios.get('http://localhost:3001/get-roles'); // Adjust the URL to your backend endpoint
-      const roleData =  response.data.data;  
+  };
+  const fetchRoles = async () => {
+    try {
+      const response = await axios.get(`${config.server.baseUrl}/get-roles`); // Adjust the URL to your backend endpoint
+      const roleData = response.data.data;
       setRoles(roleData);
-  } catch (error) {
+    } catch (error) {
       console.error('Error fetching roles:', error);
-  }
-};
+    }
+  };
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  setFormData(prev => ({ ...prev, [name]: value }));
-};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleImageChange = (e) => {
     console.log(e);
@@ -70,26 +73,26 @@ const handleChange = (e) => {
       formData.append('imageUrl', file);
       formData.append('dirPath', './images/profile/');
       // Send the file to your server
-      axios.post('http://localhost:3001/upload-profile-image', formData, {
+      axios.post(`${config.server.baseUrl}/upload-image`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       })
-      .then(response => {
-        // Handle the response, e.g., setting the image URL received from the server
-        setFormData(prev => ({ ...prev, imageUrl: response.data.imageUrl }));
-     
-      })
-      .catch(error => {
-        console.error('Error uploading image:', error);
-      });
+        .then(response => {
+          // Handle the response, e.g., setting the image URL received from the server
+          setFormData(prev => ({ ...prev, imageUrl: response.data.imageUrl }));
+
+        })
+        .catch(error => {
+          console.error('Error uploading image:', error);
+        });
     }
   };
-  
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3001/register', formData)
+    axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
         console.log(response.data);
         navigate('/Division');
@@ -99,7 +102,23 @@ const handleChange = (e) => {
         // Handle error
       });
   };
-  
+  // Populate form data with user data
+  useEffect(() => {
+    if (user) {
+      setFormData(currentFormData => ({
+        ...currentFormData,
+        name: user.Name || currentFormData.name,
+        contactNumber: user.ContactNumber || currentFormData.contactNumber,
+        email: user.Email || currentFormData.email,
+        jobTitle: user.JobTitle || currentFormData.jobTitle,
+        roleId: user.RoleId || currentFormData.roleId,
+        divisionId: user.DivisionId || currentFormData.divisionId,
+        imageUrl: user.ImageUrl || currentFormData.imageUrl, // Assuming this will be a base64 encoded string or a URL
+      }));
+    }
+  }, [user]); // Only 'user' is a dependency now
+
+
   useEffect(() => {
     fetchRoles();
     fetchJobTitles();
@@ -126,17 +145,18 @@ const handleChange = (e) => {
           </div>
           <label htmlFor="jobTitle">Job Title</label>
           <select id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange}>
-          <option value="" disabled>Select a job</option>
+            <option value="" disabled>Select a job</option>
             {jobTitles.map(jobTitle => (
               <option key={jobTitle.id} value={jobTitle.id}>{jobTitle.name}</option>
             ))}</select>
           <label htmlFor="divisionId">Division</label>
           <select id="division" name="divisionId" value={formData.divisionId} onChange={handleChange}>
-          <option value="" disabled>Select a division</option>
+            <option value="" disabled>Select a division</option>
             {divisions.map(division => (
               <option key={division.id} value={division.id}>{division.name}</option>
             ))}
           </select>
+
         </div>
         <div className="form-column right-column">
           <label htmlFor="name">Name</label>
@@ -186,7 +206,7 @@ const handleChange = (e) => {
           />
           <label htmlFor="roleId">Role</label>
           <select id="role" name="roleId" value={formData.roleId} onChange={handleChange}>
-          <option value="" disabled>Select a role</option>
+            <option value="" disabled>Select a role</option>
             {roles.map(role => (
               <option key={role.id} value={role.id}>{role.name}</option>
             ))}

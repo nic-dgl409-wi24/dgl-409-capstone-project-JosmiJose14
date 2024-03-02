@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/Login.css'; // Ensure you have the CSS file for styling
 import loginImage from "../images/login-image.png";
+import config from '../common/config';
+import { useAuth } from '../pages/auth/AuthContext'; 
 import axios from 'axios';
 const LoginPage = () => {
     const navigate = useNavigate();
+    const { login } = useAuth(); // Destructure the login function
     // The `useState` hook is used here to define `credentials` and `setCredentials`
     const [credentials, setCredentials] = useState({
         email: '',
@@ -23,13 +26,15 @@ const LoginPage = () => {
 const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/login', {
+      const response = await axios.post(`${config.server.baseUrl}/login`, {
         email: credentials.email, // Ensure the field names match the backend expectations
         password: credentials.password
       });
       console.log(response.data);
          // Check if the login is successful
+         debugger
          if (response.data.message === 'Login successful') {
+            login(response.data.user); //
             navigate('/Division'); // Redirect on success
           } else {
             // Handle other responses
