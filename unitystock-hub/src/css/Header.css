@@ -92,17 +92,15 @@ h2 {
 
 }
 
-.navigation-menu li.active a {
-  color: #000000;
+.navigation-menu li.active a,.navigation-menu li a:hover  {
+  color: #000000 !important;
 
 }
 
 .navigation-menu li:hover {
   background-color: #90bce5;
-  color: black;
   border-radius: 20px;
 }
-
 
 @media screen and (max-width: 768px) {
   .hamburger {
