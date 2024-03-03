@@ -87,15 +87,103 @@
   justify-content: center;
   width:80%;
   margin: auto;
+  max-height: 800px;
 }
+.home-page-content h2{
+  text-align: left;
+}
+/* Welcome Section */
+.welcome-section {
+  background-color: #90bce5; /* Deep blue background */
+  color: #000000; /* White text for contrast */
+  padding: 50px 20px; /* Generous padding for airy feel */
+  border-top-left-radius: 10px; /* Top left corner radius */
+  border-top-right-radius: 10px; /* Top right corner radius */
+  transform: translateY(-20%); /* Lift up to create overlapping effect */
+  position: relative; /* Required for transform property */
+  z-index: 2; /* Ensure it's above any other content */
+}
+
+/* Welcome Text Styling */
+.welcome-text {
+  font-size: 1.25rem; /* Larger font size for emphasis */
+  line-height: 1.6; /* Line height for improved readability */
+  margin: 0 auto; /* Center the text block */
+}
+
+/* Section Heading */
 .section-heading {
-  font-size: 3rem; /* Larger font size for emphasis */
-  color: #90bce5; /* Deep blue for a professional look */
-  text-align: center; /* Center align the heading */
-  position: relative; /* For pseudo-element positioning */
-  font-weight: bold; /* Bold font weight for the heading */
+  font-size: 2.5rem; /* Large font size for the section heading */
+  letter-spacing: 1px; /* Letter spacing for a touch of elegance */
+  margin-bottom: 20px; /* Space below the heading */
+  display: inline-block; /* To enable background size */
+  background: linear-gradient(to right, #000000, #184487); /* Gradient text background */
+  -webkit-background-clip: text; /* Clip the background to the text */
+  color: transparent; /* Make the text color transparent to show the background */
+  padding: 0 10px; /* Padding for the gradient background */
 }
-.section-heading::after {
+
+
+/* Features Section */
+.features-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0;
+  background: #184487; /* Light background to make the icons pop */
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transform: translateY(-15%); /* Lift up to create overlapping effect */
+}
+
+.feature {
+  flex: 1; /* Equal width for each feature */
+  margin: 0 2rem; /* Spacing between features */
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #ffffff;
+}
+
+.feature-icon {
+  color: #90bce5; /* UnityStock Hub's primary color */
+  font-size: 4rem;
+  transition: color 0.3s ease;
+}
+
+.feature h3 {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.feature p {
+  transition: color 0.3s ease;
+}
+
+/* Hover effect for each feature */
+.feature:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature:hover .feature-icon,
+.feature:hover h3,
+.feature:hover p {
+  color: #ffffff; /* A lighter shade of blue for hover effect */
+}
+
+/* Section Heading */
+.features-section .section-heading{
+ 
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 8rem;
+  color: transparent; /* Make the text color transparent to show the background */
+  background: linear-gradient(to right, #ffffff, #90bce5); /* Gradient text background */
+  -webkit-background-clip: text; /* Clip the background to the text */
+  position: relative;
+}
+.features-section .section-heading::after {
   content: '';
   display: block;
   width: 120px; /* A longer underline for distinction */
@@ -106,72 +194,24 @@
   left: 50%; /* Center the line */
   transform: translateX(-50%);
 }
-
-/* Welcome Section */
-.welcome-section {
-  background-color: #184487;
-  color: white;
-  padding: 40px;
-  border-radius: 8px;
-  margin: 40px 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-.features-section .section-heading{
-  color: #184487;
-}
-
-/* Features Section */
-.features-section {
-  display: flex;
-  gap: 1.5rem; /* Grid gap for spacing between features */
-  margin: auto; /* Center the section */
-}
-
-.feature {
-  padding: 2rem; /* Padding inside each feature for space */
-  text-align: center; /* Center the content */
-  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transitions */
-}
-
-.feature-icon {
-  font-size: 4rem; /* Larger icons for impact */
-  margin-bottom: 1rem; /* Space below the icon */
-  color: #90bce5; /* Icon color matches the underline */
-}
-
-.feature h3 {
-  font-size: 1.5rem; /* Feature headings are prominent */
-  margin-bottom: 0.5rem; /* Space below the heading */
-}
-
-.feature p {
-  line-height: 1.6; /* More line height for readability */
-}
-
-.feature:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
-  transform: translateY(-5px); /* Lift effect on hover */
-}
 /* Testimonial Section */
 .testimonial-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 90%;
-  margin: 40px 0;
+  align-items: center; 
+  transform: translateY(-36%); 
 }
 
 .testimonial-container {
-  background-color: #184487;
-  color: white;
-  border-radius: 8px;
-  padding: 40px;
+  background-color: #90bce5;
+  color: #000000; 
+  padding: 4rem;
   display: flex;
   align-items: center;
   gap: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  border-bottom-left-radius: 10px; /* Top left corner radius */
+  border-bottom-right-radius: 10px; /* Top right corner radius */
 }
 
 .testimonial-text {
@@ -188,6 +228,9 @@
 
 /* Responsive styles */
 @media (max-width: 768px) {
+  .home-page-content {
+    max-height: 2500px;
+  }
   .hero-section, .welcome-section,
   .features-section,
   .testimonial-container {
@@ -210,11 +253,21 @@
   .testimonial-section,
   .welcome-text,.cta-section {
     width: 80%;
-    margin-left: auto;
-    margin-right: auto;
     margin-bottom: 10px;
 
   }
+
+  .welcome-section,.features-section {
+    transform: translateY(-5%);
+  }
+ .testimonial-section {
+    transform: translateY(-14%);
+  }
+  .testimonial-container {
+    padding: 20px 24px;
+  }
+
+
   .cta-button{width: auto}
 
   .testimonial-image {
@@ -222,13 +275,7 @@
     margin-top: 10px;
     /* Add space above the image */
   }
-  /* .testimonial-container, .features-section {
-    flex-direction: column;
-  }
-
-  .testimonial-text, .feature {
-    max-width: 100%;
-  } */
+ 
 }
 
 /* Ensure that the feature boxes do not wrap on small margins */

@@ -19,7 +19,7 @@ const Home = () => {
       <div className="home-page-content">
         {/* Welcome Section */}
         <section className="welcome-section">
-          <h2 className="section-heading">Welcome to UnityStock</h2>
+          <h2 className="section-heading">Welcome to UnityStock Hub</h2>
           <div className="welcome-text">
             <p>Your ultimate solution for streamlined inventory management! With our intuitive app, stay in control of your stock in real-time, across diverse industries. Simplify your operations and optimize efficiency with UnityStock today!</p>
           </div>

@@ -99,9 +99,8 @@ h2 {
 
 .navigation-menu li:hover {
   background-color: #90bce5;
-  ;
+  color: black;
   border-radius: 20px;
-  color: #000000;
 }
 
 
@@ -160,11 +159,6 @@ h2 {
   .navigation-menu li.active {
     border-radius: 0px;
   }
-
-  .navigation-menu li:hover {
-    background-color: #d0d0d0;
-  }
-
   .navigation-menu ul {
     display: none;
   }
