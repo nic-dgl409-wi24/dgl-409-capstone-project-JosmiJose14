@@ -10,7 +10,6 @@ import Division from './pages/Division';
 import AddDivision from './pages/AddDivision';
 import SubDivision from './pages/SubDivision';
 import AddSubDivision from './pages/AddSubDivision';
-import Logout from './pages/Logout';
 
 function App() {
   return (
@@ -29,7 +28,7 @@ function App() {
         <Route path="/SubDivision/:divisionId" element={<SubDivision />} />
         <Route path="/AddSubDivision/add/:divisionId" element={<AddSubDivision />} />
         <Route path="/AddSubDivision/edit/:id" element={<AddSubDivision />} />
-        <Route path="/Logout" element={<Logout />} />
+        
      </Routes>
       <Footer />
     </Router>
