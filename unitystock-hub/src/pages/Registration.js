@@ -8,6 +8,7 @@ import axios from 'axios';
 const RegistrationForm = () => {
   const { user } = useAuth(); // Access global user data
   const [formData, setFormData] = useState({
+    userId:'',
     name: '',
     contactNumber: '',
     email: '',
@@ -91,6 +92,7 @@ const RegistrationForm = () => {
 
 
   const handleSubmit = (e) => {
+    debugger
     e.preventDefault();
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
@@ -107,12 +109,13 @@ const RegistrationForm = () => {
     if (user) {
       setFormData(currentFormData => ({
         ...currentFormData,
+        userId:user.user_id || currentFormData.user_id,
         name: user.Name || currentFormData.name,
         contactNumber: user.ContactNumber || currentFormData.contactNumber,
         email: user.Email || currentFormData.email,
-        jobTitle: user.JobTitle || currentFormData.jobTitle,
+        jobTitle: user.Jobtitle || currentFormData.jobTitle,
         roleId: user.RoleId || currentFormData.roleId,
-        divisionId: user.DivisionId || currentFormData.divisionId,
+        divisionId: user.DivisionID || currentFormData.divisionId,
         imageUrl: user.ImageUrl || currentFormData.imageUrl, // Assuming this will be a base64 encoded string or a URL
       }));
     }
@@ -126,15 +129,14 @@ const RegistrationForm = () => {
   }, []); // Add an empty dependency array here
   return (
     <div className="registration-container">
-      <h2>User Registration</h2> {/* Heading for the form */}
+      <h2>{user ? "Profile" : "User Registration"}</h2>
       <div className="registration-form">
         <div className="form-column left-column">
           <div className="profile-container">
             <img
               className="profile-image"
-              src={formData.profileImage || defaultImage} // Placeholder image path
-              alt="Profile"
-            />
+               src={formData.imageUrl ? `${config.server.baseUrl}/${formData.imageUrl }` : defaultImage}
+              alt={formData.name} />
             <input
               type="file"
               id="profileImage" // Associated label will use this id
@@ -186,24 +188,29 @@ const RegistrationForm = () => {
             value={formData.email}
             onChange={handleChange}
           />
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            id="confirmPassword"
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
+          {!user && (
+            <>
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <input
+                id="confirmPassword"
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
+            </>
+          )}
+
           <label htmlFor="roleId">Role</label>
           <select id="role" name="roleId" value={formData.roleId} onChange={handleChange}>
             <option value="" disabled>Select a role</option>
@@ -211,9 +218,9 @@ const RegistrationForm = () => {
               <option key={role.id} value={role.id}>{role.name}</option>
             ))}
           </select>
-          <div className="divButton">
-            <button className="btn btnRegister" onClick={handleSubmit}>Register</button>
-          </div>
+          <button className="btn btnRegister" onClick={handleSubmit}>
+            {user ? "Save" : "Register"}
+          </button>
         </div>
 
       </div>

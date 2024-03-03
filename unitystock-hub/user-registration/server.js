@@ -138,19 +138,47 @@ app.get('/get-users', async (req, res) => {
   }
 });
 app.post('/register', (req, res) => {
-  const { name, email, password, roleId, divisionId, imageUrl, jobTitle,contactNumber } = req.body;
+  const { userId,name, email, password, roleId, divisionId, imageUrl, jobTitle,contactNumber } = req.body;
+console.log("userid" +userId)
+   if (userId) {
+    // Assuming you're passing a userId, it's an update operation
+    const updateQuery = 'UPDATE users SET Name = ?, Email = ?, RoleId = ?, DivisionID = ?, ImageUrl = ?, JobTitle = ?, ContactNumber = ? WHERE user_id = ?';
 
-  // Hash password here if you want to store hashed passwords
+    // Hash password here if you want to store hashed passwords
 
-  const query = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle,ContactNumber) VALUES (?, ?, ?, ?, ?, ?, ?,?)';
+    connection.query(updateQuery, [name, email, roleId, divisionId, imageUrl, jobTitle, contactNumber, userId], (error, results) => {
+      if (error) {
+        console.error("Error executing update query:", error);
+    
+        let userMessage = "An unexpected error occurred";
+        if (error.code === "ER_DUP_ENTRY") {
+            userMessage = "A user with the given email already exists";
+        } else if (error.code === "ER_NO_REFERENCED_ROW") {
+            userMessage = "Provided role or division does not exist";
+        }
+    
+        // For development, you might include the error message:
+        // res.status(500).send({ message: userMessage, error: error.message });
+        // For production, exclude error details:
+        res.status(500).send({ message: userMessage });
+      } else {
+        res.status(200).send({ message: 'User updated successfully' });
+      }
+    });
+  } else {
+    // It's a registration operation
+    const insertQuery = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle, ContactNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
-  connection.query(query, [name, email, password, roleId, divisionId, imageUrl, jobTitle,contactNumber], (error, results) => {
-    if (error) {
-      res.status(500).send({ message: error.message });
-    } else {
-      res.status(201).send({ message: 'User registered successfully', userId: results.insertId });
-    }
-  });
+    // Hash password here if you want to store hashed passwords
+
+    connection.query(insertQuery, [name, email, password, roleId, divisionId, imageUrl, jobTitle, contactNumber], (error, results) => {
+      if (error) {
+        res.status(500).send({ message: error.message });
+      } else {
+        res.status(201).send({ message: 'User registered successfully', userId: results.insertId });
+      }
+    });
+  }
 });
 
 // Login endpoint
