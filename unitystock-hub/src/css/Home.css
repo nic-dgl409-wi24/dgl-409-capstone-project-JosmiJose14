@@ -1,153 +1,59 @@
 
 /* HomePageContent.css */
-.home-page-content {
-  color: #fff;
-  font-family: "Arial", sans-serif;
-  backdrop-filter: blur(5px);
-  /* Blur effect for background */
-  border-radius: 10px;
-  /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Box shadow for depth */
-}
+.landing-page{  background-color: #f0f0f0; }
+
+/* Hero Section */
 .hero-section {
-  position: relative;
-  height: 500px;
-  /* Adjust based on your design */
-  background-image: url("../images/Hero.jpg");
+  position: relative; /* Relative positioning for the parent */
+  color: #fff;
   background-size: cover;
   background-position: center;
+  text-align: center;
+  padding: 4rem 0; /* Adjust padding to control the height of the section */
+  overflow: hidden; /* Ensure no overflow of the content */
+  max-height: 600px; /* Maximum height */
+  min-height: 400px; /* Minimum height to ensure responsiveness */
 }
 
-.welcome-section {
+.hero-overlay {
+  position: absolute; /* Absolute positioning for the overlay */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0; /* These zero values stretch the overlay to cover the hero section */
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay for better text readability */
   display: flex;
-  justify-content: space-between;
-  padding: 20px;
+  flex-direction: column;
+  justify-content: center; /* Center the content vertically */
+  align-items: center; /* Center the content horizontally */
+  padding: 2rem;
 }
 
-.welcome-text {
-  width: 50%;
-  background-color: #184487;
-  /* Lighter blue background */
-  margin: 20px;
-  /* Add so184487me space between columns */
-  padding: 20px;
-  /* Add padding inside the columns */
-  border-radius: 10px;
-  /* Optional: add rounded corners to the columns */
+.hero-content h1 {
+  color: #000; /* Dark color for the title */
+  font-size: 3rem; /* Large font size for the title */
+  margin-bottom: 1rem;
 }
 
-.feature,
-.welcome-text,
-.testimonial-section {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
+.hero-content p {
+  font-size: 1.25rem; /* Adjust based on your design */
+  margin-bottom: 1.5rem;
 }
 
-.feature:hover,
-.welcome-text:hover,
-.testimonial-section:hover {
-  transform: translateY(-5px);
-  /* Slight lift effect on hover */
-}
 
-/* Add a pseudo-element for a sleek underline effect on headings */
-.welcome-section h2::after,
-.feature h3::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background-color: #90bce5;
-  opacity: 0;
-  transition: opacity 0.3s, transform 0.3s;
-  transform: scaleX(0);
-  transform-origin: left;
-}
-
-.welcome-section h2:hover::after,
-.feature h3:hover::after {
-  opacity: 1;
-  transform: scaleX(1);
-}
-
-.testimonial-section {
-  background-color: #184487;
-  /* Dark blue background */
-  padding: 20px;
+.hero-image {
+  max-width: 50%; /* Adjust based on your design */
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 50%;
-  margin: 20px;
-  /* Add so184487me space between columns */
-  border-radius: 10px;
 }
 
-.testimonial-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 100%;
+.hero-image img {
+  width: 100%; /* Adjust if necessary */
+ /* Adjust based on your design */
+  height: auto;
 }
-
-.testimonial-text {
-  flex: 1;
-  margin-right: 10px;
-  /* Add some space between the text and the image */
-  padding: 20px;
-  color: white;
-  font-style: italic;
-  quotes: "“" "”" "‘" "’";
-}
-
-.testimonial-image {
-  flex: 0 0 auto;
-  /* Do not grow or shrink */
-  width: 100px;
-  /* Adjust as needed */
-  height: 100px;
-  /* Adjust as needed */
-  border-radius: 50%;
-  /* Circular image */
-  margin-left: 10px;
-  /* Add some space between the image and the text */
-}
-
-/* HomePageContent.css */
-.features-section {
-  display: flex;
-  justify-content: space-around;
-  padding: 20px;
-}
-
-.feature {
-  text-align: center;
-  margin: 10px;
-  flex-basis: calc(30% - 20px);
-  /* Subtract the total margin from the width */
-  padding: 10px;
-  background-color: #184487;
-  /* Light blue background */
-  border-radius: 10px;
-  /* Optional rounded corners */
-}
-
-.feature-icon {
-  font-size: 2em;
-  /* Adjust icon size as needed */
-  margin-bottom: 10px;
-}
-
 .cta-section {
   display: flex;
-  justify-content: center;
-  padding: 20px;
-}
-label {
-  font-weight: 600;
 }
 .btn {
   background-color: #184487;
@@ -174,20 +80,135 @@ label {
   background-color: #90bce5;
   color: black;
 }
+.home-page-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width:80%;
+  margin: auto;
+}
+.section-heading {
+  font-size: 3rem; /* Larger font size for emphasis */
+  color: #90bce5; /* Deep blue for a professional look */
+  text-align: center; /* Center align the heading */
+  position: relative; /* For pseudo-element positioning */
+  font-weight: bold; /* Bold font weight for the heading */
+}
+.section-heading::after {
+  content: '';
+  display: block;
+  width: 120px; /* A longer underline for distinction */
+  height: 5px; /* A thicker line for visibility */
+  background: #184487; /* A vibrant color for the underline, e.g., bright orange */
+  position: absolute;
+  bottom: -10px; /* Position right below the heading */
+  left: 50%; /* Center the line */
+  transform: translateX(-50%);
+}
+
+/* Welcome Section */
+.welcome-section {
+  background-color: #184487;
+  color: white;
+  padding: 40px;
+  border-radius: 8px;
+  margin: 40px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+.features-section .section-heading{
+  color: #184487;
+}
+
+/* Features Section */
+.features-section {
+  display: flex;
+  gap: 1.5rem; /* Grid gap for spacing between features */
+  margin: auto; /* Center the section */
+}
+
+.feature {
+  padding: 2rem; /* Padding inside each feature for space */
+  text-align: center; /* Center the content */
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Smooth transitions */
+}
+
+.feature-icon {
+  font-size: 4rem; /* Larger icons for impact */
+  margin-bottom: 1rem; /* Space below the icon */
+  color: #90bce5; /* Icon color matches the underline */
+}
+
+.feature h3 {
+  font-size: 1.5rem; /* Feature headings are prominent */
+  margin-bottom: 0.5rem; /* Space below the heading */
+}
+
+.feature p {
+  line-height: 1.6; /* More line height for readability */
+}
+
+.feature:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+  transform: translateY(-5px); /* Lift effect on hover */
+}
+/* Testimonial Section */
+.testimonial-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  margin: 40px 0;
+}
+
+.testimonial-container {
+  background-color: #184487;
+  color: white;
+  border-radius: 8px;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.testimonial-text {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.testimonial-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
-
-  .welcome-section,
+  .hero-section, .welcome-section,
   .features-section,
-  .cta-section,
   .testimonial-container {
     flex-direction: column;
+   }
+
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
   }
 
-  .cta-button,
+  .hero-image {
+    max-width: 100%;
+  }
+
+  .hero-image img {
+    max-width: 300px; /* Adjust for smaller screens */
+  }
   .feature,
   .testimonial-section,
-  .welcome-text {
+  .welcome-text,.cta-section {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
@@ -201,6 +222,13 @@ label {
     margin-top: 10px;
     /* Add space above the image */
   }
+  /* .testimonial-container, .features-section {
+    flex-direction: column;
+  }
+
+  .testimonial-text, .feature {
+    max-width: 100%;
+  } */
 }
 
 /* Ensure that the feature boxes do not wrap on small margins */

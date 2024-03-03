@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Link, useMatch, useResolvedPath, useLocation ,useNavigate } from "react-router-dom";
+import { Link, useMatch, useResolvedPath, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHamburger } from "@fortawesome/free-solid-svg-icons";
 import logo from "../images/logo-unitystockhub.png";
-import { useAuth } from '../pages/auth/AuthContext'; 
+import { useAuth } from '../pages/auth/AuthContext';
 import '../css/Header.css';
 
 export default function Header() {
   const [isNavExpanded, setIsNavExpanded] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth(); 
+  const { logout } = useAuth();
   const handleLogout = () => {
     setIsNavExpanded(false); // Toggle navigation expansion
 
@@ -22,59 +22,77 @@ export default function Header() {
     navigate('/Login'); // Redirect to the login page
   };
   // Determine if we're on the login or registration page
-  const isLoginOrRegister = location.pathname === '/Login' || location.pathname === '/Registration' || location.pathname === '/Home';
+  const isLoginOrRegister = location.pathname === '/Login' || location.pathname === '/Signup' || location.pathname === '/Home';
 
   return (
     <header className="header">
       <div className="logo">
-        <img src={logo} alt="UnityStock Hub Logo" />
+        <Link to="/" className="logo">
+          <img src={logo} alt="UnityStock Hub Logo" />
+        </Link>
       </div>
-      {!isLoginOrRegister && (
-        <div id="divHeader">
-          <nav className="navigation">
-            <button
-              className="hamburger"
-              onClick={() => {
-                setIsNavExpanded(!isNavExpanded);
-              }}>
-              <FontAwesomeIcon icon={faHamburger} />
-            </button>
-            <div
-              className={
-                isNavExpanded ? "navigation-menu expanded" : "navigation-menu"
-              }
-            >
-              <div className="navigation-menu">
-                <ul>
-                  <CustomLink to="/Division" onClick={() => {
-                    setIsNavExpanded(!isNavExpanded);
-                  }}>Division</CustomLink>
-                  <CustomLink to="/Inventories" onClick={() => {
-                    setIsNavExpanded(!isNavExpanded);
-                  }}>Inventories</CustomLink>
-                  <CustomLink to="/Profile" onClick={() => {
-                    setIsNavExpanded(!isNavExpanded);
-                  }}>Profile</CustomLink>
+      <div id="divHeader">
+        <nav className="navigation">
+          <button
+            className="hamburger"
+            onClick={() => {
+              setIsNavExpanded(!isNavExpanded);
+            }}>
+            <FontAwesomeIcon icon={faHamburger} />
+          </button>
+          <div
+            className={
+              isNavExpanded ? "navigation-menu expanded" : "navigation-menu"
+            }
+          >
+            <div className="navigation-menu">
+              <ul>
+                {!isLoginOrRegister && (
+                  <>
+                   <CustomLink to="/Division" setIsNavExpanded={setIsNavExpanded}>Division</CustomLink>
+                    <CustomLink to="/Inventories"   setIsNavExpanded={setIsNavExpanded}>Inventories</CustomLink>
+                    <CustomLink to="/Profile"  setIsNavExpanded={setIsNavExpanded}>Profile</CustomLink>
                     <CustomLink to="/Login" onClick={handleLogout}>Logout</CustomLink>
-                </ul>
-              </div>
+                  </>
+                )}
+                {isLoginOrRegister && (<>
+                  <CustomLink to="/" label="Home"  setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
+                  <CustomLink to="/Login" label="Login" setIsNavExpanded={setIsNavExpanded} >Welcome Back</CustomLink>
+                </>
+                )}
+              </ul>
             </div>
-          </nav> 
-        </div>
-      )}
+          </div>
+        </nav>
+      </div>
+
     </header>
   );
 }
+function CustomLink({ to, children, setIsNavExpanded, ...rest }) {
+  const resolvedPath = useResolvedPath(to);
+  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
 
-function CustomLink({ to, children, ...props }) {
-  const resolvedPath = useResolvedPath(to)
-  const isActive = useMatch({ path: resolvedPath.pathname, end: true })
+  const handleClick = () => {
+    // If setIsNavExpanded is a function, call it to collapse the navigation menu
+    if (typeof setIsNavExpanded === 'function') {
+      setIsNavExpanded(false);
+    }
+    // If there's an additional onClick handler passed to CustomLink, call it
+    if (rest.onClick) {
+      rest.onClick();
+    }
+  };
+
+  // Remove the setIsNavExpanded and any non-DOM attributes from the props spread to avoid React warnings
+  const { label, ...linkProps } = rest;
 
   return (
     <li className={isActive ? "active" : ""}>
-      <Link to={to} {...props}>
+      {/* Spread the remaining props that are safe for the DOM element */}
+      <Link to={to} {...linkProps} onClick={handleClick}>
         {children}
       </Link>
     </li>
-  )
+  );
 }
