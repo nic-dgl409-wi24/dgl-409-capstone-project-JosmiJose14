@@ -21,7 +21,7 @@ export default function Division() {
                 supervisorId: row[2] || '',
                 imageUrl: row[3] || ''
             }));
-            debugger
+            
             setDivisions(divisionData);
 
         } catch (error) {

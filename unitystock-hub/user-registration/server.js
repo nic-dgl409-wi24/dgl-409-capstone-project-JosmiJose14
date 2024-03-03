@@ -200,7 +200,7 @@ app.post('/save-division', async (req, res) => {
   const authClient = await auth.getClient();
   try {
     const range = 'Sheet1'; // Adjust as necessary. Assuming 'Sheet1' is where your data is stored.
-    debugger
+    
     // If an ID is provided, attempt to update an existing division
     if (id) {
 
@@ -326,7 +326,7 @@ app.post('/save-subdivision', async (req, res) => {
   const authClient = await auth.getClient();
   try {
     const range = 'Sheet1'; // Adjust as necessary. Assuming 'Sheet1' is where your data is stored.
-    debugger
+    
     // If an ID is provided, attempt to update an existing division
     if (id) {
 

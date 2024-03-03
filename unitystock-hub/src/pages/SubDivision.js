@@ -12,7 +12,7 @@ export default function SubDivision() {
     const { divisionId } = useParams(); // Use useParams to get the id from URL
     // Function to fetch division data
     const fetchSubDivisions = async (divisionId) => {
-        debugger
+        
         try 
         {
             const response = await axios.get(`${config.server.baseUrl}/get-subdivisions/${divisionId}`);
@@ -24,7 +24,7 @@ export default function SubDivision() {
                 supervisorId: row[2] || '',
                 imageUrl: row[3] || ''
             }));
-            debugger
+            
             setSubDivisions(subdivisionData);
 
         } catch (error) {

@@ -40,7 +40,7 @@ export default function SubDivisionAddEdit() {
             formData.append('dirPath', './images/subdivision/');
 
             // Send the file to your server
-            debugger
+            
             axios.post(`${config.server.baseUrl}/upload-image`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -56,7 +56,7 @@ export default function SubDivisionAddEdit() {
         }
     };
     const handleSave = async () => {
-        debugger
+        
         // Construct the data object you want to send
         const data = {
             id,
@@ -102,7 +102,7 @@ export default function SubDivisionAddEdit() {
                 supervisorId: row[2] || '',
                 imageUrl: row[3] || ''
             }));
-            debugger
+            
             setDivisions(divisionData);
 
         } catch (error) {
@@ -114,7 +114,7 @@ export default function SubDivisionAddEdit() {
             // Replace URL with your endpoint to fetch division details by id
             const response = await axios.get(`${config.server.baseUrl}/get-subdivision/${id}`);
             if (response.data && response.data.data) {
-                debugger
+                
                 const [id,subdivisionName, division, imageUrl] = response.data.data;
 
                 setSubDivision(subdivisionName || ''); // Provide fallback value

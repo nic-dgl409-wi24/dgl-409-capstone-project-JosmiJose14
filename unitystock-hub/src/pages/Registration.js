@@ -92,7 +92,7 @@ const RegistrationForm = () => {
 
 
   const handleSubmit = (e) => {
-    debugger
+    
     e.preventDefault();
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {

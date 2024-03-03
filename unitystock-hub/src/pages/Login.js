@@ -32,7 +32,7 @@ const handleSubmit = async (event) => {
       });
       console.log(response.data);
          // Check if the login is successful
-         debugger
+         
          if (response.data.message === 'Login successful') {
             login(response.data.user); //
             navigate('/Division'); // Redirect on success
