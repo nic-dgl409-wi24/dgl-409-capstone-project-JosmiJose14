@@ -75,7 +75,6 @@ const upload = multer({ storage: storage }).single('imageUrl');
 app.post('/upload-image', (req, res) => {
   upload(req, res, (err) => {
     if (err) {
-      console.error(`Error in multer upload: ${err.message}`);
       return res.status(500).send({ message: 'Error occurred while uploading' });
     }
 
@@ -90,10 +89,8 @@ app.post('/upload-image', (req, res) => {
 
     // Move file from temporary location to desired location
     const finalPath = path.join(dirPathFromRequest, req.file.filename);
-    console.log(finalPath);
     fs.rename('/tmp/' + req.file.filename, finalPath, function (err) {
       if (err) {
-        console.error(`Error in moving file: ${err.message}`);
         return res.status(500).send({ message: 'Error occurred while moving the file' });
       }
 
@@ -113,7 +110,6 @@ app.get('/get-roles', async (req, res) => {
     const roles = await connection.query('SELECT id, name FROM role'); // Adjust the query according to your DB schema
     res.status(200).json({ success: true, data: roles });
   } catch (error) {
-    console.error('Error fetching roles:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch roles' });
   }
 });
@@ -123,7 +119,6 @@ app.get('/get-jobtitles', async (req, res) => {
     const jobTitles = await connection.query('SELECT id, name FROM jobtitles'); // Adjust the query according to your DB schema
     res.status(200).json({ success: true, data: jobTitles });
   } catch (error) {
-    console.error('Error fetching job titles:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch job titles' });
   }
 });
@@ -133,14 +128,12 @@ app.get('/get-users', async (req, res) => {
     const roles = await connection.query('SELECT * FROM users'); // Adjust the query according to your DB schema
     res.status(200).json({ success: true, data: roles });
   } catch (error) {
-    console.error('Error fetching roles:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch roles' });
   }
 });
 app.post('/register', (req, res) => {
-  const { userId,name, email, password, roleId, divisionId, imageUrl, jobTitle,contactNumber } = req.body;
-console.log("userid" +userId)
-   if (userId) {
+  const { userId, name, email, password, roleId, divisionId, imageUrl, jobTitle, contactNumber } = req.body;
+  if (userId) {
     // Assuming you're passing a userId, it's an update operation
     const updateQuery = 'UPDATE users SET Name = ?, Email = ?, RoleId = ?, DivisionID = ?, ImageUrl = ?, JobTitle = ?, ContactNumber = ? WHERE user_id = ?';
 
@@ -148,15 +141,13 @@ console.log("userid" +userId)
 
     connection.query(updateQuery, [name, email, roleId, divisionId, imageUrl, jobTitle, contactNumber, userId], (error, results) => {
       if (error) {
-        console.error("Error executing update query:", error);
-    
         let userMessage = "An unexpected error occurred";
         if (error.code === "ER_DUP_ENTRY") {
-            userMessage = "A user with the given email already exists";
+          userMessage = "A user with the given email already exists";
         } else if (error.code === "ER_NO_REFERENCED_ROW") {
-            userMessage = "Provided role or division does not exist";
+          userMessage = "Provided role or division does not exist";
         }
-    
+
         // For development, you might include the error message:
         // res.status(500).send({ message: userMessage, error: error.message });
         // For production, exclude error details:
@@ -261,9 +252,7 @@ app.post('/save-division', async (req, res) => {
           Id = 1;
         } else {
           const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
-
           Id = lastId + 1;
-          console.log(Id);
         }
 
         const appendRequest = {
@@ -285,7 +274,6 @@ app.post('/save-division', async (req, res) => {
       }
     }
   } catch (error) {
-    console.error(JSON.stringify(error, null, 2));
     res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
   }
 });
@@ -303,7 +291,6 @@ app.get('/get-divisions', async (req, res) => {
     const response = await sheets.spreadsheets.values.get(request);
     res.status(200).json({ success: true, data: response.data.values });
   } catch (error) {
-    console.error('Error fetching from Google Sheets:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
@@ -329,14 +316,12 @@ app.get('/get-division/:divisionId', async (req, res) => {
       res.status(404).json({ success: false, message: 'Division not found' });
     }
   } catch (error) {
-    console.error('Error fetching from Google Sheets:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
 
 
 app.post('/save-subdivision', async (req, res) => {
-  console.log("hi")
   const { id, subdivision, selectedDivision, imageUrl } = req.body; // Step 1: Extract ID
   const authClient = await auth.getClient();
   try {
@@ -393,9 +378,7 @@ app.post('/save-subdivision', async (req, res) => {
           Id = 1;
         } else {
           const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
-
           Id = lastId + 1;
-          console.log(Id);
         }
 
         const appendRequest = {
@@ -414,11 +397,10 @@ app.post('/save-subdivision', async (req, res) => {
       }
 
       catch (error) {
-        console.error('Error:', error.response ? error.response.data : error);
         res.status(500).json({ success: false, error: 'Failed to save to Google Sheets', details: error.message });
       }
-  }} catch (error) {
-    console.error(JSON.stringify(error, null, 2));
+    }
+  } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
   }
 });
@@ -436,7 +418,6 @@ app.get('/get-subdivisions/:divisionId', async (req, res) => {
     const response = await sheets.spreadsheets.values.get(request);
     res.status(200).json({ success: true, data: response.data.values });
   } catch (error) {
-    console.error('Error fetching from Google Sheets:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
@@ -462,7 +443,6 @@ app.get('/get-subdivision/:Id', async (req, res) => {
       res.status(404).json({ success: false, message: 'Division not found' });
     }
   } catch (error) {
-    console.error('Error fetching from Google Sheets:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
