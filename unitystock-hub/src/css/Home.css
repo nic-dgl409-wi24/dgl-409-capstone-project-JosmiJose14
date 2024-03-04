@@ -96,12 +96,13 @@
 .welcome-section {
   background-color: #90bce5; /* Deep blue background */
   color: #000000; /* White text for contrast */
-  padding: 50px 20px; /* Generous padding for airy feel */
+  padding: 4rem 20px; /* Generous padding for airy feel */
   border-top-left-radius: 10px; /* Top left corner radius */
   border-top-right-radius: 10px; /* Top right corner radius */
-  transform: translateY(-20%); /* Lift up to create overlapping effect */
+  transform: translateY(-15%); /* Lift up to create overlapping effect */
   position: relative; /* Required for transform property */
   z-index: 2; /* Ensure it's above any other content */
+  width:85%
 }
 
 /* Welcome Text Styling */
@@ -109,18 +110,18 @@
   font-size: 1.25rem; /* Larger font size for emphasis */
   line-height: 1.6; /* Line height for improved readability */
   margin: 0 auto; /* Center the text block */
+  padding: 20px;
 }
 
 /* Section Heading */
 .section-heading {
   font-size: 2.5rem; /* Large font size for the section heading */
   letter-spacing: 1px; /* Letter spacing for a touch of elegance */
-  margin-bottom: 20px; /* Space below the heading */
   display: inline-block; /* To enable background size */
   background: linear-gradient(to right, #000000, #224363); /* Gradient text background */
-  -webkit-background-clip: text; /* Clip the background to the text */
+  background-clip: text; /* Clip the background to the text */
   color: transparent; /* Make the text color transparent to show the background */
-  padding: 0 10px; /* Padding for the gradient background */
+  padding: 0 20px; /* Padding for the gradient background */
 }
 
 
@@ -129,23 +130,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 4rem 0;
-  background: #224363; /* Light background to make the icons pop */
+  padding:20px 20px;
+  background: #f0f0f0; /* Light background to make the icons pop */
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   transform: translateY(-15%); /* Lift up to create overlapping effect */
+  width:85%
 }
 
 .feature {
   flex: 1; /* Equal width for each feature */
   margin: 0 2rem; /* Spacing between features */
-  padding: 2rem;
+  padding: 4rem;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: #ffffff;
+  color: #000000;
 }
 
 .feature-icon {
-  color: #90bce5; /* UnityStock Hub's primary color */
+  color: #000000; /* UnityStock Hub's primary color */
   font-size: 4rem;
   transition: color 0.3s ease;
 }
@@ -169,30 +171,7 @@
 .feature:hover .feature-icon,
 .feature:hover h3,
 .feature:hover p {
-  color: #ffffff; /* A lighter shade of blue for hover effect */
-}
-
-/* Section Heading */
-.features-section .section-heading{
- 
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 8rem;
-  color: transparent; /* Make the text color transparent to show the background */
-  background: linear-gradient(to right, #ffffff, #90bce5); /* Gradient text background */
-  -webkit-background-clip: text; /* Clip the background to the text */
-  position: relative;
-}
-.features-section .section-heading::after {
-  content: '';
-  display: block;
-  width: 120px; /* A longer underline for distinction */
-  height: 5px; /* A thicker line for visibility */
-  background: #224363; /* A vibrant color for the underline, e.g., bright orange */
-  position: absolute;
-  bottom: -10px; /* Position right below the heading */
-  left: 50%; /* Center the line */
-  transform: translateX(-50%);
+  color: #224363; /* A lighter shade of blue for hover effect */
 }
 /* Testimonial Section */
 .testimonial-section {
@@ -200,19 +179,20 @@
   flex-direction: column;
   align-items: center; 
   transform: translateY(-36%); 
+  width:85%;
+  background-color: #90bce5;
+  padding: 20px;
+  border-bottom-left-radius: 10px; /* Top left corner radius */
+  border-bottom-right-radius: 10px; /* Top right corner radius */
 }
 
-.testimonial-container {
-  background-color: #90bce5;
+.testimonial-container { 
   color: #000000; 
   padding: 4rem 0; 
   padding-right: 1rem;
   display: flex;
   align-items: center;
   gap: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-bottom-left-radius: 10px; /* Top left corner radius */
-  border-bottom-right-radius: 10px; /* Top right corner radius */
 }
 
 .testimonial-text {
@@ -237,7 +217,6 @@
   .testimonial-container {
     flex-direction: column;
    }
-
   .hero-content {
     max-width: 100%;
     text-align: center;
@@ -252,12 +231,10 @@
   }
   .feature,
   .testimonial-section,
-  .welcome-text,.cta-section {
+  .welcome-text,.cta-section,.features-section {
     width: 80%;
     margin-bottom: 10px;
-
   }
-
   .welcome-section,.features-section {
     transform: translateY(-5%);
   }
@@ -267,8 +244,6 @@
   .testimonial-container {
     padding: 20px 24px;
   }
-
-
   .cta-button{width: auto}
 
   .testimonial-image {

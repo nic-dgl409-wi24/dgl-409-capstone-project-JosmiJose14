@@ -8,7 +8,7 @@ import axios from 'axios';
 const RegistrationForm = () => {
   const { user } = useAuth(); // Access global user data
   const [formData, setFormData] = useState({
-    userId:'',
+    userId: '',
     name: '',
     contactNumber: '',
     email: '',
@@ -54,7 +54,7 @@ const RegistrationForm = () => {
   const fetchRoles = async () => {
     try {
       const response = await axios.get(`${config.server.baseUrl}/get-roles`); // Adjust the URL to your backend endpoint
-      const roleData = response.data.data;
+      const roleData = response.data.data;     
       setRoles(roleData);
     } catch (error) {
       console.error('Error fetching roles:', error);
@@ -92,7 +92,7 @@ const RegistrationForm = () => {
 
 
   const handleSubmit = (e) => {
-    
+
     e.preventDefault();
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
@@ -109,7 +109,7 @@ const RegistrationForm = () => {
     if (user) {
       setFormData(currentFormData => ({
         ...currentFormData,
-        userId:user.user_id || currentFormData.user_id,
+        userId: user.user_id || currentFormData.user_id,
         name: user.Name || currentFormData.name,
         contactNumber: user.ContactNumber || currentFormData.contactNumber,
         email: user.Email || currentFormData.email,
@@ -134,8 +134,8 @@ const RegistrationForm = () => {
         <div className="form-column left-column">
           <div className="profile-container">
             <img
-              className="profile-image"
-               src={formData.imageUrl ? `${config.server.baseUrl}/${formData.imageUrl }` : defaultImage}
+              className="imageClass"
+              src={formData.imageUrl ? `${config.server.baseUrl}/${formData.imageUrl}` : defaultImage}
               alt={formData.name} />
             <input
               type="file"
@@ -145,19 +145,6 @@ const RegistrationForm = () => {
               accept="image/*"
             />
           </div>
-          <label htmlFor="jobTitle">Job Title</label>
-          <select id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange}>
-            <option value="" disabled>Select a job</option>
-            {jobTitles.map(jobTitle => (
-              <option key={jobTitle.id} value={jobTitle.id}>{jobTitle.name}</option>
-            ))}</select>
-          <label htmlFor="divisionId">Division</label>
-          <select id="division" name="divisionId" value={formData.divisionId} onChange={handleChange}>
-            <option value="" disabled>Select a division</option>
-            {divisions.map(division => (
-              <option key={division.id} value={division.id}>{division.name}</option>
-            ))}
-          </select>
 
         </div>
         <div className="form-column right-column">
@@ -218,11 +205,25 @@ const RegistrationForm = () => {
               <option key={role.id} value={role.id}>{role.name}</option>
             ))}
           </select>
-          <button className="btn btnRegister" onClick={handleSubmit}>
-            {user ? "Save" : "Register"}
-          </button>
+          <label htmlFor="jobTitle">Job Title</label>
+          <select id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange}>
+            <option value="" disabled>Select a job</option>
+            {jobTitles.map(jobTitle => (
+              <option key={jobTitle.id} value={jobTitle.id}>{jobTitle.name}</option>
+            ))}</select>
+          <label htmlFor="divisionId">Division</label>
+          <select id="division" name="divisionId" value={formData.divisionId} onChange={handleChange}>
+            <option value="" disabled>Select a division</option>
+            {divisions.map(division => (
+              <option key={division.id} value={division.id}>{division.name}</option>
+            ))}
+          </select>
+          <div className="divButton">
+            <button className="btn btnRegister" onClick={handleSubmit}>
+              {user ? "Save" : "Register"}
+            </button>
+          </div>
         </div>
-
       </div>
     </div>
   );

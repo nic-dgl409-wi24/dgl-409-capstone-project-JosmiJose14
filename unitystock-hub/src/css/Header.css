@@ -1,7 +1,7 @@
 /* Header.css */
 
 .header {
-  background-color: #224363;
+  background-color: #2B5782;
   /* Dark blue background */
   padding: 10px 100px;
   /* Adjust padding to match your design */
@@ -32,7 +32,7 @@ h1 {
 h2 {
   margin: auto;
   text-align: center;
-  color: #224363;
+  color: #2B5782;
 }
 
 .navigation {
@@ -101,6 +101,26 @@ h2 {
   background-color: #90bce5;
   border-radius: 20px;
 }
+/* Input and select fields with a modern, flat design */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 2px solid #E2E8F0;
+    border-radius: 8px;
+    background-color: #FAFAFA;
+    transition: border-color 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+    border-color: #A0AEC0;
+    outline: none;
+}
 
 @media screen and (max-width: 768px) {
   .hamburger {
@@ -146,7 +166,7 @@ h2 {
     /* Align to the left */
     width: 100%;
     /* Full width */
-    background-color: #224363;
+    background-color: #2B5782;
     /* Dark blue background */
     height: 100vh;
     /* Full viewport height */
