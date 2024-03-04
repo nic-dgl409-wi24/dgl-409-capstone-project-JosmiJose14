@@ -1,69 +1,62 @@
 /* Footer.css */
 
 .footer {
-  background-color: #184487; /* Dark blue background */
-  display: flex;
-  flex-direction: column;
+  background-color: #224363; /* Updated dark blue background */
+  color: #FFFFFF; /* White text color for contrast */
+  padding: 10px 40px; /* Ample padding for spacious feel */
+  font-size: 0.9rem; /* Slightly larger font size for readability */
 }
 
 .footerAboutUS {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around; /* Evenly space out the columns */
-  align-items: center; /* Vertically align the items in the middle */
-  flex-wrap: wrap; /* Allow the items to wrap on smaller screens */
-  padding: 20px 0; /* Add some vertical padding */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid layout */
+  gap: 20px; /* Gap between grid items */
+  text-align: center; /* Center text for all items */
 }
 
 .column {
-  display: flex; /* Use flex for the layout */
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center items horizontally */
-  background-color: #90bce5; /* Lighter blue background */
-  flex: 1; /* Allow each column to grow equally */
-  margin: 20px; /* Add some space between columns */
-  padding: 20px; /* Add padding inside the columns */
-  border-radius: 10px; /* Optional: add rounded corners to the columns */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .footerHeading {
-  font-weight: bold;
-  margin-bottom: 0.5rem; /* Space below the heading */
+  font-size: 1.2rem; /* Larger font size for headings */
+  margin-bottom: 15px; /* Space below the heading */
 }
 
 .footerSub {
-  display: flex; /* Flex container for the icons */
-  justify-content: center; /* Center icons horizontally */
-  align-items: center; /* Center icons vertically */
-  margin-top: 10px; /* Space above the icons */
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
 }
 
 .footerSub p {
-  margin: 0 10px; /* Horizontal space between icons */
+  margin: 5px 0; /* Margin for top and bottom of each item */
+}
+
+.footerSub svg {
+  margin: 10px; /* Margin around icons */
+  font-size: 1.5rem; /* Larger icons for better visibility */
 }
 
 .footer-bottom {
-  background-color: #184487; /* Dark blue background */
-  padding: 10px 0;
+  margin-top: 20px; /* Margin above the bottom text */
+  border-top: 1px solid #28527a; /* Border for separation */
   text-align: center;
-  color: white; /* Text color */
-  font-size: 0.75rem; /* Smaller font size for the bottom text */
+}
+
+.footer-bottom small {
+  display: block; /* Block display for small text */
 }
 
 /* Responsive styles */
 @media (max-width: 768px) {
   .footerAboutUS {
-    flex-direction: column;
-    padding: 20px; /* Increase padding on smaller screens */
+    grid-template-columns: 1fr; /* Single column on small screens */
   }
 
   .column {
-    width: 80%; /* Full width on small screens */
-    margin-bottom: 10px; /* Add vertical space between columns */
-  }
-
-  .footer-bottom {
-    padding: 20px; /* Increase padding on smaller screens */
+    width: 100%; /* Full width columns on small screens */
   }
 }

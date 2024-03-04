@@ -5,31 +5,27 @@ import '../css/Footer.css'; // Ensure the path is correct for your project struc
 function Footer() {
   return (
     <footer className="footer">
-    
       <div className="footerAboutUS">
         <div className="column">
-          <h3 className="footerHeading">Unitystock Hub</h3>
+          <h3 className="footerHeading">About UnityStock Hub</h3>
+          <p>Empowering businesses through efficient inventory solutions.</p>
+        </div>
+        <div className="column">
+          <h3 className="footerHeading">Connect With Us</h3>
           <div className="footerSub">
-          <p>Streamlining Your Inventory, Simplifying Your Success!</p>
+            <FaInstagram />
+            <FaLinkedinIn />
+            <FaFacebookF />
           </div>
         </div>
         <div className="column">
-          <h3 className="footerHeading">Contact Us</h3>
-          <div className="footerSub">
-            <p><FaInstagram style={{ fontSize: '18px' }} /></p>
-            <p><FaLinkedinIn style={{ fontSize: '18px' }} /></p>
-            <p><FaFacebookF /></p>
-          </div>
-        </div>
-        <div className="column">
-          <h3 className="footerHeading">User Instructions</h3>
-          <div className="footerSub">
+          <h3 className="footerHeading">Resources</h3>
           <p>User Manual</p>
-          </div>
+          <p>FAQs</p>
         </div>
       </div>
       <div className="footer-bottom">
-      <small><em>"This is a fictional website that was designed and coded as an educational exercise. It is not intended to be seen outside of the class environment. None of the content and images were approved by the business owner."</em></small>
+        <small>"This is a fictional website that was designed and coded as an educational exercise. It is not intended to be seen outside of the class environment. None of the content and images were approved by the business owner."</small>
       </div>
     </footer>
   );

@@ -36,14 +36,14 @@ input {
 }
 
 .login-footer {
-    background-color: #184487;
+    background-color: #224363;
     /* Dark blue background */
     padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 20px;
-    /* Add so184487me space between columns */
+    /* Add so224363me space between columns */
     border-radius: 10px;
     padding: 20px;
     color: white;
