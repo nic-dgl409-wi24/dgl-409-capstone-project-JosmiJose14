@@ -13,12 +13,9 @@ export default function Header() {
   const { logout } = useAuth();
   const handleLogout = () => {
     setIsNavExpanded(false); // Toggle navigation expansion
-
     // Clear authentication data (e.g., from localStorage)
     localStorage.removeItem('authToken');
-
     logout(); // Update global state to reflect logout
-
     navigate('/Login'); // Redirect to the login page
   };
   // Determine if we're on the login or registration page
