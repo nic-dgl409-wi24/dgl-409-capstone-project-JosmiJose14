@@ -12,6 +12,7 @@ export default function Division() {
     // Function to fetch division data
     const fetchDivisions = async () => {
         try {
+            debugger
             const response = await axios.get(`${config.server.baseUrl}/get-divisions`); // Adjust the URL to your backend endpoint
             // Assuming the first row is headers, skip it
             // Target the 'data' property within the response data
@@ -21,7 +22,7 @@ export default function Division() {
                 supervisorId: row[2] || '',
                 imageUrl: row[3] || ''
             }));
-            
+            console.log("division"+divisionData );
             setDivisions(divisionData);
 
         } catch (error) {

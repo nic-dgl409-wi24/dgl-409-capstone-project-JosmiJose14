@@ -20,7 +20,8 @@ export default function Header() {
   };
   // Determine if we're on the login or registration page
   const isLoginOrRegister = location.pathname === '/Login' || location.pathname === '/Signup' || location.pathname === '/Home';
-
+  const isRegister = location.pathname === '/Signup' || location.pathname === '/Home';
+  const isLogin = location.pathname === '/Login';
   return (
     <header className="header">
       <div className="logo">
@@ -52,9 +53,14 @@ export default function Header() {
                     <CustomLink to="/Login" onClick={handleLogout}>Logout</CustomLink>
                   </>
                 )}
-                {isLoginOrRegister && (<>
+                {isRegister && (<>
                   <CustomLink to="/" label="Home"  setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
-                  <CustomLink to="/Login" label="Login" setIsNavExpanded={setIsNavExpanded} >Welcome Back</CustomLink>
+                  <CustomLink to="/Login" label="Login" setIsNavExpanded={setIsNavExpanded} >Welcome Back</CustomLink>                  
+                </>
+                )}
+               {isLogin && (<>
+                  <CustomLink to="/" label="Home"  setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
+                  <CustomLink to="/Signup" label="Signup" setIsNavExpanded={setIsNavExpanded} >Sign Up</CustomLink>                  
                 </>
                 )}
               </ul>

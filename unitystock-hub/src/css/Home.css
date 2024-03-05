@@ -206,6 +206,19 @@
   border-radius: 50%;
   object-fit: cover;
 }
+.success-message {
+  color: green;
+  margin-bottom: 15px;
+}
+
+.error-message {
+  color: red; 
+  margin-bottom: 15px;
+}
+.required {
+  color: red;
+}
+
 
 /* Responsive styles */
 @media (max-width: 768px) {

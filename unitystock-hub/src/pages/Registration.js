@@ -6,7 +6,13 @@ import { useAuth } from '../pages/auth/AuthContext'; // Adjust the path as neces
 import config from '../common/config';
 import axios from 'axios';
 const RegistrationForm = () => {
+  const [validationErrors, setValidationErrors] = useState({});
   const { user } = useAuth(); // Access global user data
+  const [roles, setRoles] = useState([]);
+  const [jobTitles, setJobTitles] = useState([]);
+  const [divisions, setDivisions] = useState([]);
+  const [uploadMessage, setUploadMessage] = useState('');
+  const [submitMessage, setSubmitMessage] = useState('');
   const [formData, setFormData] = useState({
     userId: '',
     name: '',
@@ -19,10 +25,79 @@ const RegistrationForm = () => {
     divisionId: '',
     imageUrl: '', // Assuming this will be a base64 encoded string or a URL
   });
-  const [roles, setRoles] = useState([]);
-  const [jobTitles, setJobTitles] = useState([]);
-  const [divisions, setDivisions] = useState([]);
+
   const navigate = useNavigate();
+  useEffect(() => {
+    fetchRoles();
+    fetchJobTitles();
+    fetchDivisions();
+  }, []); // Add an empty dependency array here
+  const validateForm = () => {
+    let errors = {};
+    let formIsValid = true;
+    if (!formData.imageUrl) {
+      errors.imageUrl = "Please upload an image.";
+      formIsValid = false;
+    }
+    // Name validation
+    if (!formData.name.trim()) {
+      errors.name = "Name is required";
+      formIsValid = false;
+    }
+
+    // Contact Number validation (simple format, can be adjusted)
+    if (!formData.contactNumber.trim()) {
+      errors.contactNumber = "Contact Number is required";
+      formIsValid = false;
+    } else if (!/^\d{10}$/.test(formData.contactNumber)) {
+      errors.contactNumber = "Invalid Contact Number";
+      formIsValid = false;
+    }
+
+    // Email validation
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+      formIsValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Email is invalid";
+      formIsValid = false;
+    }
+
+    // Password validation
+    if (!formData.password) {
+      errors.password = "Password is required";
+      formIsValid = false;
+    } else if (formData.password.length < 8) {
+      errors.password = "Password must be at least 8 characters";
+      formIsValid = false;
+    }
+
+    // Confirm Password validation
+    if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+      formIsValid = false;
+    }
+
+    if (!formData.roleId) {
+      errors.roleId = "Role is required";
+      formIsValid = false;
+    }
+
+    // Job Title validation
+    if (!formData.jobTitle) {
+      errors.jobTitle = "Job Title is required";
+      formIsValid = false;
+    }
+
+    // Division validation
+    if (!formData.divisionId) {
+      errors.divisionId = "Division is required";
+      formIsValid = false;
+    }
+
+    setValidationErrors(errors);
+    return formIsValid;
+  };
 
 
   // Function to fetch division data
@@ -54,7 +129,7 @@ const RegistrationForm = () => {
   const fetchRoles = async () => {
     try {
       const response = await axios.get(`${config.server.baseUrl}/get-roles`); // Adjust the URL to your backend endpoint
-      const roleData = response.data.data;     
+      const roleData = response.data.data;
       setRoles(roleData);
     } catch (error) {
       console.error('Error fetching roles:', error);
@@ -82,10 +157,12 @@ const RegistrationForm = () => {
         .then(response => {
           // Handle the response, e.g., setting the image URL received from the server
           setFormData(prev => ({ ...prev, imageUrl: response.data.imageUrl }));
+          setUploadMessage('Image uploaded successfully.');
+          setValidationErrors(prevErrors => ({ ...prevErrors, imageUrl: '' }));
 
         })
         .catch(error => {
-          console.error('Error uploading image:', error);
+          setUploadMessage('Failed to upload image.');
         });
     }
   };
@@ -94,14 +171,17 @@ const RegistrationForm = () => {
   const handleSubmit = (e) => {
 
     e.preventDefault();
+    if (!validateForm()) {
+      console.log('Form is invalid!');
+      return;
+    }
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
-        console.log(response.data);
+        setSubmitMessage('User registered successfully.');
         navigate('/Division');
       })
       .catch(error => {
-        console.error('There was an error!', error);
-        // Handle error
+        setSubmitMessage('Failed to register user.');
       });
   };
   // Populate form data with user data
@@ -121,15 +201,10 @@ const RegistrationForm = () => {
     }
   }, [user]); // Only 'user' is a dependency now
 
-
-  useEffect(() => {
-    fetchRoles();
-    fetchJobTitles();
-    fetchDivisions();
-  }, []); // Add an empty dependency array here
   return (
     <div className="registration-container">
-      <h2>{user ? "Profile" : "User Registration"}</h2>
+      <h2 className='section-heading'>{user ? "Profile" : "User Registration"}</h2>
+      {submitMessage && <div className={submitMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{submitMessage}</div>}
       <div className="registration-form">
         <div className="form-column left-column">
           <div className="profile-container">
@@ -144,20 +219,23 @@ const RegistrationForm = () => {
               onChange={handleImageChange}
               accept="image/*"
             />
+            {uploadMessage && <div className={uploadMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{uploadMessage}</div>}
+            {validationErrors.imageUrl && <div className="error-message">{validationErrors.imageUrl}</div>}
           </div>
-
         </div>
         <div className="form-column right-column">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Name<span className="required">*</span></label>
           <input
             id="name"
             type="text"
             name="name"
             placeholder="Name"
+            aria-required="true"
             value={formData.name}
             onChange={handleChange}
           />
-          <label htmlFor="contactNumber">Contact No</label>
+          {validationErrors.name && <div className="error-message">{validationErrors.name}</div>}
+          <label htmlFor="contactNumber">Contact No<span className="required">*</span></label>
           <input
             id="contactNumber"
             type="text"
@@ -166,7 +244,8 @@ const RegistrationForm = () => {
             value={formData.contactNumber}
             onChange={handleChange}
           />
-          <label htmlFor="email">Email</label>
+          {validationErrors.contactNumber && <div className="error-message">{validationErrors.contactNumber}</div>}
+          <label htmlFor="email">Email<span className="required">*</span></label>
           <input
             id="email"
             type="email"
@@ -175,9 +254,10 @@ const RegistrationForm = () => {
             value={formData.email}
             onChange={handleChange}
           />
+          {validationErrors.email && <div className="error-message">{validationErrors.email}</div>}
           {!user && (
             <>
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">Password<span className="required">*</span></label>
               <input
                 id="password"
                 type="password"
@@ -186,7 +266,8 @@ const RegistrationForm = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
-              <label htmlFor="confirmPassword">Confirm Password</label>
+              {validationErrors.password && <div className="error-message">{validationErrors.password}</div>}
+              <label htmlFor="confirmPassword">Confirm Password<span className="required">*</span></label>
               <input
                 id="confirmPassword"
                 type="password"
@@ -195,29 +276,33 @@ const RegistrationForm = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
               />
+              {validationErrors.confirmPassword && <div className="error-message">{validationErrors.confirmPassword}</div>}
             </>
           )}
 
-          <label htmlFor="roleId">Role</label>
+          <label htmlFor="roleId">Role<span className="required">*</span></label>
           <select id="role" name="roleId" value={formData.roleId} onChange={handleChange}>
             <option value="" disabled>Select a role</option>
             {roles.map(role => (
               <option key={role.id} value={role.id}>{role.name}</option>
             ))}
           </select>
-          <label htmlFor="jobTitle">Job Title</label>
+          {validationErrors.roleId && <div className="error-message">{validationErrors.roleId}</div>}
+          <label htmlFor="jobTitle">Job Title<span className="required">*</span></label>
           <select id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange}>
             <option value="" disabled>Select a job</option>
             {jobTitles.map(jobTitle => (
               <option key={jobTitle.id} value={jobTitle.id}>{jobTitle.name}</option>
             ))}</select>
-          <label htmlFor="divisionId">Division</label>
+          {validationErrors.jobTitle && <div className="error-message">{validationErrors.jobTitle}</div>}
+          <label htmlFor="divisionId">Division<span className="required">*</span></label>
           <select id="division" name="divisionId" value={formData.divisionId} onChange={handleChange}>
             <option value="" disabled>Select a division</option>
             {divisions.map(division => (
               <option key={division.id} value={division.id}>{division.name}</option>
             ))}
           </select>
+          {validationErrors.divisionId && <div className="error-message">{validationErrors.divisionId}</div>}
           <div className="divButton">
             <button className="btn btnRegister" onClick={handleSubmit}>
               {user ? "Save" : "Register"}

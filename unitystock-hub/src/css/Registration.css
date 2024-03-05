@@ -49,6 +49,8 @@ body {
     width: auto;
 }
 
+  
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .registration-form {
@@ -56,7 +58,7 @@ body {
     }
 
     .form-column {
-        flex-basis: 100%;
+        width: 100%;
     }
 
     .registration-container {

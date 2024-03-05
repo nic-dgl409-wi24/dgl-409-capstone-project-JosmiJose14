@@ -7,6 +7,7 @@ const { google } = require('googleapis');
 const app = express();
 const fs = require('fs');
 const util = require('util');
+
 app.use(cors());
 app.use(bodyParser.json());
 const path = require('path');
@@ -23,7 +24,8 @@ const connection = mysql.createConnection({
   password: 'root',
   database: 'user_db'
 });
-
+// Promisify the query method
+connection.query = util.promisify(connection.query);
 connection.connect(error => {
   if (error) throw error;
   console.log("Successfully connected to the database.");
@@ -102,8 +104,7 @@ app.post('/upload-image', (req, res) => {
 });
 
 
-// Promisify the query method
-connection.query = util.promisify(connection.query);
+
 
 app.get('/get-roles', async (req, res) => {
   try {
