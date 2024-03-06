@@ -19,22 +19,20 @@
     /* For the overlay positioning */
     width: 50%;
 }
-
-.content {
-    z-index: 2;
-    /* Ensure it's above the overlay */
-    /* You can add padding if you need some space around the content */
+.login-image{
+    width: 500px;
+    height: 500px;
 }
-
 .login-form {
     border-radius: 8px;
     padding: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: #90bce5;
+    height: auto;
+    margin: auto;
 }
-
-
 .login-form form {
     display: flex;
     flex-direction: column;

@@ -60,7 +60,7 @@ export default function Header() {
                 )}
                {isLogin && (<>
                   <CustomLink to="/" label="Home"  setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
-                  <CustomLink to="/Signup" label="Signup" setIsNavExpanded={setIsNavExpanded} >Sign Up</CustomLink>                  
+                  <CustomLink to="/Signup" label="Signup" setIsNavExpanded={setIsNavExpanded} >Get Started</CustomLink>                  
                 </>
                 )}
               </ul>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import '../css/Login.css';  //Ensure you have the CSS file for styling
 import loginImage from "../images/login-image.png";
 import config from '../common/config';
@@ -49,7 +49,7 @@ const LoginPage = () => {
             <div className="login-page">
                 <div className="left-panel">
                     <div className="content">
-                        <h1 className='section-heading'>UnityStock Hub</h1>
+                        <h2 className='section-heading'>UnityStock Hub</h2>
                         <p>Keep your inventory organized and accessible. Log in to manage your stock efficiently.</p>
                         <div className="login-info">
                             <img className="login-image" src={loginImage} alt="Login" />
@@ -59,7 +59,7 @@ const LoginPage = () => {
                     </div>
                 </div>
                 <div className="login-form">
-                    <form onSubmit={handleSubmit} className="login-form">
+                    <form onSubmit={handleSubmit} >
                         <h2 className='section-heading'>Welcome Back</h2> {/* Heading for the form */}
                         <label htmlFor="email">Email</label>
                         <input
@@ -87,7 +87,7 @@ const LoginPage = () => {
             </div>
             <div className="join-container">
                 <p>Don’t you have account?  </p>
-                <button className="btn join-now-button">Join Now</button>
+                <Link to="/Signup" className="btn hero-cta">Get Started</Link>
             </div>
             <div className="login-footer">
                 <p>Welcome back to UnityStock Hub! Please sign in to access your inventory management dashboard and streamline your business operations. Manage your inventory with ease and efficiency. Let's get started</p>
