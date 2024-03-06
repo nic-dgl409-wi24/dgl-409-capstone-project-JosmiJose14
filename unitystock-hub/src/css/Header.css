@@ -138,7 +138,7 @@ select:focus {
     flex-direction: column;
     width: 100%;
     height: calc(100vh - 77px);
-    background-color: #f4f4f4;
+    background-color: #f0f0f0;
     top: 0px;
     margin-top: 36px;
   }

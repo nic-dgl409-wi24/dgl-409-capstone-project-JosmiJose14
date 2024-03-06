@@ -49,7 +49,7 @@ const handleSubmit = async (event) => {
 
     return (
         <div className="login">
-            <h2>Welcome Back</h2> {/* Heading for the form */}
+            <h2 className='section-heading'>Welcome Back</h2> {/* Heading for the form */}
             <div className="login-container">
                 <div className="login-info">
                     <img
