@@ -217,7 +217,9 @@
 .required {
   color: red;
 }
-
+label{
+  margin-bottom: 10px;
+}
 
 /* Responsive styles */
 @media (max-width: 768px) {

@@ -118,8 +118,6 @@ const RegistrationForm = () => {
   const fetchJobTitles = async () => {
     try {
       const response = await axios.get(`${config.server.baseUrl}/get-jobtitles`); // Adjust the URL to your backend endpoint
-      // Assuming the first row is headers, skip it
-      // Target the 'data' property within the response data
       const jobData = response.data.data;
       setJobTitles(jobData);
     } catch (error) {
@@ -142,7 +140,6 @@ const RegistrationForm = () => {
   };
 
   const handleImageChange = (e) => {
-    console.log(e);
     if (e.target.files.length > 0) {
       const file = e.target.files[0];
       const formData = new FormData();

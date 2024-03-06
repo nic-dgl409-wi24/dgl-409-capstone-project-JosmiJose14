@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../css/Login.css';  //Ensure you have the CSS file for styling
 import loginImage from "../images/login-image.png";
 import config from '../common/config';
@@ -8,6 +8,9 @@ import axios from 'axios';
 const LoginPage = () => {
     const navigate = useNavigate();
     const { login } = useAuth(); // Destructure the login function
+    const [message, setMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
     // The `useState` hook is used here to define `credentials` and `setCredentials`
     const [credentials, setCredentials] = useState({
         email: '',
@@ -25,23 +28,30 @@ const LoginPage = () => {
     // ...
     const handleSubmit = async (event) => {
         event.preventDefault();
+        // Simple front-end validation for empty fields
+        if (!credentials.email || !credentials.password) {
+            setMessage('Please enter both email and password.');
+            setIsError(true);
+            return;
+        }
         try {
             const response = await axios.post(`${config.server.baseUrl}/login`, {
                 email: credentials.email, // Ensure the field names match the backend expectations
                 password: credentials.password
             });
-            console.log(response.data);
-            // Check if the login is successful
-
             if (response.data.message === 'Login successful') {
-                login(response.data.user); //
-                navigate('/Division'); // Redirect on success
+                login(response.data.user);
+                navigate('/Division');
+                setMessage('Login successful. Redirecting...');
+                setIsError(false);
             } else {
-                // Handle other responses
+                setMessage('Login failed. Please check your credentials.');
+                setIsError(true);
             }
         } catch (error) {
             console.error('Login error', error.response);
-            // Handle errors here
+            setMessage(error.response?.data?.message || 'An error occurred during login.');
+            setIsError(true);
         }
     };
     return (
@@ -54,13 +64,12 @@ const LoginPage = () => {
                         <div className="login-info">
                             <img className="login-image" src={loginImage} alt="Login" />
                         </div>
-
-
                     </div>
                 </div>
                 <div className="login-form">
                     <form onSubmit={handleSubmit} >
                         <h2 className='section-heading'>Welcome Back</h2> {/* Heading for the form */}
+                        <div className={`message ${isError ? 'error-message' : 'success-message'}`}>{message}</div>
                         <label htmlFor="email">Email</label>
                         <input
                             id="email"
