@@ -1,43 +1,49 @@
-/* src/components/Login.css */
-.login {
-    margin-top: 20px !important;
-    margin-bottom: 20px;    
+.login-page {
+    display: flex;
     width: 80%;
+    padding: 20px;
     margin: auto;
 }
 
-.login-container {
+.left-panel {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
+    /* Centers vertically inside the left-panel */
     align-items: center;
-    box-sizing: border-box;  
-    padding-top: 0;
-}
-.login-form{
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    width: 100%;
-}
-.login-image {
-    height: 450px;
-    width: 450px;
+    /* Centers horizontally */
+    text-align: center;
+    /* Centers the text inside the content */
+    background-size: cover;
+    position: relative;
+    /* For the overlay positioning */
+    width: 50%;
 }
 
-.login-info,
-.login-form {
-    flex: 1;
+.content {
+    z-index: 2;
+    /* Ensure it's above the overlay */
+    /* You can add padding if you need some space around the content */
 }
+
+.login-form {
+    border-radius: 8px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 
 .login-form form {
     display: flex;
     flex-direction: column;
 }
-input {
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 16px;
+
+label,
+input,
+.btn {
+    margin-left: 20px;
 }
 
 .login-footer {
@@ -51,13 +57,20 @@ input {
     /* Add so224363me space between columns */
     border-radius: 10px;
     padding: 20px;
+    margin: auto;
+    width: 80%;
+    margin-bottom: 20px;
 }
+
 .login-footer p {
-    font-size: 1.25rem; /* Larger font size for emphasis */
-    line-height: 1.6; /* Line height for improved readability */
-    margin: 0 auto; /* Center the text block */
+    font-size: 1.25rem;
+    /* Larger font size for emphasis */
+    line-height: 1.6;
+    /* Line height for improved readability */
+    margin: 0 auto;
+    /* Center the text block */
     padding: 20px;
-  }
+}
 
 /* JoinNowButton.css */
 .join-container {
@@ -65,12 +78,22 @@ input {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    gap: 10px; /* this creates space between the elements inside the flex container */
-  }
-/* Responsive styling */
+    gap: 10px;
+    /* this creates space between the elements inside the flex container */
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .login-container {
+    .login-page {
         flex-direction: column;
     }
-  
+
+    .left-panel,
+    .login-form {
+        width: 100%;
+    }
+
+    .login-form {
+        width: 90%;
+    }
 }
