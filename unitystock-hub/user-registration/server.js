@@ -214,7 +214,7 @@ app.post('/save-division', async (req, res) => {
     const divisionIndex = rows.findIndex(row => row[1]?.toLowerCase() === division.toLowerCase());
     // Check if a division with the same name exists and it's not an update operation
     if (divisionIndex !== -1 && !id) {
-      return res.status(400).json({ success: false, error: 'A division with the same name already exists.' });
+      return res.status(400).json({ success: false, error: 'Failed : A division with the same name already exists.' });
     }
     // If an ID is provided, attempt to update an existing division
     if (id) {
@@ -327,16 +327,25 @@ app.post('/save-subdivision', async (req, res) => {
   const authClient = await auth.getClient();
   try {
     const range = 'Sheet1'; // Adjust as necessary. Assuming 'Sheet1' is where your data is stored.
-    // If an ID is provided, attempt to update an existing division
+    const spreadsheetId = subspreadsheetId; // Ensure this is defined somewhere in your scope
+
+    // Fetch all rows to search for an existing sub-division by name
+    const getRequest = {
+      spreadsheetId: spreadsheetId,
+      range: range,
+      auth: authClient,
+    };
+    const getResponse = await sheets.spreadsheets.values.get(getRequest);
+    const rows = getResponse.data.values || [];
+
+    // Assuming subdivision name is in the second column (B column), adjust the index if necessary
+    let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === subdivision.toLowerCase() && (!id || row[0] !== id));
+
+    // Prevent insertion/updation if subdivision with the same name exists
+    if (foundRowIndex !== -1) {
+      return res.status(400).json({ success: false, error: 'Failed : A sub-division with the same name already exists.' });
+    }
     if (id) {
-      // Fetch all rows to find the one to update
-      const getRequest = {
-        spreadsheetId: subspreadsheetId,
-        range: range,
-        auth: authClient,
-      };
-      const getResponse = await sheets.spreadsheets.values.get(getRequest);
-      const rows = getResponse.data.values || [];
       let foundRowIndex = rows.findIndex(row => row[0] === id); // Assuming ID is in the first column
       if (foundRowIndex !== -1) {
         // Calculate the actual row index in the sheet, adjusting for header row if present

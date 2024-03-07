@@ -91,6 +91,7 @@ export default function Division() {
             const response = await axios.post(endpoint, data);
             setSubmitMessage(response.data.message);
         } catch (error) {
+            debugger
             setSubmitMessage(error.response.data.error);
         }
     };
@@ -146,7 +147,7 @@ export default function Division() {
                         <input
                             type="text"
                             name="division"
-                            placeholder="Enter Division Name"
+                            placeholder="Enter Department Name"
                             value={division}
                             onChange={(e) => setDivision(e.target.value)}
                         />

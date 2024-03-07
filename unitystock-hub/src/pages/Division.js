@@ -62,8 +62,7 @@ export default function Division() {
                 {divisions.map((division, index) => (
                     <div className="division-card" key={division.id} >
                         <img src={division.imageUrl ? `${config.server.baseUrl}/${division.imageUrl}` : defaultImage} alt={division.name} className="division-image" onClick={() => handleRedirect(division.id)}/>
-                       
-                        <div className="card-body">
+                            <div className="card-body">
                             <h3>{division.name}</h3>
                             <div className="division-actions">
                             <button className="btn" onClick={() => handleEdit(division.id)}>Edit</button>
