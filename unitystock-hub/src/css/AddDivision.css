@@ -29,7 +29,7 @@
     border-radius: 50%;
 }
 
-.form-column {
+.form-column-dept {
     flex-basis: 70%; /* Form column takes the remaining 70% of the form container */
 }
 
@@ -60,7 +60,7 @@
     }
 
     .image-column,
-    .form-column {
+    .form-column-dept {
         flex-basis: 100%; /* Both columns take full width on smaller screens */
     }
 

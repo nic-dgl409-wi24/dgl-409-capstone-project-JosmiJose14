@@ -139,7 +139,7 @@ export default function Division() {
                         {uploadMessage && <div className={uploadMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{uploadMessage}</div>}
                     </div>
                 </div>
-                <div className="form-column">
+                <div className="form-column-dept">
                     <div className="form-fields">
                         <h2 className='section-heading'>{id ? 'Edit Department' : 'Add Department'}</h2>
                         {submitMessage && <div className={submitMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{submitMessage}</div>}
