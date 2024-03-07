@@ -1,76 +1,67 @@
-.division-container {
-    width: 80%;
-    padding: 20px;
-    box-sizing: border-box;
-    margin: auto;
+.department-container {
+    width: 100%;
+    max-width: 1200px; /* Maximum width of the container */
+    padding: 40px 20px; /* Padding for smaller screens with a max-width of 1200px */
+    margin: 20px auto; /* Center the container */
     display: flex;
     flex-direction: column;
+    align-items: center; /* Center children */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow to the container */
+    border-radius: 8px; /* Rounded corners */
 }
 
 .form-container {
+    width: 100%; /* Full width of the parent container */
     display: flex;
-    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-    gap: 20px;
+    flex-direction: row; /* Set direction to row for larger screens */
+    align-items: flex-start; /* Align items to the start of the flex container */
+    gap: 40px; /* Space between image and form fields */
+    padding: 20px; /* Padding inside the form container */
 }
 
 .image-column {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px; /* Adds space between the image and form on small screens */
-}
-
-.form-column {
-    flex: 2; /* Takes twice the space of the image column, adjust as needed */
-    margin: auto;
+    flex-basis: 40%; /* Image column takes 30% of the form container */
+    text-align: center; /* Center the image within the column */
 }
 
 .image-container img {
+    max-width: 100%; /* Image width should not exceed the container */
     border-radius: 50%;
-    width:450px;
-    height:450px;
+}
+
+.form-column {
+    flex-basis: 70%; /* Form column takes the remaining 70% of the form container */
 }
 
 .form-fields label {
     display: block;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .form-fields input,
 .form-fields select {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
+    width: 80%; /* Full width of the form column */
+    padding: 15px; /* Increased padding for better touch targets */
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd; /* Lighter border color */
+    margin-top: 5px; /* Space between label and input/select */
 }
-
+.form-fields select {
+    width: 85%;
+}
 .form-actions {
+    margin-top: 30px; /* Space above the buttons */
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    width: 100%; /* Ensure action buttons don't overflow the form column */
 }
 /* Responsive styles */
 @media (max-width: 768px) {
     .form-container {
-        flex-direction: column;
+        flex-direction: column; /* Stack image and form fields on smaller screens */
     }
 
     .image-column,
     .form-column {
-        max-width: 100%;
+        flex-basis: 100%; /* Both columns take full width on smaller screens */
     }
 
-    .form-actions {
-        flex-direction: column; /* Stack buttons on top of each other on small screens */
-    }
-
-    .btn {
-        margin-bottom: 10px; /* Space between stacked buttons */
-    }
-
-    .btn:last-child {
-        margin-bottom: 0; /* No bottom margin for the last button */
-    }
 }

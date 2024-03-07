@@ -12,7 +12,9 @@ export default function Division() {
     const [users, setUsers] = useState([]);
     const { id } = useParams(); // Use useParams to get the id from URL
     const navigate = useNavigate(); // Use useHistory for navigation
-
+    const [validationErrors, setValidationErrors] = useState({});
+    const [uploadMessage, setUploadMessage] = useState('');
+    const [submitMessage, setSubmitMessage] = useState('');
     useEffect(() => {
         fetchusers();
         if (id) {
@@ -26,6 +28,27 @@ export default function Division() {
             setSupervisor(value);
         }
     };
+    const validateForm = () => {
+        let errors = {};
+        let formIsValid = true;
+        if (!imageUrl) {
+            errors.imageUrl = "Please upload an image.";
+            formIsValid = false;
+        }
+
+        if (!division.trim()) {
+            errors.division = 'Division name is required.';
+            formIsValid = false;
+        }
+
+        if (!supervisor) {
+            errors.supervisor = 'Supervisor selection is required.';
+            formIsValid = false;
+        }
+        setValidationErrors(errors);
+        return formIsValid;
+    };
+
     const handleImageChange = (e) => {
         if (e.target.files.length > 0) {
             const file = e.target.files[0];
@@ -34,22 +57,26 @@ export default function Division() {
             formData.append('dirPath', './images/division/');
 
             // Send the file to your server
-            
+
             axios.post(`${config.server.baseUrl}/upload-image`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
                 .then(response => {
-
                     setImageUrl(response.data.imageUrl);
+                    setUploadMessage('Image uploaded successfully.');
+                    setValidationErrors(prevErrors => ({ ...prevErrors, imageUrl: '' }));
                 })
                 .catch(error => {
-                    console.error('Error uploading image:', error);
+                    setUploadMessage('Failed to upload image.');
                 });
         }
     };
     const handleSave = async () => {
+        if (!validateForm()) {
+            return; // Stop the save operation if validation fails
+        }
         // Construct the data object you want to send
         const data = {
             id,
@@ -60,28 +87,15 @@ export default function Division() {
 
         // The URL of your backend endpoint
         const endpoint = `${config.server.baseUrl}/save-division`;
-
         try {
             // Send a POST request to your backend service
             const response = await axios.post(endpoint, data);
-            console.log(response.data); // Handle the response as needed
-            // If necessary, add code to handle successful save (like redirect or notification)
+            console.log(response.data);
+            setSubmitMessage('User registered successfully.');
+            // Navigate or refresh the list if necessary
         } catch (error) {
-            //  console.error('There was an error saving the data:', error);
-            // Handle error case, possibly with user notification
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                console.error(error.response.data);
-                console.error(error.response.status);
-                console.error(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error('Error', error.message);
-            }
-            console.error(error.config);
+            console.error('There was an error saving the data:', error);
+            setSubmitMessage('Failed to register user.');
         }
     };
     const fetchusers = async () => {
@@ -101,9 +115,8 @@ export default function Division() {
             // Replace URL with your endpoint to fetch division details by id
             const response = await axios.get(`${config.server.baseUrl}/get-division/${divisionId}`);
             if (response.data && response.data.data) {
-                
-                const [id,divisionName, supervisor, imageUrl] = response.data.data;
 
+                const [id, divisionName, supervisor, imageUrl] = response.data.data;
                 setDivision(divisionName || ''); // Provide fallback value
                 setSupervisor(supervisor || ''); // Provide fallback value
                 setImageUrl(imageUrl || defaultImage);  // Use fetched imageUrl or defaultImage if null
@@ -113,7 +126,7 @@ export default function Division() {
         }
     };
     return (
-        <div className="division-container">
+        <div className="department-container">
             <div className="form-container">
                 <div className="image-column">
                     <div className="image-container">
@@ -122,7 +135,6 @@ export default function Division() {
                             src={imageUrl ? `${config.server.baseUrl}/${imageUrl}` : defaultImage}
                             alt="division"
                         />
-
                         <input
                             type="file"
                             id="divisionImage"
@@ -130,11 +142,14 @@ export default function Division() {
                             onChange={handleImageChange}
                             accept="image/*"
                         />
+                        {validationErrors.imageUrl && <div className="error-message">{validationErrors.imageUrl}</div>}
+                        {uploadMessage && <div className={uploadMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{uploadMessage}</div>}
                     </div>
                 </div>
                 <div className="form-column">
                     <div className="form-fields">
-                        <h2>{id ? 'Edit Division' : 'Add Division'}</h2>
+                        <h2 className='section-heading'>{id ? 'Edit Department' : 'Add Department'}</h2>
+                        {submitMessage && <div className={submitMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{submitMessage}</div>}
                         <label htmlFor="division">Division</label>
                         <input
                             type="text"
@@ -143,6 +158,7 @@ export default function Division() {
                             value={division}
                             onChange={(e) => setDivision(e.target.value)}
                         />
+                        {validationErrors.division && <div className="error-message">{validationErrors.division}</div>}
                         <label htmlFor="supervisor">Supervisor</label>
                         <select id="supervisor" name="supervisor" value={supervisor} onChange={handleChange}>
                             <option value="" disabled>Select a user</option>
@@ -150,6 +166,7 @@ export default function Division() {
                                 <option key={user.user_id} value={user.user_id}>{user.Name}</option>
                             ))}
                         </select>
+                        {validationErrors.supervisor && <div className="error-message">{validationErrors.supervisor}</div>}
                     </div>
                     <div className="form-actions">
                         <button className="btn save" onClick={handleSave}>{id ? 'Update' : 'Save'}</button>
