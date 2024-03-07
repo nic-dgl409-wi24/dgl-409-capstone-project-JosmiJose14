@@ -214,7 +214,7 @@ app.post('/save-division', async (req, res) => {
     const divisionIndex = rows.findIndex(row => row[1]?.toLowerCase() === division.toLowerCase());
     // Check if a division with the same name exists and it's not an update operation
     if (divisionIndex !== -1 && !id) {
-      return res.status(400).json({ success: false, error: 'Failed : A division with the same name already exists.' });
+      return res.status(400).json({ success: false, error: 'Failed : A department with the same name already exists.' });
     }
     // If an ID is provided, attempt to update an existing division
     if (id) {
@@ -236,10 +236,10 @@ app.post('/save-division', async (req, res) => {
 
         // Update the existing row
         await sheets.spreadsheets.values.update(updateRequest);
-        res.status(200).json({ success: true, message: 'Division updated successfully' });
+        res.status(200).json({ success: true, message: 'Department updated successfully' });
       } else {
         // Handle case where ID is provided but not found
-        res.status(404).json({ success: false, error: 'Division not found with provided ID' });
+        res.status(404).json({ success: false, error: 'Department not found with provided ID' });
       }
     } else {
       try {
@@ -315,7 +315,7 @@ app.get('/get-division/:divisionId', async (req, res) => {
     if (division) {
       res.status(200).json({ success: true, data: division });
     } else {
-      res.status(404).json({ success: false, message: 'Division not found' });
+      res.status(404).json({ success: false, message: 'Department not found' });
     }
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
@@ -339,11 +339,11 @@ app.post('/save-subdivision', async (req, res) => {
     const rows = getResponse.data.values || [];
 
     // Assuming subdivision name is in the second column (B column), adjust the index if necessary
-    let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === subdivision.toLowerCase() && (!id || row[0] !== id));
+    let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === subdivision.toLowerCase());
 
     // Prevent insertion/updation if subdivision with the same name exists
     if (foundRowIndex !== -1) {
-      return res.status(400).json({ success: false, error: 'Failed : A sub-division with the same name already exists.' });
+      return res.status(400).json({ success: false, error: 'Failed : A sub-department with the same name already exists.' });
     }
     if (id) {
       let foundRowIndex = rows.findIndex(row => row[0] === id); // Assuming ID is in the first column
@@ -364,7 +364,7 @@ app.post('/save-subdivision', async (req, res) => {
 
         // Update the existing row
         await sheets.spreadsheets.values.update(updateRequest);
-        res.status(200).json({ success: true, message: 'Sub-Division updated successfully' });
+        res.status(200).json({ success: true, message: 'Sub-Department updated successfully' });
       } else {
         // Handle case where ID is provided but not found
         res.status(404).json({ success: false, error: 'Sub-Division not found with provided ID' });
@@ -398,7 +398,7 @@ app.post('/save-subdivision', async (req, res) => {
         };
         // Append the new row
         const response = await sheets.spreadsheets.values.append(appendRequest);
-        res.status(200).json({ success: true, data: response.data });
+        res.status(200).json({ success: true, message: 'Sub-Department added successfully' });
       }
       catch (error) {
         res.status(500).json({ success: false, error: 'Failed to save to Google Sheets', details: error.message });
