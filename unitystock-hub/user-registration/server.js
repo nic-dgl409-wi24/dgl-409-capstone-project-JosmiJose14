@@ -200,14 +200,13 @@ app.post('/save-division', async (req, res) => {
   const { id, division, supervisor, imageUrl } = req.body; // Step 1: Extract ID
   const authClient = await auth.getClient();
   try {
-    const range = 'Sheet1';    
+    const range = 'Sheet1';
     const sheetRange = 'Sheet1'; // Adjust as necessary
     const getAllRequest = {
       spreadsheetId: spreadsheetId,
       range: sheetRange,
       auth: authClient,
     };
-
     // Fetch all rows to search for an existing division with the same name
     const getAllResponse = await sheets.spreadsheets.values.get(getAllRequest);
     const rows = getAllResponse.data.values || [];
@@ -216,12 +215,11 @@ app.post('/save-division', async (req, res) => {
     // Check if a division with the same name exists and it's not an update operation
     if (divisionIndex !== -1 && !id) {
       return res.status(400).json({ success: false, error: 'A division with the same name already exists.' });
-    } 
+    }
     // If an ID is provided, attempt to update an existing division
     if (id) {
       // Fetch all rows to find the one to update      
       let foundRowIndex = rows.findIndex(row => row[0] === id); // Assuming ID is in the first column
-
       if (foundRowIndex !== -1) {
         // Calculate the actual row index in the sheet, adjusting for header row if present
         const sheetRowIndex = foundRowIndex + 1; // Adjust based on your sheet's header presence
@@ -252,7 +250,7 @@ app.post('/save-division', async (req, res) => {
           auth: authClient,
         });
         const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
-        
+
         // Determine the next ID value
         let Id;
         if (lastRow === 0) {
@@ -261,7 +259,6 @@ app.post('/save-division', async (req, res) => {
           const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0], 10);
           Id = isNaN(lastId) ? 1 : lastId + 1;
         }
-  
         const appendRequest = {
           spreadsheetId: spreadsheetId,
           range: 'Sheet1', // Adjust the range as necessary
@@ -271,12 +268,10 @@ app.post('/save-division', async (req, res) => {
           },
           auth: authClient,
         };
-
         // Append the new row
         const response = await sheets.spreadsheets.values.append(appendRequest);
         res.status(200).json({ success: true, data: response.data });
       } catch (error) {
-
         res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
       }
     }
@@ -327,16 +322,13 @@ app.get('/get-division/:divisionId', async (req, res) => {
   }
 });
 
-
 app.post('/save-subdivision', async (req, res) => {
   const { id, subdivision, selectedDivision, imageUrl } = req.body; // Step 1: Extract ID
   const authClient = await auth.getClient();
   try {
     const range = 'Sheet1'; // Adjust as necessary. Assuming 'Sheet1' is where your data is stored.
-    
     // If an ID is provided, attempt to update an existing division
     if (id) {
-
       // Fetch all rows to find the one to update
       const getRequest = {
         spreadsheetId: subspreadsheetId,
@@ -346,7 +338,6 @@ app.post('/save-subdivision', async (req, res) => {
       const getResponse = await sheets.spreadsheets.values.get(getRequest);
       const rows = getResponse.data.values || [];
       let foundRowIndex = rows.findIndex(row => row[0] === id); // Assuming ID is in the first column
-
       if (foundRowIndex !== -1) {
         // Calculate the actual row index in the sheet, adjusting for header row if present
         const sheetRowIndex = foundRowIndex + 1; // Adjust based on your sheet's header presence
@@ -387,7 +378,6 @@ app.post('/save-subdivision', async (req, res) => {
           const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
           Id = lastId + 1;
         }
-
         const appendRequest = {
           spreadsheetId: subspreadsheetId,
           range: 'Sheet1', // Adjust the range as necessary
@@ -397,12 +387,10 @@ app.post('/save-subdivision', async (req, res) => {
           },
           auth: authClient,
         };
-
         // Append the new row
         const response = await sheets.spreadsheets.values.append(appendRequest);
         res.status(200).json({ success: true, data: response.data });
       }
-
       catch (error) {
         res.status(500).json({ success: false, error: 'Failed to save to Google Sheets', details: error.message });
       }
@@ -414,13 +402,11 @@ app.post('/save-subdivision', async (req, res) => {
 
 app.get('/get-subdivisions/:divisionId', async (req, res) => {
   const authClient = await auth.getClient();
-
   const request = {
     spreadsheetId: subspreadsheetId,
     range: 'Sheet1', // Replace with your actual range
     auth: authClient,
   };
-
   try {
     const response = await sheets.spreadsheets.values.get(request);
     res.status(200).json({ success: true, data: response.data.values });
@@ -428,22 +414,20 @@ app.get('/get-subdivisions/:divisionId', async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
+
 app.get('/get-subdivision/:Id', async (req, res) => {
   const divisionId = req.params.Id;
   const authClient = await auth.getClient();
-
   const request = {
     spreadsheetId: subspreadsheetId,
     range: 'Sheet1', // Adjust as necessary
     auth: authClient,
   };
-
   try {
     const response = await sheets.spreadsheets.values.get(request);
     const rows = response.data.values || [];
     // Assuming ID is the first column in each row
     const division = rows.find(row => row[0] === divisionId);
-
     if (division) {
       res.status(200).json({ success: true, data: division });
     } else {

@@ -108,7 +108,6 @@ export default function Division() {
             // Replace URL with your endpoint to fetch division details by id
             const response = await axios.get(`${config.server.baseUrl}/get-division/${divisionId}`);
             if (response.data && response.data.data) {
-
                 const [id, divisionName, supervisor, imageUrl] = response.data.data;
                 setDivision(divisionName || ''); // Provide fallback value
                 setSupervisor(supervisor || ''); // Provide fallback value
