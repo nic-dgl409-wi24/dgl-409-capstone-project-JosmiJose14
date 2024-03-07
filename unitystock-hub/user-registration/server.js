@@ -200,26 +200,32 @@ app.post('/save-division', async (req, res) => {
   const { id, division, supervisor, imageUrl } = req.body; // Step 1: Extract ID
   const authClient = await auth.getClient();
   try {
-    const range = 'Sheet1'; // Adjust as necessary. Assuming 'Sheet1' is where your data is stored.
-    
+    const range = 'Sheet1';    
+    const sheetRange = 'Sheet1'; // Adjust as necessary
+    const getAllRequest = {
+      spreadsheetId: spreadsheetId,
+      range: sheetRange,
+      auth: authClient,
+    };
+
+    // Fetch all rows to search for an existing division with the same name
+    const getAllResponse = await sheets.spreadsheets.values.get(getAllRequest);
+    const rows = getAllResponse.data.values || [];
+    // Assuming division name is in the second column (B column), adjust if necessary
+    const divisionIndex = rows.findIndex(row => row[1]?.toLowerCase() === division.toLowerCase());
+    // Check if a division with the same name exists and it's not an update operation
+    if (divisionIndex !== -1 && !id) {
+      return res.status(400).json({ success: false, error: 'A division with the same name already exists.' });
+    } 
     // If an ID is provided, attempt to update an existing division
     if (id) {
-
-      // Fetch all rows to find the one to update
-      const getRequest = {
-        spreadsheetId: spreadsheetId,
-        range: range,
-        auth: authClient,
-      };
-      const getResponse = await sheets.spreadsheets.values.get(getRequest);
-      const rows = getResponse.data.values || [];
+      // Fetch all rows to find the one to update      
       let foundRowIndex = rows.findIndex(row => row[0] === id); // Assuming ID is in the first column
 
       if (foundRowIndex !== -1) {
         // Calculate the actual row index in the sheet, adjusting for header row if present
         const sheetRowIndex = foundRowIndex + 1; // Adjust based on your sheet's header presence
         const updateRange = `${range}!A${sheetRowIndex}:D${sheetRowIndex}`;
-
         const updateRequest = {
           spreadsheetId: spreadsheetId,
           range: updateRange,
@@ -240,22 +246,22 @@ app.post('/save-division', async (req, res) => {
     } else {
       try {
         // Fetch the last ID from the sheet
-        const getLastIdRequest = {
+        const lastIdResponse = await sheets.spreadsheets.values.get({
           spreadsheetId: spreadsheetId,
           range: 'Sheet1!A:A', // Assuming IDs are in column A
           auth: authClient,
-        };
-        const lastIdResponse = await sheets.spreadsheets.values.get(getLastIdRequest);
+        });
         const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
-        // If there are no existing records, start ID at 1, else increment last ID
+        
+        // Determine the next ID value
         let Id;
         if (lastRow === 0) {
           Id = 1;
         } else {
-          const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0]);
-          Id = lastId + 1;
+          const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0], 10);
+          Id = isNaN(lastId) ? 1 : lastId + 1;
         }
-
+  
         const appendRequest = {
           spreadsheetId: spreadsheetId,
           range: 'Sheet1', // Adjust the range as necessary

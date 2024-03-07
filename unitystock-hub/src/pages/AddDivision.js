@@ -84,27 +84,20 @@ export default function Division() {
             supervisor,
             imageUrl
         };
-
         // The URL of your backend endpoint
         const endpoint = `${config.server.baseUrl}/save-division`;
         try {
             // Send a POST request to your backend service
             const response = await axios.post(endpoint, data);
-            console.log(response.data);
-            setSubmitMessage('User registered successfully.');
-            // Navigate or refresh the list if necessary
+            setSubmitMessage(response.data.message);
         } catch (error) {
-            console.error('There was an error saving the data:', error);
-            setSubmitMessage('Failed to register user.');
+            setSubmitMessage(error.response.data.error);
         }
     };
     const fetchusers = async () => {
         try {
             const response = await axios.get(`${config.server.baseUrl}/get-users`); // Adjust the URL to your backend endpoint
-            // Assuming the first row is headers, skip it
-            // Target the 'data' property within the response data
-            console.log(response.data.data);
-            const users = response.data.data;
+             const users = response.data.data;
             setUsers(users);
         } catch (error) {
             console.error('Error fetching job:', error);
