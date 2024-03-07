@@ -47,7 +47,7 @@ export default function Header() {
               <ul>
                 {!isLoginOrRegister && (
                   <>
-                   <CustomLink to="/Division" setIsNavExpanded={setIsNavExpanded}>Division</CustomLink>
+                   <CustomLink to="/Division" setIsNavExpanded={setIsNavExpanded}>Departments</CustomLink>
                     <CustomLink to="/Inventories"   setIsNavExpanded={setIsNavExpanded}>Inventories</CustomLink>
                     <CustomLink to="/Profile"  setIsNavExpanded={setIsNavExpanded}>Profile</CustomLink>
                     <CustomLink to="/Login" onClick={handleLogout}>Logout</CustomLink>

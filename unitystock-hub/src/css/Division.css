@@ -5,7 +5,7 @@
     margin: auto;
 }
 
-.division-cards {
+.division-grid {
     display: flex;
     flex-wrap: wrap; /* Enable wrapping of child elements */
     justify-content: space-between;
@@ -14,60 +14,46 @@
 
 .division-card {
     background: #90bce5;
-    border-radius: 10px;
-    padding: 20px;
-   
-  flex-basis: calc(30% - 20px);
+    border-radius: 10px;     flex-basis: calc(30% - 20px);
     margin-bottom: 20px; /* Add space between rows */
 }
 img{
-object-fit: cover;
-    width: 300px;
-    height: 300px;
+    object-fit: cover;
+    width: 400px;
+    height: 400px;
 }
-
-.division-icon-container {
-    flex-shrink: 0; /* Prevents the icon container from shrinking */
-    margin-right: 20px; /* Adds space between the icon and the text */
-}
-
-.division-icon {
-    width: auto; /* Set the width of the icon */
-    height: 400px; /* Set the height of the icon */
-    background-size: cover; /* Ensures the icon covers the area */
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.divAddDivision {
-    display: flex;
-    justify-content: flex-end; /* Aligns children (buttons/links) to the start of the container */
-    align-items: center; /* Centers children vertically within the container */
-    padding: 10px 0; /* Gives some padding above and below the buttons/links */
-}
-.housekeeping-icon {
-    background-image: url('../images/default.jpg');
-}
-
-.recreation-icon {
-    background-image: url('../images/default.jpg');
-}
-
-.division-info h3 {
-    margin: 10px 0;
+.card-body {
+    padding: 20px 20px; /* Gives some padding above and below the buttons/links */
+    background-color: #f0f0f0;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-bottom-left-radius: 10px; /* Top left corner radius */
+    border-bottom-right-radius: 10px; /* Top right corner radius */
 }
 
 .division-actions button {
-    margin-right: 10px;
+    margin-left: 0;
     padding: 5px 10px;
     /* Add more styles for buttons */
 }
+.add-division-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
 @media (max-width: 768px) { /* Adjust the breakpoint as needed */
-    .division-cards {
+    .division-card {
         flex-direction: column;
         justify-content: space-between;
+        flex-basis: 100% !important;
+    }
+    img{
+        width:500px;
+        height:500px;
     }
     .division-card {
       
         width:100%;
+        margin: auto;
     }
 }

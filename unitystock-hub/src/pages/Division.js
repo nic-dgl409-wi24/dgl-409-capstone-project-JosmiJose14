@@ -4,15 +4,15 @@ import '../css/Division.css'; // Ensure you have the CSS file for styling
 import config from '../common/config';
 import defaultImage from "../images/default.jpg";
 import axios from 'axios';
-
+import { useAuth } from '../pages/auth/AuthContext'; // Adjust the path as necessary
 
 export default function Division() {
     const [divisions, setDivisions] = useState([]); // State to store divisions
     let navigate = useNavigate();
+    const { user } = useAuth(); // Access global user data
     // Function to fetch division data
     const fetchDivisions = async () => {
         try {
-            debugger
             const response = await axios.get(`${config.server.baseUrl}/get-divisions`); // Adjust the URL to your backend endpoint
             // Assuming the first row is headers, skip it
             // Target the 'data' property within the response data
@@ -22,7 +22,6 @@ export default function Division() {
                 supervisorId: row[2] || '',
                 imageUrl: row[3] || ''
             }));
-            console.log("division"+divisionData );
             setDivisions(divisionData);
 
         } catch (error) {
@@ -50,34 +49,32 @@ export default function Division() {
     
     return (
         <div className="division-container">
-            <h2>Division</h2>
-            <div className="divAddDivision">
-            <Link to="/AddDivision/add" className="btn">Add Division</Link>
-
+            <div className="division-header">
+                <h2 className='section-heading'>Departments</h2>
+                <span className='welcome-text'>Welcome, {user?.Name || 'User'}!</span> {/* Use optional chaining */}
+                <span className="add-division-button">
+                <Link to="/AddDivision/add" className="btn">Add Department</Link>
+            </span>
             </div>
-            <div className="division-cards">
+            
+            {/* Division Cards */}
+            <div className="division-grid">
                 {divisions.map((division, index) => (
-                    <div className="division-card" key={index}  >
-                        <div className="division-icon-container" onClick={() => handleRedirect(division.id)}>
-                            <div  className="division-icon">
-                            <img 
-                            src={division.imageUrl ? `${config.server.baseUrl}/${division.imageUrl}` : defaultImage}
-                            alt={division.name} />
-
-                            </div>
-                        </div>
-                        <div className="division-info">
+                    <div className="division-card" key={division.id} >
+                        <img src={division.imageUrl ? `${config.server.baseUrl}/${division.imageUrl}` : defaultImage} alt={division.name} className="division-image" onClick={() => handleRedirect(division.id)}/>
+                       
+                        <div className="card-body">
                             <h3>{division.name}</h3>
                             <div className="division-actions">
-                             {/* Bind division.id to the onClick event for the Edit button */}
-                    <button className='btn' onClick={() => handleEdit(division.id)}>Edit</button>
-                    {/* Bind division.id to the onClick event for the Delete button */}
-                    <button className='btn' onClick={() => handleDelete(division.id)}>Delete</button>
+                            <button className="btn" onClick={() => handleEdit(division.id)}>Edit</button>
+                            <button className="btn" onClick={() => handleDelete(division.id)}>Delete</button>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
+            
+           
         </div>
     );
 }
