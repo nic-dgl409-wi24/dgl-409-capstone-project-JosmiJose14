@@ -19,8 +19,8 @@
 }
 img{
     object-fit: cover;
-    width: 400px;
-    height: 400px;
+    width: 350px;
+    height: 350px;
 }
 .card-body {
     padding: 20px 20px; /* Gives some padding above and below the buttons/links */

@@ -112,7 +112,9 @@ select {
     background-color: #FAFAFA;
     transition: border-color 0.2s ease-in-out;
 }
-
+select {
+  margin-left: 20px;
+}
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
@@ -120,6 +122,12 @@ select:focus {
     border-color: #A0AEC0;
     outline: none;
 }
+.content {
+  z-index: 2;
+  /* Ensure it's above the overlay */
+  /* You can add padding if you need some space around the content */
+}
+
 
 @media screen and (max-width: 768px) {
   .hamburger {

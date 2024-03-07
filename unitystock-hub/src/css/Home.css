@@ -89,14 +89,12 @@
   margin: auto;
   max-height: 800px;
 }
-.home-page-content h2{
-  text-align: left;
-}
+
 /* Welcome Section */
 .welcome-section {
   background-color: #90bce5; /* Deep blue background */
   color: #000000; /* White text for contrast */
-  padding: 4rem 20px; /* Generous padding for airy feel */
+  padding: 2rem 20px; /* Generous padding for airy feel */
   border-top-left-radius: 10px; /* Top left corner radius */
   border-top-right-radius: 10px; /* Top right corner radius */
   transform: translateY(-15%); /* Lift up to create overlapping effect */
@@ -110,7 +108,7 @@
   font-size: 1.25rem; /* Larger font size for emphasis */
   line-height: 1.6; /* Line height for improved readability */
   margin: 0 auto; /* Center the text block */
-  padding: 20px;
+padding-left: 20px;
 }
 
 /* Section Heading */
@@ -213,6 +211,7 @@
 .error-message {
   color: red; 
   margin-bottom: 15px;
+  margin-left: 20px;
 }
 .required {
   color: red;
@@ -246,7 +245,6 @@ label{
   .feature,
   .testimonial-section,
   .welcome-text,.cta-section,.features-section {
-    width: 80%;
     margin-bottom: 10px;
   }
   .welcome-section,.features-section {
