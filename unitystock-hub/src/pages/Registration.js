@@ -64,6 +64,7 @@ const RegistrationForm = () => {
     }
 
     // Password validation
+    if(!user){
     if (!formData.password) {
       errors.password = "Password is required";
       formIsValid = false;
@@ -77,7 +78,7 @@ const RegistrationForm = () => {
       errors.confirmPassword = "Passwords do not match";
       formIsValid = false;
     }
-
+  }
     if (!formData.roleId) {
       errors.roleId = "Role is required";
       formIsValid = false;
@@ -98,8 +99,6 @@ const RegistrationForm = () => {
     setValidationErrors(errors);
     return formIsValid;
   };
-
-
   // Function to fetch division data
   const fetchDivisions = async () => {
     try {
@@ -166,19 +165,22 @@ const RegistrationForm = () => {
 
 
   const handleSubmit = (e) => {
-
     e.preventDefault();
+    debugger
     if (!validateForm()) {
-      console.log('Form is invalid!');
+      setSubmitMessage(validationErrors);
       return;
     }
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
-        setSubmitMessage('User registered successfully.');
+        debugger
+        setSubmitMessage(response.data.message);
+        if(!user){
         navigate('/Division');
+        }
       })
       .catch(error => {
-        setSubmitMessage('Failed to register user.');
+        setSubmitMessage(error.response.data.message);
       });
   };
   // Populate form data with user data
@@ -200,8 +202,7 @@ const RegistrationForm = () => {
 
   return (
     <div className="registration-container">
-      <h2 className='section-heading'>{user ? "Profile" : "User Registration"}</h2>
-      {submitMessage && <div className={submitMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{submitMessage}</div>}
+      <h2 className='section-heading'>{user ? "Profile" : "User Registration"}</h2>     
       <div className="registration-form">
         <div className="form-column left-column">
           <div className="profile-container">
@@ -221,6 +222,7 @@ const RegistrationForm = () => {
           </div>
         </div>
         <div className="form-column right-column">
+        {typeof submitMessage === 'string' && submitMessage && <div className={submitMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{submitMessage}</div>}
           <label htmlFor="name">Name<span className="required">*</span></label>
           <input
             id="name"

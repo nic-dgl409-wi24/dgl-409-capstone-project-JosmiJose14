@@ -134,44 +134,63 @@ app.get('/get-users', async (req, res) => {
 });
 app.post('/register', (req, res) => {
   const { userId, name, email, password, roleId, divisionId, imageUrl, jobTitle, contactNumber } = req.body;
-  if (userId) {
-    // Assuming you're passing a userId, it's an update operation
-    const updateQuery = 'UPDATE users SET Name = ?, Email = ?, RoleId = ?, DivisionID = ?, ImageUrl = ?, JobTitle = ?, ContactNumber = ? WHERE user_id = ?';
 
-    // Hash password here if you want to store hashed passwords
-
-    connection.query(updateQuery, [name, email, roleId, divisionId, imageUrl, jobTitle, contactNumber, userId], (error, results) => {
-      if (error) {
-        let userMessage = "An unexpected error occurred";
-        if (error.code === "ER_DUP_ENTRY") {
-          userMessage = "A user with the given email already exists";
-        } else if (error.code === "ER_NO_REFERENCED_ROW") {
-          userMessage = "Provided role or division does not exist";
-        }
-
-        // For development, you might include the error message:
-        // res.status(500).send({ message: userMessage, error: error.message });
-        // For production, exclude error details:
-        res.status(500).send({ message: userMessage });
-      } else {
-        res.status(200).send({ message: 'User updated successfully' });
-      }
-    });
-  } else {
-    // It's a registration operation
+  function insertUser() {
+    // Insert operation
     const insertQuery = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle, ContactNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-
-    // Hash password here if you want to store hashed passwords
-
     connection.query(insertQuery, [name, email, password, roleId, divisionId, imageUrl, jobTitle, contactNumber], (error, results) => {
       if (error) {
-        res.status(500).send({ message: error.message });
+        console.error(error); // Log the error for debugging purposes
+        res.status(500).send({ message: "Failed: User registration failed" });
       } else {
         res.status(201).send({ message: 'User registered successfully', userId: results.insertId });
       }
     });
   }
+
+  if (userId) {
+    // Update operation
+    const updateQuery = 'UPDATE users SET Name = ?, Email = ?,  RoleId = ?, DivisionID = ?, ImageUrl = ?, JobTitle = ?, ContactNumber = ? WHERE user_id = ?';
+    connection.query(updateQuery, [name, email, roleId, divisionId, imageUrl, jobTitle, contactNumber, userId], (error, results) => {
+      if (error) {
+        console.error(error); // Log the error for debugging purposes
+        res.status(500).send({ message: "Failed: An unexpected error occurred during update" });
+      } else {
+        res.status(200).send({ message: 'User updated successfully' });
+      }
+    });
+  } else {
+    // Pre-check for email and name existence only on insert
+    const checkQuery = 'SELECT Email, Name FROM users WHERE Email = ? OR Name = ?';
+    connection.query(checkQuery, [email, name], (checkError, checkResults) => {
+      if (checkError) {
+        console.error(checkError); // Log the error for debugging purposes
+        res.status(500).send({ message: "Failed: An unexpected error occurred" });
+      } else if (checkResults.length > 0) {
+        let isDuplicate = false;
+        let duplicateField = '';
+        checkResults.forEach(result => {
+          if (email === result.Email) {
+            isDuplicate = true;
+            duplicateField = 'Email';
+          } else if (name === result.Name) {
+            isDuplicate = true;
+            duplicateField = 'Name';
+          }
+        });
+
+        if (isDuplicate) {         
+          return res.status(400).json({ success: false, error: `Failed: A user with the given ${duplicateField} already exists.` });
+        } else {
+          insertUser();
+        }
+      } else {
+        insertUser();
+      }
+    });
+  }
 });
+
 
 // Login endpoint
 app.post('/login', (req, res) => {

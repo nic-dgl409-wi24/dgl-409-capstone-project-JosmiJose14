@@ -16,7 +16,7 @@
 }
 
 .division-card {
-    background: #90bce5;
+    background: #f4f4f4;
     border-radius: 10px;    
      flex-basis: calc(30% - 20px);
     margin-bottom: 20px; /* Add space between rows */
@@ -28,7 +28,7 @@ img{
 }
 .card-body {
     padding: 20px 20px; /* Gives some padding above and below the buttons/links */
-    background-color: #f0f0f0;
+    background-color: #90bce5;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     border-bottom-left-radius: 10px; /* Top left corner radius */
     border-bottom-right-radius: 10px; /* Top right corner radius */
