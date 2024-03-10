@@ -1,0 +1,119 @@
+.inventory-page {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter section full width */
+.filter-section {
+    width: 100%;
+    /* Full width by default */
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow the items to wrap */
+    gap: 10px;
+    /* Space between filter items */
+    padding: 10px;
+}
+
+
+.filter-section input[type="text"] {
+    flex-grow: 1;
+    /* Allow each input and button to grow */
+    margin: 0 10px;
+}
+
+/* Remove margin from first and last child to align with the parent's edge */
+.filter-section input[type="text"]:first-child,
+.filter-section .btn:last-child {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.inventory-list-container {
+    overflow-x: auto;
+    /* Enables horizontal scrolling */
+    margin: 20px 0;
+}
+
+.inventory-list {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    /* Minimum width of the table */
+
+}
+
+.inventory-list th,
+.inventory-list td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.inventory-list th {
+    background-color: #90bce5;
+}
+
+/* Set the Actions column to be wider to fit buttons */
+.inventory-list th:last-child,
+.inventory-list td:last-child {
+    width: 20%;
+    /* Adjust width as needed for your buttons */
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: start;
+    /* This will space your buttons nicely */
+    padding-left: 0;
+}
+
+.action-buttons button {
+    margin-right: 10px;
+}
+
+/* Hover effect for rows */
+.inventory-list tr:hover {
+    background-color: #bacddd;
+}
+
+/* Responsive adjustments for table */
+@media (max-width: 768px) {
+    .filter-section input {
+        width: 100%;
+        /* Full width on small screens */
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 10px;
+        /* Spacing between items when wrapped */
+    }
+
+    .filter-section input[type="text"] {
+        margin: 0;
+    }
+
+    .inventory-list,
+    .inventory-list th,
+    .inventory-list td {
+        font-size: 14px;
+        /* Smaller font size for readability on small screens */
+        padding: 8px;
+        /* Adjust padding to suit smaller viewport */
+    }
+
+    /* Responsive adjustments for action buttons */
+    .action-buttons {
+        padding: 0;
+        text-align: center;
+    }
+
+    .action-buttons button {
+        margin-bottom: 5px;
+        /* Space between stacked buttons */
+    }
+}
