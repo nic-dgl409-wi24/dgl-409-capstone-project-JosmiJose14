@@ -34,6 +34,7 @@ connection.connect(error => {
 
 const spreadsheetId = '1-GYq6o3zJ_MlMCqHCmU9XRFyVCyi2gRx8e-kkN2DIaI'; // Replace with your actual spreadsheet ID
 const subspreadsheetId = '12_hbBZt7NU8nj-JfInDxLMvBjpYps82Vw4k2-SHjEXU';
+const inventoryspreadsheetId='1hO7IajrBcAypA8FKjngv9G65ltq8Uw3VV-EFATdJlZI';
 const filePath = path.join(__dirname, 'unitystock-hub-google.json');
 
 // Set up authentication with the service account
@@ -289,7 +290,7 @@ app.post('/save-division', async (req, res) => {
         };
         // Append the new row
         const response = await sheets.spreadsheets.values.append(appendRequest);
-        res.status(200).json({ success: true, data: response.data });
+        res.status(200).json({ success: true, data: response.data ,message: 'Department added successfully'});
       } catch (error) {
         res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
       }
@@ -417,7 +418,7 @@ app.post('/save-subdivision', async (req, res) => {
         };
         // Append the new row
         const response = await sheets.spreadsheets.values.append(appendRequest);
-        res.status(200).json({ success: true, message: 'Sub-Department added successfully' });
+        res.status(200).json({ success: true, message: 'Sub-Department added successfully',data: response.data });
       }
       catch (error) {
         res.status(500).json({ success: false, error: 'Failed to save to Google Sheets', details: error.message });
@@ -461,6 +462,24 @@ app.get('/get-subdivision/:Id', async (req, res) => {
     } else {
       res.status(404).json({ success: false, message: 'Division not found' });
     }
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+  }
+});
+
+
+app.get('/inventory', async (req, res) => {
+  const authClient = await auth.getClient();
+
+  const request = {
+    spreadsheetId: inventoryspreadsheetId,
+    range: 'Sheet1', // Replace with your actual range
+    auth: authClient,
+  };
+
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    res.status(200).json({ success: true, data: response.data.values });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }

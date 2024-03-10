@@ -10,7 +10,7 @@ import Division from './pages/Division';
 import AddDivision from './pages/AddDivision';
 import SubDivision from './pages/SubDivision';
 import AddSubDivision from './pages/AddSubDivision';
-
+import Inventories from './pages/Inventory';
 function App() {
   return (
     <AuthProvider>
@@ -28,7 +28,7 @@ function App() {
         <Route path="/SubDivision/:divisionId" element={<SubDivision />} />
         <Route path="/AddSubDivision/add/:divisionId" element={<AddSubDivision />} />
         <Route path="/AddSubDivision/edit/:id" element={<AddSubDivision />} />
-        
+        <Route path="/Inventories" element={<Inventories />} />
      </Routes>
       <Footer />
     </Router>
