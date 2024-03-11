@@ -146,7 +146,7 @@ export default function SubDivisionAddEdit() {
                 </div>
                 <div className="form-column">
                     <div className="form-fields">
-                        <h2 className='section-heading'>{id ? 'Edit SubDivision' : 'Add SubDivision'}</h2>
+                        <h2 className='section-heading'>{id ? 'Edit Sub-Department' : 'Add Sub-Department'}</h2>
                         {submitMessage && <div className={submitMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{submitMessage}</div>}
                         <label htmlFor="subdivision">Sub Department</label>
                         <input

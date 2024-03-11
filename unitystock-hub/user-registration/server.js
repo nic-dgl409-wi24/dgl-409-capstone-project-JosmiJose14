@@ -597,7 +597,6 @@ app.post('/save-inventory', async (req, res) => {
     LastUpdatedBy,
     LastUpdateTimestamp
   } = req.body;
-  console.log(req.body);
 
   const authClient = await auth.getClient();
   const spreadsheetId = inventoryspreadsheetId; // Your spreadsheet ID here
@@ -667,5 +666,30 @@ app.post('/save-inventory', async (req, res) => {
   } catch (error) {
     console.error('Error saving inventory data:', error);
     res.status(500).json({ success: false, error: 'Failed to save to Google Sheets.' });
+  }
+});
+app.get('/get-inventory/:Id', async (req, res) => {
+  const Id = req.params.Id;
+  const authClient = await auth.getClient();
+
+  const request = {
+    spreadsheetId: spreadsheetId,
+    range: 'Sheet1', // Adjust as necessary
+    auth: authClient,
+  };
+
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    const rows = response.data.values || [];
+    // Assuming ID is the first column in each row
+    const inventory = rows.find(row => row[0] === Id);
+
+    if (inventory) {
+      res.status(200).json({ success: true, data: inventory });
+    } else {
+      res.status(404).json({ success: false, message: 'Inventory not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });

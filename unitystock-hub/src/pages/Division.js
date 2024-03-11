@@ -36,7 +36,6 @@ export default function Division() {
     function handleEdit(divisionId) {
         // Logic to handle edit action for the division with the given id
         navigate(`/AddDivision/edit/${divisionId}`);
-        console.log(`Edit division with ID: ${divisionId}`);
     }
     function handleRedirect(divisionId) {
         // Logic to handle edit action for the division with the given id

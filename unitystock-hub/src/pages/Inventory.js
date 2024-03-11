@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../css/Inventory.css';
 import config from '../common/config';
 import axios from 'axios';
@@ -7,10 +7,8 @@ import axios from 'axios';
 const InventoryPage = () => {
     const [items, setItems] = useState([]);
     const [headers] = useState(['Name', 'Quantity', 'Expiry Date', 'Manufacture', 'Supplier', 'Updated By', 'Update Time']);
-
     const [filters, setFilters] = useState({ name: '', manufacture: '', supplier: '' });
-
-  
+    let navigate = useNavigate();
     const DESIRED_HEADERS = {
         'Id': 'ID',
         'Name': 'Name',
@@ -32,8 +30,8 @@ const InventoryPage = () => {
             const { data, success } = response.data;
             if (success && Array.isArray(data) && data.length > 1) {
                 const apiHeaders = data[0];
-            const rows = data.slice(1);
-          
+                const rows = data.slice(1);
+
                 const itemsArray = rows.map(row => {
                     let item = {};
                     apiHeaders.forEach((header, index) => {
@@ -44,7 +42,7 @@ const InventoryPage = () => {
                     });
                     return item;
                 });
-    
+
                 setItems(itemsArray);
             } else {
                 console.error('Invalid data format:', response.data);
@@ -56,17 +54,14 @@ const InventoryPage = () => {
         }
     };
     const handleEdit = (id) => {
-        // Logic to handle editing an item with the specified ID
-        console.log('Editing item with ID:', id);
-        // You can navigate to an edit page or open a modal for editing here
-      };
-    
-      const handleDelete = (id) => {
+        navigate(`/AddInventories/edit/${id}`)
+    };
+    const handleDelete = (id) => {
         // Logic to handle deleting an item with the specified ID
         console.log('Deleting item with ID:', id);
         // Perform deletion action, such as making an API call to delete the item
-      };
-    
+    };
+
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters({ ...filters, [name]: value });
@@ -77,19 +72,19 @@ const InventoryPage = () => {
             const response = await axios.get(`${config.server.baseUrl}/inventory/search`, { params: filters });
             const { data, success } = response.data;
             if (success && Array.isArray(data) && data.length > 0) {
-              const itemsArray = data.map(row => {
-                let item = {};
-                headers.forEach((header, index) => {
-                  // Note: Adjust index based on actual data structure if needed
-                  const apiHeader = Object.keys(DESIRED_HEADERS).find(key => DESIRED_HEADERS[key] === header);
-                  item[header] = row[apiHeader];
+                const itemsArray = data.map(row => {
+                    let item = {};
+                    headers.forEach((header, index) => {
+                        // Note: Adjust index based on actual data structure if needed
+                        const apiHeader = Object.keys(DESIRED_HEADERS).find(key => DESIRED_HEADERS[key] === header);
+                        item[header] = row[apiHeader];
+                    });
+                    return item;
                 });
-                return item;
-              });
-        
-              setItems(itemsArray);
-        }
-     } catch (error) {
+
+                setItems(itemsArray);
+            }
+        } catch (error) {
             console.error('Error searching inventory:', error);
         }
     };
@@ -107,7 +102,7 @@ const InventoryPage = () => {
                 <button className='btn' onClick={handleSearch}>Search</button>
             </div>
             <div className="inventory-list-container">
-            <table className="inventory-list">
+                <table className="inventory-list">
                     <thead>
                         <tr>
                             {headers.map(header => (
@@ -119,15 +114,15 @@ const InventoryPage = () => {
                     <tbody>
                         {items.map((item, index) => (
                             <tr key={index}>
-                            {headers.map((header) => {
-                              if (header !== 'ID') {  // Assuming you do not include 'ID' in your headers array
-                                return <td key={header}>{item[header]}</td>;
-                              }
-                              return null;  // Do not render anything for 'ID'
-                            })}
+                                {headers.map((header) => {
+                                    if (header !== 'ID') {  // Assuming you do not include 'ID' in your headers array
+                                        return <td key={header}>{item[header]}</td>;
+                                    }
+                                    return null;  // Do not render anything for 'ID'
+                                })}
                                 <td className="action-buttons">
                                     <button className="btn" onClick={() => handleEdit(item.ID)}>Edit</button>
-                                    <button className="btn"onClick={() => handleDelete(item.ID)}>Delete</button>
+                                    <button className="btn" onClick={() => handleDelete(item.ID)}>Delete</button>
                                 </td>
                             </tr>
                         ))}

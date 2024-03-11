@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import defaultImage from "../images/default.jpg";
 import config from '../common/config';
 import '../css/AddDivision.css'; // Update to the correct CSS file
@@ -19,18 +19,22 @@ export default function SubInventoryAddEdit() {
         expiryDate: '',
         selectedSubDivision: '',
         imageUrl: '', // Use default image as initial value
-        LastUpdatedBy: user.user_id,
+        LastUpdatedBy: user.Name,
         LastUpdateTimestamp: currentDate
     });
     const [subdivisions, setSubDivisions] = useState([]);
     const navigate = useNavigate();
+    const { id } = useParams();
     const [validationErrors, setValidationErrors] = useState({});
     const [uploadMessage, setUploadMessage] = useState('');
     const [submitMessage, setSubmitMessage] = useState('');
 
     useEffect(() => {
         fetchSubDivisions();
-    }, []);
+        if (id) {
+            fetchInventory(id); // Fetch division details if id is present
+        }
+    }, [id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -145,6 +149,33 @@ export default function SubInventoryAddEdit() {
             console.error('Error fetching divisions:', error);
         }
     };
+    const fetchInventory = async (id) => {
+        try {
+            // Replace URL with your endpoint to fetch division details by id
+            const response = await axios.get(`${config.server.baseUrl}/get-inventory/${id}`);
+            const inventoryData = response.data.data;
+            debugger
+            // Update the formData state with the fetched data
+            setFormData({
+                id: inventoryData[0],
+                name: inventoryData[1],
+                quantity: inventoryData[2],
+                manufacture: inventoryData[6],
+                supplier: inventoryData[7],
+                expiryDate: inventoryData[4],
+                selectedSubDivision: inventoryData[3], // Make sure this is the correct index for the sub-division
+                imageUrl: inventoryData[5], // Make sure this is the correct index for the image URL
+                LastUpdatedBy: user.Name,
+                LastUpdateTimestamp: currentDate // currentDate should be in the state or fetched from somewhere
+            });
+        } catch (error) {
+            console.error('Error fetching division details:', error);
+        }
+    };
+    const handleBack = () => {
+        navigate(`/Inventories`)
+    };
+
     return (
         <div className="division-container">
             <div className="form-container">
@@ -166,10 +197,9 @@ export default function SubInventoryAddEdit() {
                         {uploadMessage && <div className={uploadMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{uploadMessage}</div>}
                     </div>
                 </div>
-
                 <div className="form-column">
                     <div className="form-fields">
-                        <h2 className='section-heading'>{'Add SubDivision'}</h2>
+                        <h2 className='section-heading'>{id ? 'Edit Inventory' : 'Add Inventory'}</h2>
                         {submitMessage && <div className={submitMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{submitMessage}</div>}
                         <label htmlFor="name">Product Name</label>
                         <input
@@ -232,7 +262,7 @@ export default function SubInventoryAddEdit() {
                     {/* Include other input fields as needed */}
                     <div className="form-actions">
                         <button className="btn save" onClick={handleSave}>Save</button>
-                        <button className="btn back" onClick={() => navigate(-1)}>Back</button>
+                        <button className="btn back" onClick={handleBack}>Back</button>
                     </div>
                 </div>
             </div>
