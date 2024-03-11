@@ -117,7 +117,7 @@ export default function SubDivisionAddEdit() {
                 const [id, subdivisionName, division, imageUrl] = response.data.data;
                 setSubDivision(subdivisionName || ''); // Provide fallback value
                 setSelectedDivision(division || ''); // Provide fallback value
-                setImageUrl(imageUrl || defaultImage);  // Use fetched imageUrl or defaultImage if null
+                setImageUrl(imageUrl || '');  // Use fetched imageUrl or defaultImage if null
             }
         } catch (error) {
             console.error('Error fetching division details:', error);

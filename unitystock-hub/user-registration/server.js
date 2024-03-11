@@ -357,14 +357,6 @@ app.post('/save-subdivision', async (req, res) => {
     };
     const getResponse = await sheets.spreadsheets.values.get(getRequest);
     const rows = getResponse.data.values || [];
-
-    // Assuming subdivision name is in the second column (B column), adjust the index if necessary
-    let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === subdivision.toLowerCase());
-
-    // Prevent insertion/updation if subdivision with the same name exists
-    if (foundRowIndex !== -1) {
-      return res.status(400).json({ success: false, error: 'Failed : A sub-department with the same name already exists.' });
-    }
     if (id) {
       let foundRowIndex = rows.findIndex(row => row[0] === id); // Assuming ID is in the first column
       if (foundRowIndex !== -1) {
@@ -391,6 +383,13 @@ app.post('/save-subdivision', async (req, res) => {
       }
     } else {
       try {
+         // Assuming subdivision name is in the second column (B column), adjust the index if necessary
+        let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === subdivision.toLowerCase());
+
+        // Prevent insertion/updation if subdivision with the same name exists
+        if (foundRowIndex !== -1) {
+          return res.status(400).json({ success: false, error: 'Failed : A sub-department with the same name already exists.' });
+        }
         // Fetch the last ID from the sheet
         const getLastIdRequest = {
           spreadsheetId: subspreadsheetId,

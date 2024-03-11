@@ -106,13 +106,14 @@ export default function Division() {
     };
     const fetchDivisionDetails = async (divisionId) => {
         try {
+            debugger
             // Replace URL with your endpoint to fetch division details by id
             const response = await axios.get(`${config.server.baseUrl}/get-division/${divisionId}`);
             if (response.data && response.data.data) {
                 const [id, divisionName, supervisor, imageUrl] = response.data.data;
                 setDivision(divisionName || ''); // Provide fallback value
                 setSupervisor(supervisor || ''); // Provide fallback value
-                setImageUrl(imageUrl || defaultImage);  // Use fetched imageUrl or defaultImage if null
+                setImageUrl(imageUrl || '');  // Use fetched imageUrl or defaultImage if null
             }
         } catch (error) {
             console.error('Error fetching division details:', error);
