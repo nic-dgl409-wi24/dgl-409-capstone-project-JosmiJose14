@@ -91,7 +91,7 @@ export default function Division() {
             const response = await axios.post(endpoint, data);
             setSubmitMessage(response.data.message);
         } catch (error) {
-            debugger
+            
             setSubmitMessage(error.response.data.error);
         }
     };
@@ -106,7 +106,7 @@ export default function Division() {
     };
     const fetchDivisionDetails = async (divisionId) => {
         try {
-            debugger
+            
             // Replace URL with your endpoint to fetch division details by id
             const response = await axios.get(`${config.server.baseUrl}/get-division/${divisionId}`);
             if (response.data && response.data.data) {

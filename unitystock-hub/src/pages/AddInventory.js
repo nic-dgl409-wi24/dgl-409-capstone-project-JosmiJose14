@@ -126,7 +126,7 @@ export default function SubInventoryAddEdit() {
         // The URL of your backend endpoint
         const endpoint = `${config.server.baseUrl}/save-inventory`;
         try {
-            debugger
+            
             // Send a POST request to your backend service
             const response = await axios.post(endpoint, formData);
             setSubmitMessage(response.data.message);
@@ -155,7 +155,7 @@ export default function SubInventoryAddEdit() {
             // Replace URL with your endpoint to fetch division details by id
             const response = await axios.get(`${config.server.baseUrl}/get-inventory/${id}`);
             const inventoryData = response.data.data;
-            debugger
+            
             // Update the formData state with the fetched data
             setFormData({
                 id: inventoryData[0],

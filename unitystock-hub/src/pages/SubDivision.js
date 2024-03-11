@@ -15,7 +15,7 @@ export default function SubDivision() {
     const fetchSubDivisions = async (divisionId) => {
         try {
             const response = await axios.get(`${config.server.baseUrl}/get-subdivisions/${divisionId}`);
-            debugger
+            
             // Assuming the first row is headers, skip it
             // Target the 'data' property within the response data
             const subdivisionData = response.data.data.map(row => ({

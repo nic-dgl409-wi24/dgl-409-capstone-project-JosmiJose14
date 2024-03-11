@@ -25,7 +25,6 @@ const RegistrationForm = () => {
     divisionId: '',
     imageUrl: '', // Assuming this will be a base64 encoded string or a URL
   });
-  const { login } = useAuth(); // Destructure the login function
   const navigate = useNavigate();
   useEffect(() => {
     fetchRoles();
@@ -166,7 +165,7 @@ const RegistrationForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    debugger
+    
     if (!validateForm()) {
       setSubmitMessage(validationErrors);
       return;
