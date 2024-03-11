@@ -484,3 +484,62 @@ app.get('/inventory', async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
+app.get('/inventory/search', async (req, res) => {
+  const { name, manufacture, supplier } = req.query;
+
+  const authClient = await auth.getClient();
+  const request = {
+    spreadsheetId: inventoryspreadsheetId,
+    range: 'Sheet1',
+    auth: authClient,
+  };
+
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    const rows = response.data.values;
+
+    // Assuming the first row contains headers
+    const headers = rows[0].map(header => header);
+
+    const searchName = name?.toLowerCase();
+    const searchManufacture = manufacture?.toLowerCase();
+    const searchSupplier = supplier?.toLowerCase();
+
+    let results = rows.slice(1).filter(row => {
+      const itemName = row[1].toLowerCase(); // Assuming 'Name' is in the second column
+      const itemManufacture = row[6].toLowerCase(); // Assuming 'Manufacture' is in the seventh column
+      const itemSupplier = row[7].toLowerCase(); // Assuming 'Supplier' is in the eighth column
+
+      let includeRow = true;
+
+      if (searchName && !itemName.includes(searchName)) {
+        includeRow = false;
+      }
+
+      if (searchManufacture && !itemManufacture.includes(searchManufacture)) {
+        includeRow = false;
+      }
+
+      if (searchSupplier && !itemSupplier.includes(searchSupplier)) {
+        includeRow = false;
+      }
+
+      return includeRow;
+    }).map(row => {
+      // Creating an object for each row based on headers
+      let item = {};
+      row.forEach((cell, index) => {
+        let key = headers[index]; // Getting the key based on the index
+        item[key] = cell;
+      });
+      return item;
+    });
+
+    res.json({ success: true, data: results });
+  } catch (error) {
+    console.error('Error searching inventory:', error);
+    res.status(500).json({ success: false, error: 'Failed to search data in Google Sheets' });
+  }
+});
+
+

@@ -7,7 +7,8 @@ const InventoryPage = () => {
     const [items, setItems] = useState([]);
     const [headers] = useState(['Name', 'Quantity', 'Expiry Date', 'Manufacture', 'Supplier', 'Updated By', 'Update Time']);
 
-    const [filters, setFilters] = useState({ dining: '', manufacture: '', quantity: '' });
+    const [filters, setFilters] = useState({ name: '', manufacture: '', supplier: '' });
+
   
     const DESIRED_HEADERS = {
         'Id': 'ID',
@@ -27,7 +28,6 @@ const InventoryPage = () => {
     const fetchItems = async () => {
         try {
             const response = await axios.get(`${config.server.baseUrl}/inventory`); // Update the API endpoint as needed
-            debugger
             const { data, success } = response.data;
             if (success && Array.isArray(data) && data.length > 1) {
                 const apiHeaders = data[0];
@@ -73,9 +73,22 @@ const InventoryPage = () => {
 
     const handleSearch = async () => {
         try {
-            const response = await axios.get(`/api/inventory/search`, { params: filters });
-            setItems(response.data);
-        } catch (error) {
+            const response = await axios.get(`${config.server.baseUrl}/inventory/search`, { params: filters });
+            const { data, success } = response.data;
+            if (success && Array.isArray(data) && data.length > 0) {
+              const itemsArray = data.map(row => {
+                let item = {};
+                headers.forEach((header, index) => {
+                  // Note: Adjust index based on actual data structure if needed
+                  const apiHeader = Object.keys(DESIRED_HEADERS).find(key => DESIRED_HEADERS[key] === header);
+                  item[header] = row[apiHeader];
+                });
+                return item;
+              });
+        
+              setItems(itemsArray);
+        }
+     } catch (error) {
             console.error('Error searching inventory:', error);
         }
     };
@@ -84,7 +97,7 @@ const InventoryPage = () => {
         <div className="inventory-page">
             <h2 className='section-heading'>Inventories</h2>
             <div className="filter-section">
-                <input type="text" name="name" value={filters.dining} onChange={handleFilterChange} placeholder="name" />
+                <input type="text" name="name" value={filters.dining} onChange={handleFilterChange} placeholder="Name" />
                 <input type="text" name="manufacture" value={filters.manufacture} onChange={handleFilterChange} placeholder="Manufacture" />
                 <input type="text" name="supplier" value={filters.quantity} onChange={handleFilterChange} placeholder="Supplier" />
                 <button className='btn' onClick={handleSearch}>Search</button>
