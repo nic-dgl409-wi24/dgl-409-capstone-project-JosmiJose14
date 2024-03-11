@@ -25,7 +25,7 @@ const RegistrationForm = () => {
     divisionId: '',
     imageUrl: '', // Assuming this will be a base64 encoded string or a URL
   });
-
+  const { login } = useAuth(); // Destructure the login function
   const navigate = useNavigate();
   useEffect(() => {
     fetchRoles();
@@ -173,11 +173,10 @@ const RegistrationForm = () => {
     }
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
-        debugger
         setSubmitMessage(response.data.message);
-        if(!user){
-        navigate('/Division');
-        }
+      
+        navigate('/login');      
+        
       })
       .catch(error => {
         setSubmitMessage(error.response.data.message);

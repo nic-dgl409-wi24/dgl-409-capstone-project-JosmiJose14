@@ -30,7 +30,9 @@ function App() {
         <Route path="/AddSubDivision/add/:divisionId" element={<AddSubDivision />} />
         <Route path="/AddSubDivision/edit/:id" element={<AddSubDivision />} />
         <Route path="/Inventories" element={<Inventories />} />
+        <Route path="/Inventories/:subId" element={<Inventories />} />
         <Route path="/AddInventories/add/" element={<AddInventories />} />
+        <Route path="/AddInventories/add/:subId" element={<AddInventories />} />
         <Route path="/AddInventories/edit/:id" element={<AddInventories />} />
      </Routes>
       <Footer />

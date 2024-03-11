@@ -15,9 +15,10 @@ export default function SubDivision() {
     const fetchSubDivisions = async (divisionId) => {
         try {
             const response = await axios.get(`${config.server.baseUrl}/get-subdivisions/${divisionId}`);
+            debugger
             // Assuming the first row is headers, skip it
             // Target the 'data' property within the response data
-            const subdivisionData = response.data.data.slice(1).map(row => ({
+            const subdivisionData = response.data.data.map(row => ({
                 id: row[0],
                 name: row[1],
                 supervisorId: row[2] || '',
@@ -38,10 +39,10 @@ export default function SubDivision() {
         // Logic to handle edit action for the division with the given id
         navigate(`/AddSubDivision/edit/${Id}`);
     }
-    // function handleRedirect(divisionId) {
-    //     // Logic to handle edit action for the division with the given id
-    //     navigate(`/SubDivision/${divisionId}`);
-    // }
+    function handleRedirect(subId) {
+        // Logic to handle edit action for the division with the given id
+        navigate(`/Inventories/${subId}`);
+    }
     function handleDelete(divisionId) {
         // Logic to handle delete action for the division with the given id
         console.log(`Delete division with ID: ${divisionId}`);
@@ -52,22 +53,26 @@ export default function SubDivision() {
             <div className="division-header">
                 <h2 className='section-heading'>Sub-Department</h2>
                 <span className='welcome-text'>Welcome, {user?.Name || 'User'}!</span> {/* Use optional chaining */}
-                <span className="add-division-button">
-                    <Link to={`/AddSubDivision/add/${divisionId}`} className="btn">Add Sub-Department</Link>
-                </span>
+                {user.RoleId !== 2 && (
+                    <span className="add-division-button">
+                        <Link to={`/AddSubDivision/add/${divisionId}`} className="btn">Add Sub-Department</Link>
+                    </span>
+                )}
             </div>
             <div className="division-grid">
                 {subdivisions.map((division, index) => (
                     <div className="division-card" key={index}>
-                        <img src={division.imageUrl ? `${config.server.baseUrl}/${division.imageUrl}` : defaultImage} alt={division.name} className="division-image" />
+                        <img src={division.imageUrl ? `${config.server.baseUrl}/${division.imageUrl}` : defaultImage} alt={division.name} className="division-image" onClick={() => handleRedirect(division.id)} />
                         <div className="card-body">
                             <h3>{division.name}</h3>
-                            <div className="division-actions">
-                                {/* Bind division.id to the onClick event for the Edit button */}
-                                <button className='btn' onClick={() => handleEdit(division.id)}>Edit</button>
-                                {/* Bind division.id to the onClick event for the Delete button */}
-                                <button className='btn' onClick={() => handleDelete(division.id)}>Delete</button>
-                            </div>
+                            {user.RoleId !== 2 && (
+                                <div className="division-actions">
+                                    {/* Bind division.id to the onClick event for the Edit button */}
+                                    <button className='btn' onClick={() => handleEdit(division.id)}>Edit</button>
+                                    {/* Bind division.id to the onClick event for the Delete button */}
+                                    <button className='btn' onClick={() => handleDelete(division.id)}>Delete</button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}

@@ -9,25 +9,26 @@ export default function SubInventoryAddEdit() {
     // State to store the form data
     const { user } = useAuth(); // Access global user data
     const currentDate = new Date().toISOString().split('T')[0];
-
+    const [subdivisions, setSubDivisions] = useState([]);
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const { subId } = useParams();
+    const [validationErrors, setValidationErrors] = useState({});
+    const [uploadMessage, setUploadMessage] = useState('');
+    const [submitMessage, setSubmitMessage] = useState('');
     const [formData, setFormData] = useState({
         id: '',
         name: '',
         quantity: '',
         manufacture: '',
         supplier: '',
-        expiryDate: '',
-        selectedSubDivision: '',
+        expiryDate: '', 
+        selectedSubDivision:subId || '',
         imageUrl: '', // Use default image as initial value
         LastUpdatedBy: user.Name,
         LastUpdateTimestamp: currentDate
     });
-    const [subdivisions, setSubDivisions] = useState([]);
-    const navigate = useNavigate();
-    const { id } = useParams();
-    const [validationErrors, setValidationErrors] = useState({});
-    const [uploadMessage, setUploadMessage] = useState('');
-    const [submitMessage, setSubmitMessage] = useState('');
+ 
 
     useEffect(() => {
         fetchSubDivisions();
@@ -173,6 +174,11 @@ export default function SubInventoryAddEdit() {
         }
     };
     const handleBack = () => {
+        if(subId)
+        {
+        navigate(`/Inventories/${subId}`);
+        }
+        else
         navigate(`/Inventories`)
     };
 

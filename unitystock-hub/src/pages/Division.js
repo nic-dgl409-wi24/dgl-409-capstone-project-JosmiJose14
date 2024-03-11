@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link ,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../css/Division.css'; // Ensure you have the CSS file for styling
 import config from '../common/config';
 import defaultImage from "../images/default.jpg";
@@ -45,34 +45,38 @@ export default function Division() {
         // Logic to handle delete action for the division with the given id
         console.log(`Delete division with ID: ${divisionId}`);
     }
-    
+
     return (
         <div className="division-container">
             <div className="division-header">
                 <h2 className='section-heading'>Departments</h2>
                 <span className='welcome-text'>Welcome, {user?.Name || 'User'}!</span> {/* Use optional chaining */}
-                <span className="add-division-button">
-                <Link to="/AddDivision/add" className="btn">Add Department</Link>
-            </span>
+                {user.RoleId !== 2 && (
+                    <span className="add-division-button">
+                        <Link to="/AddDivision/add" className="btn">Add Department</Link>
+                    </span>
+                )}
             </div>
-            
+
             {/* Division Cards */}
             <div className="division-grid">
                 {divisions.map((division, index) => (
                     <div className="division-card" key={division.id} >
-                        <img src={division.imageUrl ? `${config.server.baseUrl}/${division.imageUrl}` : defaultImage} alt={division.name} className="division-image" onClick={() => handleRedirect(division.id)}/>
-                            <div className="card-body">
+                        <img src={division.imageUrl ? `${config.server.baseUrl}/${division.imageUrl}` : defaultImage} alt={division.name} className="division-image" onClick={() => handleRedirect(division.id)} />
+                        <div className="card-body">
                             <h3>{division.name}</h3>
+                            {user.RoleId !== 2 && (
                             <div className="division-actions">
-                            <button className="btn" onClick={() => handleEdit(division.id)}>Edit</button>
-                            <button className="btn" onClick={() => handleDelete(division.id)}>Delete</button>
+                                <button className="btn" onClick={() => handleEdit(division.id)}>Edit</button>
+                                <button className="btn" onClick={() => handleDelete(division.id)}>Delete</button>
                             </div>
+                            )}
                         </div>
                     </div>
                 ))}
             </div>
-            
-           
+
+
         </div>
     );
 }

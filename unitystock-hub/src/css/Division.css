@@ -12,7 +12,8 @@
     display: flex;
     flex-wrap: wrap; /* Enable wrapping of child elements */
     justify-content: start;
-    gap: 60px/* Adjust the space between the cards */
+    gap: 60px;/* Adjust the space between the cards */
+    margin-top:20px;
 }
 
 .division-card {
