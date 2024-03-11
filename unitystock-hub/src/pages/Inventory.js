@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../css/Inventory.css';
 import config from '../common/config';
 import axios from 'axios';
@@ -96,6 +97,9 @@ const InventoryPage = () => {
     return (
         <div className="inventory-page">
             <h2 className='section-heading'>Inventories</h2>
+            <span className="add-division-button">
+                <Link to="/AddInventories/add" className="btn">Add Inventory</Link>
+            </span>
             <div className="filter-section">
                 <input type="text" name="name" value={filters.dining} onChange={handleFilterChange} placeholder="Name" />
                 <input type="text" name="manufacture" value={filters.manufacture} onChange={handleFilterChange} placeholder="Manufacture" />

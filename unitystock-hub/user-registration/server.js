@@ -466,7 +466,26 @@ app.get('/get-subdivision/:Id', async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
-
+app.get('/get-subdivisions', async (req, res) => {
+  const authClient = await auth.getClient();
+  const request = {
+    spreadsheetId: subspreadsheetId,
+    range: 'Sheet1', // Adjust as necessary
+    auth: authClient,
+  };
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    const rows = response.data.values || [];
+    // Assuming ID is the first column in each row
+    if (rows) {
+      res.status(200).json({ success: true, data: rows });
+    } else {
+      res.status(404).json({ success: false, message: 'Division not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+  }
+});
 
 app.get('/inventory', async (req, res) => {
   const authClient = await auth.getClient();
@@ -543,3 +562,110 @@ app.get('/inventory/search', async (req, res) => {
 });
 
 
+app.get('/get-inventory/:Id', async (req, res) => {
+  const id = req.params.Id;
+  const authClient = await auth.getClient();
+  const request = {
+    spreadsheetId: inventoryspreadsheetId,
+    range: 'Sheet1', // Adjust as necessary
+    auth: authClient,
+  };
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    const rows = response.data.values || [];
+    // Assuming ID is the first column in each row
+    const inventory = rows.find(row => row[0] === id);
+    if (inventory) {
+      res.status(200).json({ success: true, data: inventory });
+    } else {
+      res.status(404).json({ success: false, message: 'Inventory not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+  }
+});
+app.post('/save-inventory', async (req, res) => {
+  const {
+    id,
+    name,
+    quantity,
+    selectedSubDivision,
+    expiryDate,
+    imageUrl,
+    manufacture,
+    supplier,
+    LastUpdatedBy,
+    LastUpdateTimestamp
+  } = req.body;
+  console.log(req.body);
+
+  const authClient = await auth.getClient();
+  const spreadsheetId = inventoryspreadsheetId; // Your spreadsheet ID here
+
+  try {
+    const range = 'Sheet1'; // Adjust as necessary for your spreadsheet's name
+    const sheetRange = `${range}!A:Z`; // Adjust as necessary to cover the range of your data
+
+    // Fetch all rows to search for an existing inventory item with the same name or ID
+    const getAllResponse = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: sheetRange,
+      auth: authClient,
+    });
+
+    const rows = getAllResponse.data.values || [];
+    const inventoryIndex = id ? rows.findIndex(row => row[0] === id.toString()) : -1;
+
+    if (inventoryIndex !== -1) {
+      // Update the existing inventory item
+      const updateRange = `${range}!A${inventoryIndex + 1}:I${inventoryIndex + 1}`; // Adjust based on your sheet's structure
+      await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: updateRange,
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+          values: [
+            [id, name,quantity, selectedSubDivision, expiryDate, imageUrl,manufacture,supplier,LastUpdatedBy,LastUpdateTimestamp]
+          ],
+        },
+        auth: authClient,
+      });
+
+      res.status(200).json({ success: true, message: 'Inventory updated successfully.' });
+    } else {
+      const lastIdResponse = await sheets.spreadsheets.values.get({
+        spreadsheetId: inventoryspreadsheetId,
+        range: 'Sheet1!A:A', // Assuming IDs are in column A
+        auth: authClient,
+      });
+      const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
+
+      // Determine the next ID value
+      let Id;
+      if (lastRow === 0) {
+        Id = 1;
+      } else {
+        const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0], 10);
+        Id = isNaN(lastId) ? 1 : lastId + 1;
+      }
+      // Append a new inventory item
+      const appendRequest = {
+        spreadsheetId,
+        range,
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+          values: [
+            [Id, name,quantity, selectedSubDivision, expiryDate, imageUrl,manufacture,supplier,LastUpdatedBy,LastUpdateTimestamp]
+          ],
+        },
+        auth: authClient,
+      };
+
+      await sheets.spreadsheets.values.append(appendRequest);
+      res.status(200).json({ success: true, message: 'Inventory added successfully.' });
+    }
+  } catch (error) {
+    console.error('Error saving inventory data:', error);
+    res.status(500).json({ success: false, error: 'Failed to save to Google Sheets.' });
+  }
+});

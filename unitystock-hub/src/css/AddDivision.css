@@ -22,6 +22,7 @@
 .image-column {
     flex-basis: 40%; /* Image column takes 30% of the form container */
     text-align: center; /* Center the image within the column */
+    margin: auto;
 }
 
 .image-container img {
