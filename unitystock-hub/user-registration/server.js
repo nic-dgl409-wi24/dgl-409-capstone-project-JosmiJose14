@@ -140,8 +140,7 @@ app.post('/register', (req, res) => {
     // Insert operation
     const insertQuery = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle, ContactNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     connection.query(insertQuery, [name, email, password, roleId, divisionId, imageUrl, jobTitle, contactNumber], (error, results) => {
-      if (error) {
-        console.error(error); // Log the error for debugging purposes
+      if (error) {// Log the error for debugging purposes
         res.status(500).send({ message: "Failed: User registration failed" });
       } else {
         res.status(201).send({ message: 'User registered successfully', userId: results.insertId });
@@ -154,7 +153,6 @@ app.post('/register', (req, res) => {
     const updateQuery = 'UPDATE users SET Name = ?, Email = ?,  RoleId = ?, DivisionID = ?, ImageUrl = ?, JobTitle = ?, ContactNumber = ? WHERE user_id = ?';
     connection.query(updateQuery, [name, email, roleId, divisionId, imageUrl, jobTitle, contactNumber, userId], (error, results) => {
       if (error) {
-        console.error(error); // Log the error for debugging purposes
         res.status(500).send({ message: "Failed: An unexpected error occurred during update" });
       } else {
         res.status(200).send({ message: 'User updated successfully' });
@@ -165,7 +163,6 @@ app.post('/register', (req, res) => {
     const checkQuery = 'SELECT Email, Name FROM users WHERE Email = ? OR Name = ?';
     connection.query(checkQuery, [email, name], (checkError, checkResults) => {
       if (checkError) {
-        console.error(checkError); // Log the error for debugging purposes
         res.status(500).send({ message: "Failed: An unexpected error occurred" });
       } else if (checkResults.length > 0) {
         let isDuplicate = false;
@@ -429,6 +426,7 @@ app.post('/save-subdivision', async (req, res) => {
 });
 
 app.get('/get-subdivisions/:divisionId', async (req, res) => {
+  const divisionId = req.params.divisionId; // Extract divisionId from the request parameters
   const authClient = await auth.getClient();
   const request = {
     spreadsheetId: subspreadsheetId,
@@ -437,7 +435,10 @@ app.get('/get-subdivisions/:divisionId', async (req, res) => {
   };
   try {
     const response = await sheets.spreadsheets.values.get(request);
-    res.status(200).json({ success: true, data: response.data.values });
+      const allsubdivisions = response.data.values;
+        // Assuming the DivisionId is in the 3rd column, filter the subdivisions based on divisionId
+    const filteresubdivisions = allsubdivisions.filter(row => row[2] === divisionId);
+    res.status(200).json({ success: true, data: filteresubdivisions});
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
@@ -555,7 +556,6 @@ app.get('/inventory/search', async (req, res) => {
 
     res.json({ success: true, data: results });
   } catch (error) {
-    console.error('Error searching inventory:', error);
     res.status(500).json({ success: false, error: 'Failed to search data in Google Sheets' });
   }
 });
@@ -583,6 +583,8 @@ app.get('/get-inventory/:Id', async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
+
+
 app.post('/save-inventory', async (req, res) => {
   const {
     id,
@@ -597,17 +599,15 @@ app.post('/save-inventory', async (req, res) => {
     LastUpdateTimestamp
   } = req.body;
 
-  const authClient = await auth.getClient();
-  const spreadsheetId = inventoryspreadsheetId; // Your spreadsheet ID here
-
   try {
+    const authClient = await auth.getClient();
+    const spreadsheetId = inventoryspreadsheetId; // Ensure this is defined
     const range = 'Sheet1'; // Adjust as necessary for your spreadsheet's name
-    const sheetRange = `${range}!A:Z`; // Adjust as necessary to cover the range of your data
 
     // Fetch all rows to search for an existing inventory item with the same name or ID
     const getAllResponse = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: sheetRange,
+      spreadsheetId: spreadsheetId,
+      range: `${range}!A:Z`, // Adjust as necessary to cover the range of your data
       auth: authClient,
     });
 
@@ -616,14 +616,14 @@ app.post('/save-inventory', async (req, res) => {
 
     if (inventoryIndex !== -1) {
       // Update the existing inventory item
-      const updateRange = `${range}!A${inventoryIndex + 1}:I${inventoryIndex + 1}`; // Adjust based on your sheet's structure
+      const updateRange = `${range}!A${inventoryIndex + 1}:J${inventoryIndex + 1}`;
       await sheets.spreadsheets.values.update({
-        spreadsheetId,
+        spreadsheetId: spreadsheetId,
         range: updateRange,
         valueInputOption: 'USER_ENTERED',
         resource: {
           values: [
-            [id, name,quantity, selectedSubDivision, expiryDate, imageUrl,manufacture,supplier,LastUpdatedBy,LastUpdateTimestamp]
+            [id, name, quantity, selectedSubDivision, expiryDate, imageUrl, manufacture, supplier, LastUpdatedBy, LastUpdateTimestamp],
           ],
         },
         auth: authClient,
@@ -631,42 +631,58 @@ app.post('/save-inventory', async (req, res) => {
 
       res.status(200).json({ success: true, message: 'Inventory updated successfully.' });
     } else {
-      const lastIdResponse = await sheets.spreadsheets.values.get({
-        spreadsheetId: inventoryspreadsheetId,
-        range: 'Sheet1!A:A', // Assuming IDs are in column A
-        auth: authClient,
-      });
-      const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
+      try {
+        // Assuming subdivision name is in the second column (B column), adjust the index if necessary
+       let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === name.toLowerCase());
 
-      // Determine the next ID value
-      let Id;
-      if (lastRow === 0) {
-        Id = 1;
-      } else {
-        const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0], 10);
-        Id = isNaN(lastId) ? 1 : lastId + 1;
-      }
-      // Append a new inventory item
-      const appendRequest = {
-        spreadsheetId,
-        range,
-        valueInputOption: 'USER_ENTERED',
-        resource: {
-          values: [
-            [Id, name,quantity, selectedSubDivision, expiryDate, imageUrl,manufacture,supplier,LastUpdatedBy,LastUpdateTimestamp]
-          ],
-        },
-        auth: authClient,
-      };
+       // Prevent insertion/updation if subdivision with the same name exists
+       if (foundRowIndex !== -1) {
+         return res.status(400).json({ success: false, error: 'Failed : A sub-department with the same name already exists.' });
+       }
+     const lastIdResponse = await sheets.spreadsheets.values.get({
+       spreadsheetId: inventoryspreadsheetId,
+       range: 'Sheet1!A:A', // Assuming IDs are in column A
+       auth: authClient,
+     });
+     const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
 
-      await sheets.spreadsheets.values.append(appendRequest);
-      res.status(200).json({ success: true, message: 'Inventory added successfully.' });
-    }
-  } catch (error) {
-    console.error('Error saving inventory data:', error);
+     // Determine the next ID value
+     let Id;
+     if (lastRow === 0) {
+       Id = 1;
+     } else {
+       const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0], 10);
+       Id = isNaN(lastId) ? 1 : lastId + 1;
+     }
+     // Append a new inventory item
+     const appendRequest = {
+       spreadsheetId: inventoryspreadsheetId,
+       range,
+       valueInputOption: 'USER_ENTERED',
+       resource: {
+         values: [
+           [Id, name,quantity, selectedSubDivision, expiryDate, imageUrl,manufacture,supplier,LastUpdatedBy,LastUpdateTimestamp]
+         ],
+       },
+       auth: authClient,
+     };
+
+     await sheets.spreadsheets.values.append(appendRequest);
+     res.status(200).json({ success: true, message: 'Inventory added successfully.' });
+   }
+   catch (error) {
+    console.error('Error: ', error);
     res.status(500).json({ success: false, error: 'Failed to save to Google Sheets.' });
-  }
+    }
+  } 
+}catch (error) {
+  console.error('Error: ', error);
+  res.status(500).json({ success: false, error: 'Failed to save to Google Sheets.' });
+}
 });
+
+
+
 app.get('/get-inventory/:Id', async (req, res) => {
   const Id = req.params.Id;
   const authClient = await auth.getClient();
@@ -691,4 +707,31 @@ app.get('/get-inventory/:Id', async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
+});
+app.get('/get-invertorybySub/:subId', async (req, res) => {
+  const subId = req.params.subId; // Extract divisionId from the request parameters
+  const authClient = await auth.getClient();
+  const request = {
+    spreadsheetId: inventoryspreadsheetId,
+    range: 'Sheet1', // Adjust as necessary for your spreadsheet's structure
+    auth: authClient,
+  };
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    const rows = response.data.values;
+    if (rows.length > 0) {
+      const headers = rows[0]; // Assuming the first row contains headers
+      // Assuming the SubDivisionId is in a specific column, adjust the index as necessary
+      // Note: Column indexes are 0-based, so for example, if SubDivisionId is in the 4th column, the index should be 3.
+      const filteredRows = rows.filter((row, index) => index > 0 && row[3] === subId); // Adjust the index 3 to match your SubDivisionId column
+
+      res.status(200).json({ success: true, data: { headers, rows: filteredRows } });
+    } else {
+      res.status(404).json({ success: false, message: 'No data found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+
+  }
+
 });

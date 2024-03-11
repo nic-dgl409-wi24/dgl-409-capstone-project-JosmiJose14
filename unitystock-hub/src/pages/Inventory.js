@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,useParams } from 'react-router-dom';
 import '../css/Inventory.css';
 import config from '../common/config';
 import axios from 'axios';
-
+import { useAuth } from '../pages/auth/AuthContext'; // Adjust the path as necessary
 const InventoryPage = () => {
     const [items, setItems] = useState([]);
     const [headers] = useState(['Name', 'Quantity', 'Expiry Date', 'Manufacture', 'Supplier', 'Updated By', 'Update Time']);
     const [filters, setFilters] = useState({ name: '', manufacture: '', supplier: '' });
     let navigate = useNavigate();
+    const { subId } = useParams();
+    const { user } = useAuth(); // Access global user data
     const DESIRED_HEADERS = {
         'Id': 'ID',
         'Name': 'Name',
@@ -21,8 +23,13 @@ const InventoryPage = () => {
     };
     useEffect(() => {
         // Fetch items when the component is mounted
+       
+        if(subId){
+        fetchInventoryBySub(subId);
+        }
+        else
         fetchItems();
-    }, []);
+    }, [subId]);
 
     const fetchItems = async () => {
         try {
@@ -51,6 +58,25 @@ const InventoryPage = () => {
         } catch (error) {
             console.error('Error fetching inventory data:', error);
             setItems([]);
+        }
+    };
+    const fetchInventoryBySub = async (subId) => {
+        try {
+            debugger
+            const response = await axios.get(`${config.server.baseUrl}/get-invertorybySub/${subId}`);
+            const { headers, rows } = response.data.data;
+            const itemsArray = rows.map(row => {
+                let item = {};
+                headers.forEach((header, index) => {
+                  const key = DESIRED_HEADERS[header] || header; // Use the header as key if not found in DESIRED_HEADERS
+                  item[key] = row[index];
+                });
+                return item;
+              });
+              
+              setItems(itemsArray);
+        } catch (error) {
+            console.error('Error fetching divisions:', error);
         }
     };
     const handleEdit = (id) => {
@@ -92,9 +118,11 @@ const InventoryPage = () => {
     return (
         <div className="inventory-page">
             <h2 className='section-heading'>Inventories</h2>
+           {user.RoleId !== 2 && (
             <span className="add-division-button">
-                <Link to="/AddInventories/add" className="btn">Add Inventory</Link>
+            <Link to={subId ? `/AddInventories/add/${subId}` : "/AddInventories/add"} className="btn">Add Inventory</Link>
             </span>
+           )}
             <div className="filter-section">
                 <input type="text" name="name" value={filters.dining} onChange={handleFilterChange} placeholder="Name" />
                 <input type="text" name="manufacture" value={filters.manufacture} onChange={handleFilterChange} placeholder="Manufacture" />
@@ -122,7 +150,9 @@ const InventoryPage = () => {
                                 })}
                                 <td className="action-buttons">
                                     <button className="btn" onClick={() => handleEdit(item.ID)}>Edit</button>
+                                    {user.RoleId !== 2 && (
                                     <button className="btn" onClick={() => handleDelete(item.ID)}>Delete</button>
+                                    )}
                                 </td>
                             </tr>
                         ))}
