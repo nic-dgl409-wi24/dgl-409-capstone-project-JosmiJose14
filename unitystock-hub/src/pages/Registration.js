@@ -9,7 +9,7 @@ const RegistrationForm = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const { user } = useAuth(); // Access global user data
   const [roles, setRoles] = useState([]);
-  const [jobTitles, setJobTitles] = useState([]);
+  // const [jobTitles, setJobTitles] = useState([]);
   const [divisions, setDivisions] = useState([]);
   const [uploadMessage, setUploadMessage] = useState('');
   const [submitMessage, setSubmitMessage] = useState('');
@@ -20,7 +20,6 @@ const RegistrationForm = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    jobTitle: '',
     roleId: '',
     divisionId: '',
     imageUrl: '', // Assuming this will be a base64 encoded string or a URL
@@ -28,16 +27,15 @@ const RegistrationForm = () => {
   const navigate = useNavigate();
   useEffect(() => {
     fetchRoles();
-    fetchJobTitles();
     fetchDivisions();
   }, []); // Add an empty dependency array here
   const validateForm = () => {
     let errors = {};
     let formIsValid = true;
-    if (!formData.imageUrl) {
-      errors.imageUrl = "Please upload an image.";
-      formIsValid = false;
-    }
+    // if (!formData.imageUrl) {
+    //   errors.imageUrl = "Please upload an image.";
+    //   formIsValid = false;
+    // }
     // Name validation
     if (!formData.name.trim()) {
       errors.name = "Name is required";
@@ -83,11 +81,11 @@ const RegistrationForm = () => {
       formIsValid = false;
     }
 
-    // Job Title validation
-    if (!formData.jobTitle) {
-      errors.jobTitle = "Job Title is required";
-      formIsValid = false;
-    }
+    // // Job Title validation
+    // if (!formData.jobTitle) {
+    //   errors.jobTitle = "Job Title is required";
+    //   formIsValid = false;
+    // }
 
     // Division validation
     if (!formData.divisionId) {
@@ -113,15 +111,15 @@ const RegistrationForm = () => {
     }
   };
 
-  const fetchJobTitles = async () => {
-    try {
-      const response = await axios.get(`${config.server.baseUrl}/get-jobtitles`); // Adjust the URL to your backend endpoint
-      const jobData = response.data.data;
-      setJobTitles(jobData);
-    } catch (error) {
-      console.error('Error fetching job:', error);
-    }
-  };
+  // const fetchJobTitles = async () => {
+  //   try {
+  //     const response = await axios.get(`${config.server.baseUrl}/get-jobtitles`); // Adjust the URL to your backend endpoint
+  //     const jobData = response.data.data;
+  //     setJobTitles(jobData);
+  //   } catch (error) {
+  //     console.error('Error fetching job:', error);
+  //   }
+  // };
   const fetchRoles = async () => {
     try {
       const response = await axios.get(`${config.server.baseUrl}/get-roles`); // Adjust the URL to your backend endpoint
@@ -285,13 +283,13 @@ const RegistrationForm = () => {
             ))}
           </select>
           {validationErrors.roleId && <div className="error-message">{validationErrors.roleId}</div>}
-          <label htmlFor="jobTitle">Job Title<span className="required">*</span></label>
+          {/* <label htmlFor="jobTitle">Job Title<span className="required">*</span></label>
           <select id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange}>
             <option value="" disabled>Select a job</option>
             {jobTitles.map(jobTitle => (
               <option key={jobTitle.id} value={jobTitle.id}>{jobTitle.name}</option>
             ))}</select>
-          {validationErrors.jobTitle && <div className="error-message">{validationErrors.jobTitle}</div>}
+          {validationErrors.jobTitle && <div className="error-message">{validationErrors.jobTitle}</div>} */}
           <label htmlFor="divisionId">Division<span className="required">*</span></label>
           <select id="division" name="divisionId" value={formData.divisionId} onChange={handleChange}>
             <option value="" disabled>Select a division</option>

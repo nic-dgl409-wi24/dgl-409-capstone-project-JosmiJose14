@@ -134,12 +134,12 @@ app.get('/get-users', async (req, res) => {
   }
 });
 app.post('/register', (req, res) => {
-  const { userId, name, email, password, roleId, divisionId, imageUrl, jobTitle, contactNumber } = req.body;
+  const { userId, name, email, password, roleId, divisionId, imageUrl, contactNumber } = req.body;
 
   function insertUser() {
     // Insert operation
-    const insertQuery = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, JobTitle, ContactNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    connection.query(insertQuery, [name, email, password, roleId, divisionId, imageUrl, jobTitle, contactNumber], (error, results) => {
+    const insertQuery = 'INSERT INTO users (Name, Email, Password, RoleId, DivisionID, ImageUrl, ContactNumber) VALUES ( ?, ?, ?, ?, ?, ?, ?)';
+    connection.query(insertQuery, [name, email, password, roleId, divisionId, imageUrl, contactNumber], (error, results) => {
       if (error) {// Log the error for debugging purposes
         res.status(500).send({ message: "Failed: User registration failed" });
       } else {
@@ -150,8 +150,8 @@ app.post('/register', (req, res) => {
 
   if (userId) {
     // Update operation
-    const updateQuery = 'UPDATE users SET Name = ?, Email = ?,  RoleId = ?, DivisionID = ?, ImageUrl = ?, JobTitle = ?, ContactNumber = ? WHERE user_id = ?';
-    connection.query(updateQuery, [name, email, roleId, divisionId, imageUrl, jobTitle, contactNumber, userId], (error, results) => {
+    const updateQuery = 'UPDATE users SET Name = ?, Email = ?,  RoleId = ?, DivisionID = ?, ImageUrl = ?, ContactNumber = ? WHERE user_id = ?';
+    connection.query(updateQuery, [name, email, roleId, divisionId, imageUrl, contactNumber, userId], (error, results) => {
       if (error) {
         res.status(500).send({ message: "Failed: An unexpected error occurred during update" });
       } else {
@@ -688,7 +688,7 @@ app.get('/get-inventory/:Id', async (req, res) => {
   const authClient = await auth.getClient();
 
   const request = {
-    spreadsheetId: spreadsheetId,
+    spreadsheetId: inventoryspreadsheetId,
     range: 'Sheet1', // Adjust as necessary
     auth: authClient,
   };
