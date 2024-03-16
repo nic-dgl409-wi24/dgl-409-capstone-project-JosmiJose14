@@ -29,16 +29,12 @@ export default function SubDivisionAddEdit() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'divisions') {
-            setSelectedDivision(value); // Update the selected division
+            setSelectedDivision(value.toUpperCase()); // Update the selected division
         }
     };
     const validateForm = () => {
         let errors = {};
-        let formIsValid = true;
-        if (!imageUrl) {
-            errors.imageUrl = "Please upload an image.";
-            formIsValid = false;
-        }
+        let formIsValid = true;      
         if (!subdivision.trim()) {
             errors.subdivision = 'Sub-Department name is required.';
             formIsValid = false;
@@ -140,8 +136,8 @@ export default function SubDivisionAddEdit() {
                             onChange={handleImageChange}
                             accept="image/*"
                         />
-                         {validationErrors.imageUrl && <div className="error-message">{validationErrors.imageUrl}</div>}
-                         {uploadMessage && <div className={uploadMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{uploadMessage}</div>}
+                        {validationErrors.imageUrl && <div className="error-message">{validationErrors.imageUrl}</div>}
+                        {uploadMessage && <div className={uploadMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{uploadMessage}</div>}
                     </div>
                 </div>
                 <div className="form-column">
@@ -156,14 +152,22 @@ export default function SubDivisionAddEdit() {
                             value={subdivision}
                             onChange={(e) => setSubDivision(e.target.value)}
                         />
-                         {validationErrors.subdivision && <div className="error-message">{validationErrors.subdivision}</div>}
+                        {validationErrors.subdivision && <div className="error-message">{validationErrors.subdivision}</div>}
                         <label htmlFor="divisions">Select Division</label>
-                        <select id="divisions" name="divisions" value={selectedDivision} onChange={handleChange}>
+                        <select
+                            id="divisions"
+                            name="divisions"
+                            value={selectedDivision}
+                            onChange={handleChange}
+                            disabled={selectedDivision ? true : false}>
                             <option value="" disabled>Select a Division</option>
                             {divisions.map((division) => (
                                 <option key={division.id} value={division.id}>{division.name}</option>
                             ))}
                         </select>
+                        {selectedDivision && (
+                            <input type="hidden" name="selectedDivision" value={selectedDivision} />
+                        )}
                         {validationErrors.division && <div className="error-message">{validationErrors.division}</div>}
                     </div>
                     <div className="form-actions">

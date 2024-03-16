@@ -34,6 +34,7 @@ function App() {
         <Route path="/AddInventories/add/" element={<AddInventories />} />
         <Route path="/AddInventories/add/:subId" element={<AddInventories />} />
         <Route path="/AddInventories/edit/:id" element={<AddInventories />} />
+        <Route path="/AddInventories/edit/:subId/:id" element={<AddInventories />} />
      </Routes>
       <Footer />
     </Router>

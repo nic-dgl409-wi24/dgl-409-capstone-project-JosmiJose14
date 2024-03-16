@@ -41,7 +41,12 @@ const LoginPage = () => {
             });
             if (response.data.message === 'Login successful') {
                 login(response.data.user);
+                if(response.data.user.roleId===2){
+                    navigate('/Inventories');
+                }
+                else{
                 navigate('/Division');
+                }
                 setMessage('Login successful. Redirecting...');
                 setIsError(false);
             } else {

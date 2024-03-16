@@ -24,12 +24,23 @@ export default function Header() {
   const isRegister = location.pathname === '/Signup' || location.pathname === '/Home';
   const isLogin = location.pathname === '/Login';
   const shouldShowDepartmentsLink = user && user.RoleId !== 2;
+
   return (
     <header className="header">
       <div className="logo">
-        <Link to="/" className="logo">
-          <img src={logo} alt="UnityStock Hub Logo" />
-        </Link>
+        {shouldShowDepartmentsLink ? (
+          <Link to="/Division" className="logo">
+            <img src={logo} alt="UnityStock Hub Logo" />
+          </Link>
+        ) : user && user.RoleId === 2 ? (
+          <Link to="/Inventories" className="logo">
+            <img src={logo} alt="UnityStock Hub Logo" />
+          </Link>
+        ) : (
+          <Link to="/" className="logo">
+            <img src={logo} alt="UnityStock Hub Logo" />
+          </Link>
+        )}
       </div>
       <div id="divHeader">
         <nav className="navigation">

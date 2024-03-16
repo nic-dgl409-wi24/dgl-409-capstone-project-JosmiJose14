@@ -62,7 +62,6 @@ const InventoryPage = () => {
     };
     const fetchInventoryBySub = async (subId) => {
         try {
-            debugger
             const response = await axios.get(`${config.server.baseUrl}/get-invertorybySub/${subId}`);
             const { headers, rows } = response.data.data;
             const itemsArray = rows.map(row => {
@@ -80,7 +79,12 @@ const InventoryPage = () => {
         }
     };
     const handleEdit = (id) => {
-        navigate(`/AddInventories/edit/${id}`)
+        if(subId){
+        navigate(`/AddInventories/edit/${subId}/${id}`)
+        }
+        else{
+            navigate(`/AddInventories/edit/${id}`)
+        }
     };
     const handleDelete = (id) => {
         // Logic to handle deleting an item with the specified ID

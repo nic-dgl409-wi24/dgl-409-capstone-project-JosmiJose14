@@ -25,16 +25,12 @@ export default function Division() {
         const { name, value } = e.target;
 
         if (name === 'supervisor') {
-            setSupervisor(value);
+            setSupervisor(value.toUpperCase());
         }
     };
     const validateForm = () => {
         let errors = {};
         let formIsValid = true;
-        if (!imageUrl) {
-            errors.imageUrl = "Please upload an image.";
-            formIsValid = false;
-        }
 
         if (!division.trim()) {
             errors.division = 'Division name is required.';

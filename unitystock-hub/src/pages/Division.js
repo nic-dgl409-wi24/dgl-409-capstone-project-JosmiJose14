@@ -15,7 +15,6 @@ export default function Division() {
         try {
             const response = await axios.get(`${config.server.baseUrl}/get-divisions`); // Adjust the URL to your backend endpoint
             // Assuming the first row is headers, skip it
-            debugger
             // Target the 'data' property within the response data
             const divisionData = response.data.data.slice(1).map(row => ({
                 id: row[0],

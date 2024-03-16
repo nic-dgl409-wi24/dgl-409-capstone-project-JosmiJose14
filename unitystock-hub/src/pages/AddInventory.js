@@ -22,14 +22,14 @@ export default function SubInventoryAddEdit() {
         quantity: '',
         manufacture: '',
         supplier: '',
-        expiryDate: '', 
-        selectedSubDivision:subId || '',
+        expiryDate: '',
+        selectedSubDivision: subId || '',
         imageUrl: '', // Use default image as initial value
         LastUpdatedBy: user.Name,
         LastUpdateTimestamp: currentDate
     });
- 
 
+   
     useEffect(() => {
         fetchSubDivisions();
         if (id) {
@@ -39,7 +39,7 @@ export default function SubInventoryAddEdit() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: value.toUpperCase() }));
     };
 
     const validateForm = () => {
@@ -77,6 +77,14 @@ export default function SubInventoryAddEdit() {
         if (!formData.expiryDate) {
             errors.expiryDate = "Expiry date is required.";
             formIsValid = false;
+        }else {
+            const currentDate = new Date();
+            const expiryDate = new Date(formData.expiryDate);
+        
+            if (expiryDate < currentDate) {
+                errors.expiryDate = "Expiry date should not be a previous date.";
+                formIsValid = false;
+            }
         }
 
         // Validate selectedSubDivision
@@ -126,7 +134,7 @@ export default function SubInventoryAddEdit() {
         // The URL of your backend endpoint
         const endpoint = `${config.server.baseUrl}/save-inventory`;
         try {
-            
+
             // Send a POST request to your backend service
             const response = await axios.post(endpoint, formData);
             setSubmitMessage(response.data.message);
@@ -155,7 +163,6 @@ export default function SubInventoryAddEdit() {
             // Replace URL with your endpoint to fetch division details by id
             const response = await axios.get(`${config.server.baseUrl}/get-inventory/${id}`);
             const inventoryData = response.data.data;
-            
             // Update the formData state with the fetched data
             setFormData({
                 id: inventoryData[0],
@@ -174,12 +181,11 @@ export default function SubInventoryAddEdit() {
         }
     };
     const handleBack = () => {
-        if(subId)
-        {
-        navigate(`/Inventories/${subId}`);
+        if (subId) {
+            navigate(`/Inventories/${subId}`);
         }
         else
-        navigate(`/Inventories`)
+            navigate(`/Inventories`)
     };
 
     return (
@@ -257,12 +263,21 @@ export default function SubInventoryAddEdit() {
                         />
                         {validationErrors.expiryDate && <div className="error-message">{validationErrors.expiryDate}</div>}
                         <label htmlFor="subdivisions">Select sub- department</label>
-                        <select id="selectedSubDivision" name="selectedSubDivision" value={formData.selectedSubDivision} onChange={handleChange}>
-                            <option value="" disabled>Select a Division</option>
+                        <select
+                            id="selectedSubDivision"
+                            name="selectedSubDivision"
+                            value={formData.selectedSubDivision}
+                            onChange={handleChange}
+                            disabled={!!formData.selectedSubDivision}>
+                            <option value="" disabled>Select a Subdivision</option>
                             {subdivisions.map((division) => (
                                 <option key={division.id} value={division.id}>{division.name}</option>
                             ))}
                         </select>
+                        {/* Include a hidden input to ensure the value is submitted with the form */}
+                        {formData.selectedSubDivision && (
+                            <input type="hidden" name="selectedSubDivision" value={formData.selectedSubDivision} />
+                        )}
                         {validationErrors.selectedSubDivision && <div className="error-message">{validationErrors.selectedSubDivision}</div>}
                     </div>
                     {/* Include other input fields as needed */}
