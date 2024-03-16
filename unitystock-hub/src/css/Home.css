@@ -21,7 +21,7 @@
   right: 0;
   bottom: 0;
   left: 0; /* These zero values stretch the overlay to cover the hero section */
-  background: rgba(0, 0, 0, 0.5); /* Dark overlay for better text readability */
+  background: rgb(126 117 192 / 50%); /* Dark overlay for better text readability */
   display: flex;
   flex-direction: column;
   justify-content: center; /* Center the content vertically */

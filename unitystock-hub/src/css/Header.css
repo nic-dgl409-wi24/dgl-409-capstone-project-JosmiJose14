@@ -85,8 +85,6 @@ h2 {
 
 
 .navigation-menu li.active {
-  background-color: #bacddd;
-  border-radius: 9px;
   color: #000000 !important;
 }
 
@@ -95,9 +93,7 @@ h2 {
 }
 
 .navigation-menu li:hover,.navigation-menu li.active a:hover {
-  background-color: #bacddd;
   color: #000000 !important;
-  border-radius: 20px;
 }
 /* Input and select fields with a modern, flat design */
 input[type="text"],

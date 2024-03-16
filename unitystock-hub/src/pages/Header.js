@@ -55,7 +55,7 @@ export default function Header() {
                 )}
                 {isRegister && (<>
                   <CustomLink to="/" label="Home"  setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
-                  <CustomLink to="/Login" label="Login" setIsNavExpanded={setIsNavExpanded} >Welcome Back</CustomLink>                  
+                  <CustomLink to="/Login" label="Login" setIsNavExpanded={setIsNavExpanded} >Login</CustomLink>                  
                 </>
                 )}
                {isLogin && (<>
@@ -76,16 +76,14 @@ function CustomLink({ to, children, setIsNavExpanded, ...rest }) {
   const resolvedPath = useResolvedPath(to);
   const isActive = useMatch({ path: resolvedPath.pathname, end: true });
 
-  const handleClick = () => {
-    // If setIsNavExpanded is a function, call it to collapse the navigation menu
-    if (typeof setIsNavExpanded === 'function') {
-      setIsNavExpanded(false);
-    }
-    // If there's an additional onClick handler passed to CustomLink, call it
-    if (rest.onClick) {
-      rest.onClick();
-    }
-  };
+const handleClick = () => {
+  if (typeof setIsNavExpanded === 'function') {
+    setIsNavExpanded(false);
+  }
+  if (rest.onClick) {
+    rest.onClick();
+  }
+};
 
   // Remove the setIsNavExpanded and any non-DOM attributes from the props spread to avoid React warnings
   const { label, ...linkProps } = rest;
