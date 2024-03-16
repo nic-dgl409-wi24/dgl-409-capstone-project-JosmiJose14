@@ -170,9 +170,9 @@ const RegistrationForm = () => {
     }
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
-        setSubmitMessage(response.data.message);
-      
-        navigate('/login');      
+        debugger
+        setSubmitMessage(response.data.message);      
+        navigate('/Login');      
         
       })
       .catch(error => {

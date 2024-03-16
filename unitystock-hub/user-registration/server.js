@@ -178,7 +178,7 @@ app.post('/register', (req, res) => {
         });
 
         if (isDuplicate) {         
-          return res.status(400).json({ success: false, error: `Failed: A user with the given ${duplicateField} already exists.` });
+          return res.status(400).json({ success: false, message: `Failed: A user with the given ${duplicateField} already exists.` });
         } else {
           insertUser();
         }

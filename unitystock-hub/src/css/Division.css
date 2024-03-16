@@ -4,35 +4,53 @@
     box-sizing: border-box;
     margin: auto;
 }
-.division-container h2{
-  margin: 0%;
+
+.division-container h2 {
+    margin: 0%;
 }
 
 .division-grid {
     display: flex;
-    flex-wrap: wrap; /* Enable wrapping of child elements */
+    flex-wrap: wrap;
+    /* Enable wrapping of child elements */
     justify-content: start;
-    gap: 60px;/* Adjust the space between the cards */
-    margin-top:20px;
+    gap: 60px;
+    /* Adjust the space between the cards */
+    margin-top: 20px;
 }
 
 .division-card {
     background: #f4f4f4;
-    border-radius: 10px;    
-     flex-basis: calc(30% - 20px);
-    margin-bottom: 20px; /* Add space between rows */
+    border-radius: 10px;
+    flex-basis: calc(30% - 20px);
+    margin-bottom: 20px;
+    /* Add space between rows */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
-img{
+
+.division-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+img {
     object-fit: cover;
     width: 350px;
     height: 350px;
+    cursor: pointer;
 }
+
 .card-body {
-    padding: 20px 20px; /* Gives some padding above and below the buttons/links */
+    padding: 20px 20px;
+    /* Gives some padding above and below the buttons/links */
     background-color: #90bce5;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    border-bottom-left-radius: 10px; /* Top left corner radius */
-    border-bottom-right-radius: 10px; /* Top right corner radius */
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    border-bottom-left-radius: 10px;
+    /* Top left corner radius */
+    border-bottom-right-radius: 10px;
+    /* Top right corner radius */
 }
 
 .division-actions button {
@@ -40,25 +58,30 @@ img{
     padding: 5px 10px;
     /* Add more styles for buttons */
 }
+
 .add-division-button {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 20px;
 }
 
-@media (max-width: 768px) { /* Adjust the breakpoint as needed */
+@media (max-width: 768px) {
+
+    /* Adjust the breakpoint as needed */
     .division-card {
         flex-direction: column;
         justify-content: space-between;
         flex-basis: 100% !important;
     }
-    img{
-        width:500px;
-        height:500px;
+
+    img {
+        width: 500px;
+        height: 500px;
     }
+
     .division-card {
-      
-        width:100%;
+
+        width: 100%;
         margin: auto;
     }
 }

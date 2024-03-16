@@ -11,6 +11,7 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { user } = useAuth(); // Access global user data
   const handleLogout = () => {
     setIsNavExpanded(false); // Toggle navigation expansion
     // Clear authentication data (e.g., from localStorage)
@@ -22,6 +23,7 @@ export default function Header() {
   const isLoginOrRegister = location.pathname === '/Login' || location.pathname === '/Signup' || location.pathname === '/Home';
   const isRegister = location.pathname === '/Signup' || location.pathname === '/Home';
   const isLogin = location.pathname === '/Login';
+  const shouldShowDepartmentsLink = user && user.RoleId !== 2;
   return (
     <header className="header">
       <div className="logo">
@@ -47,20 +49,22 @@ export default function Header() {
               <ul>
                 {!isLoginOrRegister && (
                   <>
-                   <CustomLink to="/Division" setIsNavExpanded={setIsNavExpanded}>Departments</CustomLink>
-                    <CustomLink to="/Inventories"   setIsNavExpanded={setIsNavExpanded}>Inventories</CustomLink>
-                    <CustomLink to="/Profile"  setIsNavExpanded={setIsNavExpanded}>Profile</CustomLink>
+                    {shouldShowDepartmentsLink && (
+                      <CustomLink to="/Division" setIsNavExpanded={setIsNavExpanded}>Departments</CustomLink>
+                    )}
+                    <CustomLink to="/Inventories" setIsNavExpanded={setIsNavExpanded}>Inventories</CustomLink>
+                    <CustomLink to="/Profile" setIsNavExpanded={setIsNavExpanded}>Profile</CustomLink>
                     <CustomLink to="/Login" onClick={handleLogout}>Logout</CustomLink>
                   </>
                 )}
                 {isRegister && (<>
-                  <CustomLink to="/" label="Home"  setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
-                  <CustomLink to="/Login" label="Login" setIsNavExpanded={setIsNavExpanded} >Login</CustomLink>                  
+                  <CustomLink to="/" label="Home" setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
+                  <CustomLink to="/Login" label="Login" setIsNavExpanded={setIsNavExpanded} >Login</CustomLink>
                 </>
                 )}
-               {isLogin && (<>
-                  <CustomLink to="/" label="Home"  setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
-                  <CustomLink to="/Signup" label="Signup" setIsNavExpanded={setIsNavExpanded} >Get Started</CustomLink>                  
+                {isLogin && (<>
+                  <CustomLink to="/" label="Home" setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
+                  <CustomLink to="/Signup" label="Signup" setIsNavExpanded={setIsNavExpanded} >Get Started</CustomLink>
                 </>
                 )}
               </ul>
@@ -76,14 +80,14 @@ function CustomLink({ to, children, setIsNavExpanded, ...rest }) {
   const resolvedPath = useResolvedPath(to);
   const isActive = useMatch({ path: resolvedPath.pathname, end: true });
 
-const handleClick = () => {
-  if (typeof setIsNavExpanded === 'function') {
-    setIsNavExpanded(false);
-  }
-  if (rest.onClick) {
-    rest.onClick();
-  }
-};
+  const handleClick = () => {
+    if (typeof setIsNavExpanded === 'function') {
+      setIsNavExpanded(false);
+    }
+    if (rest.onClick) {
+      rest.onClick();
+    }
+  };
 
   // Remove the setIsNavExpanded and any non-DOM attributes from the props spread to avoid React warnings
   const { label, ...linkProps } = rest;
