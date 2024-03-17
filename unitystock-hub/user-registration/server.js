@@ -1,49 +1,46 @@
 const express = require('express');
 const mysql = require('mysql');
-const multer = require('multer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { google } = require('googleapis');
-const app = express();
 const fs = require('fs');
 const util = require('util');
+const path = require('path');
+const multer = require('multer');
+// Import the configuration
+const config = require('./config');
+
+const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-const path = require('path');
-const sheets = google.sheets('v4');
-app.use('/images/division', express.static(path.join(__dirname, '/images/division')));
-app.use('/images/subdivision', express.static(path.join(__dirname, '/images/subdivision')));
-app.use('/images/profile', express.static(path.join(__dirname, '/images/profile')));
-app.use('/images/inventory', express.static(path.join(__dirname, '/images/inventory')));
-// MySQL database connection
-const connection = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'root',
-  database: 'user_db'
-});
+
+// Use the static files configurations
+app.use('/images/division', express.static(path.join(__dirname, config.staticFilesConfig.division)));
+app.use('/images/subdivision', express.static(path.join(__dirname, config.staticFilesConfig.subdivision)));
+app.use('/images/profile', express.static(path.join(__dirname, config.staticFilesConfig.profile)));
+app.use('/images/inventory', express.static(path.join(__dirname, config.staticFilesConfig.inventory)));
+
+// MySQL database connection using configuration from config.js
+const connection = mysql.createConnection(config.dbConfig);
+
 // Promisify the query method
 connection.query = util.promisify(connection.query);
+
 connection.connect(error => {
   if (error) throw error;
   console.log("Successfully connected to the database.");
 });
 
-
-const spreadsheetId = '1-GYq6o3zJ_MlMCqHCmU9XRFyVCyi2gRx8e-kkN2DIaI'; // Replace with your actual spreadsheet ID
-const subspreadsheetId = '12_hbBZt7NU8nj-JfInDxLMvBjpYps82Vw4k2-SHjEXU';
-const inventoryspreadsheetId = '1hO7IajrBcAypA8FKjngv9G65ltq8Uw3VV-EFATdJlZI';
-const filePath = path.join(__dirname, 'unitystock-hub-google.json');
-
-// Set up authentication with the service account
+// Set up authentication with the service account using configuration
 const auth = new google.auth.GoogleAuth({
-  keyFile: filePath, // The file path to your service account credentials
-  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  keyFile: config.googleSheetsConfig.keyFile, // The file path to your service account credentials
+  scopes: config.googleSheetsConfig.scopes,
 });
 
-const PORT = process.env.PORT || 3001;
+const sheets = google.sheets('v4');
+
+const PORT = config.PORT;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
@@ -220,7 +217,7 @@ app.post('/save-division', async (req, res) => {
     const range = 'Sheet1';
     const sheetRange = 'Sheet1'; // Adjust as necessary
     const getAllRequest = {
-      spreadsheetId: spreadsheetId,
+      spreadsheetId: config.googleSheetsConfig.spreadsheetId,
       range: sheetRange,
       auth: authClient,
     };
@@ -242,7 +239,7 @@ app.post('/save-division', async (req, res) => {
         const sheetRowIndex = foundRowIndex + 1; // Adjust based on your sheet's header presence
         const updateRange = `${range}!A${sheetRowIndex}:D${sheetRowIndex}`;
         const updateRequest = {
-          spreadsheetId: spreadsheetId,
+          spreadsheetId:config.googleSheetsConfig.spreadsheetId,
           range: updateRange,
           valueInputOption: 'USER_ENTERED',
           resource: {
@@ -262,7 +259,7 @@ app.post('/save-division', async (req, res) => {
       try {
         // Fetch the last ID from the sheet
         const lastIdResponse = await sheets.spreadsheets.values.get({
-          spreadsheetId: spreadsheetId,
+          spreadsheetId:config.googleSheetsConfig.spreadsheetId,
           range: 'Sheet1!A:A', // Assuming IDs are in column A
           auth: authClient,
         });
@@ -277,7 +274,7 @@ app.post('/save-division', async (req, res) => {
           Id = isNaN(lastId) ? 1 : lastId + 1;
         }
         const appendRequest = {
-          spreadsheetId: spreadsheetId,
+          spreadsheetId: config.googleSheetsConfig.spreadsheetId,
           range: 'Sheet1', // Adjust the range as necessary
           valueInputOption: 'USER_ENTERED',
           resource: {
@@ -301,7 +298,7 @@ app.get('/get-divisions', async (req, res) => {
   const authClient = await auth.getClient();
 
   const request = {
-    spreadsheetId: spreadsheetId,
+    spreadsheetId: config.googleSheetsConfig.spreadsheetId,
     range: 'Sheet1', // Replace with your actual range
     auth: authClient,
   };
@@ -318,7 +315,7 @@ app.get('/get-division/:divisionId', async (req, res) => {
   const authClient = await auth.getClient();
 
   const request = {
-    spreadsheetId: spreadsheetId,
+    spreadsheetId: config.googleSheetsConfig.spreadsheetId,
     range: 'Sheet1', // Adjust as necessary
     auth: authClient,
   };
@@ -344,7 +341,7 @@ app.post('/save-subdivision', async (req, res) => {
   const authClient = await auth.getClient();
   try {
     const range = 'Sheet1'; // Adjust as necessary. Assuming 'Sheet1' is where your data is stored.
-    const spreadsheetId = subspreadsheetId; // Ensure this is defined somewhere in your scope
+    const spreadsheetId = config.googleSheetsConfig.subspreadsheetId; // Ensure this is defined somewhere in your scope
 
     // Fetch all rows to search for an existing sub-division by name
     const getRequest = {
@@ -362,7 +359,7 @@ app.post('/save-subdivision', async (req, res) => {
         const updateRange = `${range}!A${sheetRowIndex}:D${sheetRowIndex}`;
 
         const updateRequest = {
-          spreadsheetId: subspreadsheetId,
+          spreadsheetId: config.googleSheetsConfig.subspreadsheetId,
           range: updateRange,
           valueInputOption: 'USER_ENTERED',
           resource: {
@@ -389,7 +386,7 @@ app.post('/save-subdivision', async (req, res) => {
         }
         // Fetch the last ID from the sheet
         const getLastIdRequest = {
-          spreadsheetId: subspreadsheetId,
+          spreadsheetId: config.googleSheetsConfig.subspreadsheetId,
           range: 'Sheet1!A:A', // Assuming IDs are in column A
           auth: authClient,
         };
@@ -404,7 +401,7 @@ app.post('/save-subdivision', async (req, res) => {
           Id = lastId + 1;
         }
         const appendRequest = {
-          spreadsheetId: subspreadsheetId,
+          spreadsheetId: config.googleSheetsConfig.subspreadsheetId,
           range: 'Sheet1', // Adjust the range as necessary
           valueInputOption: 'USER_ENTERED',
           resource: {
@@ -438,7 +435,7 @@ app.get('/get-subdivisions/:divisionId', async (req, res) => {
 async function fetchSubdivisionsDetails(divisionId) {
   const authClient = await auth.getClient();
   const request = {
-    spreadsheetId: subspreadsheetId,
+    spreadsheetId: config.googleSheetsConfig.subspreadsheetId,
     range: 'Sheet1',
     auth: authClient,
   };
@@ -455,7 +452,7 @@ app.get('/get-subdivision/:Id', async (req, res) => {
   const divisionId = req.params.Id;
   const authClient = await auth.getClient();
   const request = {
-    spreadsheetId: subspreadsheetId,
+    spreadsheetId: config.googleSheetsConfig.subspreadsheetId,
     range: 'Sheet1', // Adjust as necessary
     auth: authClient,
   };
@@ -476,7 +473,7 @@ app.get('/get-subdivision/:Id', async (req, res) => {
 app.get('/get-subdivisions', async (req, res) => {
   const authClient = await auth.getClient();
   const request = {
-    spreadsheetId: subspreadsheetId,
+    spreadsheetId: config.googleSheetsConfig.subspreadsheetId,
     range: 'Sheet1', // Adjust as necessary
     auth: authClient,
   };
@@ -508,7 +505,7 @@ app.get('/inventory', async (req, res) => {
       'ImageUrl', 'Manufacture', 'Supplier', 'LastUpdatedBy', 'LastUpdateTimestamp'
     ];
     const request = {
-      spreadsheetId: inventoryspreadsheetId,
+      spreadsheetId: config.googleSheetsConfig.inventoryspreadsheetId,
       range: 'Sheet1', 
       auth: authClient,
     };
@@ -533,7 +530,7 @@ app.get('/inventory/search', async (req, res) => {
 
   const authClient = await auth.getClient();
   const request = {
-    spreadsheetId: inventoryspreadsheetId,
+    spreadsheetId:config.googleSheetsConfig.inventoryspreadsheetId,
     range: 'Sheet1',
     auth: authClient,
   };
@@ -590,7 +587,7 @@ app.get('/get-inventory/:Id', async (req, res) => {
   const id = req.params.Id;
   const authClient = await auth.getClient();
   const request = {
-    spreadsheetId: inventoryspreadsheetId,
+    spreadsheetId: config.googleSheetsConfig.inventoryspreadsheetId,
     range: 'Sheet1', // Adjust as necessary
     auth: authClient,
   };
@@ -626,7 +623,7 @@ app.post('/save-inventory', async (req, res) => {
 
   try {
     const authClient = await auth.getClient();
-    const spreadsheetId = inventoryspreadsheetId; // Ensure this is defined
+    const spreadsheetId = config.googleSheetsConfig.inventoryspreadsheetId; // Ensure this is defined
     const range = 'Sheet1'; // Adjust as necessary for your spreadsheet's name
 
     // Fetch all rows to search for an existing inventory item with the same name or ID
@@ -665,7 +662,7 @@ app.post('/save-inventory', async (req, res) => {
           return res.status(400).json({ success: false, error: 'Failed : A sub-department with the same name already exists.' });
         }
         const lastIdResponse = await sheets.spreadsheets.values.get({
-          spreadsheetId: inventoryspreadsheetId,
+          spreadsheetId: config.googleSheetsConfig.inventoryspreadsheetId,
           range: 'Sheet1!A:A', // Assuming IDs are in column A
           auth: authClient,
         });
@@ -681,7 +678,7 @@ app.post('/save-inventory', async (req, res) => {
         }
         // Append a new inventory item
         const appendRequest = {
-          spreadsheetId: inventoryspreadsheetId,
+          spreadsheetId: config.googleSheetsConfig.inventoryspreadsheetId,
           range,
           valueInputOption: 'USER_ENTERED',
           resource: {
@@ -713,7 +710,7 @@ app.get('/get-inventory/:Id', async (req, res) => {
   const authClient = await auth.getClient();
 
   const request = {
-    spreadsheetId: inventoryspreadsheetId,
+    spreadsheetId: config.googleSheetsConfig.inventoryspreadsheetId,
     range: 'Sheet1', // Adjust as necessary
     auth: authClient,
   };
@@ -737,7 +734,7 @@ app.get('/get-invertorybySub/:subId', async (req, res) => {
   const subId = req.params.subId; // Extract divisionId from the request parameters
   const authClient = await auth.getClient();
   const request = {
-    spreadsheetId: inventoryspreadsheetId,
+    spreadsheetId: config.googleSheetsConfig.inventoryspreadsheetId,
     range: 'Sheet1', // Adjust as necessary for your spreadsheet's structure
     auth: authClient,
   };

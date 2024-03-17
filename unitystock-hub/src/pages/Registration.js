@@ -132,7 +132,7 @@ const RegistrationForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value.toUpperCase() }));
+    setFormData(prev => ({ ...prev, [name]: value}));
   };
 
   const handleImageChange = (e) => {
@@ -170,7 +170,6 @@ const RegistrationForm = () => {
     }
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
-        debugger
         setSubmitMessage(response.data.message);      
         navigate('/Login');      
         

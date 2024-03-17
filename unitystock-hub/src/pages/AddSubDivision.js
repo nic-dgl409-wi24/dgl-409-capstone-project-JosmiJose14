@@ -29,7 +29,7 @@ export default function SubDivisionAddEdit() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'divisions') {
-            setSelectedDivision(value.toUpperCase()); // Update the selected division
+            setSelectedDivision(value); // Update the selected division
         }
     };
     const validateForm = () => {

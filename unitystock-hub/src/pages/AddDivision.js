@@ -25,7 +25,7 @@ export default function Division() {
         const { name, value } = e.target;
 
         if (name === 'supervisor') {
-            setSupervisor(value.toUpperCase());
+            setSupervisor(value);
         }
     };
     const validateForm = () => {

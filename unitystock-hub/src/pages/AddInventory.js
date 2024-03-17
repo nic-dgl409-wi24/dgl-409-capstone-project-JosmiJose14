@@ -39,7 +39,7 @@ export default function SubInventoryAddEdit() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value.toUpperCase() }));
+        setFormData(prev => ({ ...prev, [name]: value}));
     };
 
     const validateForm = () => {
