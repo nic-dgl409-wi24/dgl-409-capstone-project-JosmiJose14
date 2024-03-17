@@ -85,15 +85,15 @@ h2 {
 
 
 .navigation-menu li.active {
-  color: #000000 !important;
+  color: #90bce5 !important;
 }
 
 .navigation-menu li.active a,.navigation-menu li a:hover  {
-  color: #000000 !important;
+  color: #90bce5 !important;
 }
 
 .navigation-menu li:hover,.navigation-menu li.active a:hover {
-  color: #000000 !important;
+  color: #90bce5 !important;
 }
 /* Input and select fields with a modern, flat design */
 input[type="text"],

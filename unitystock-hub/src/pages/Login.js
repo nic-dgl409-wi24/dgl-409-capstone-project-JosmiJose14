@@ -41,7 +41,7 @@ const LoginPage = () => {
             });
             if (response.data.message === 'Login successful') {
                 login(response.data.user);
-                if(response.data.user.roleId===2){
+                if(response.data.user.RoleId===2){
                     navigate('/Inventories');
                 }
                 else{
