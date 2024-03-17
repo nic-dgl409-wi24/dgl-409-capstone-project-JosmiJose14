@@ -33,33 +33,36 @@ const InventoryPage = () => {
 
     const fetchItems = async () => {
         try {
-            const response = await axios.get(`${config.server.baseUrl}/inventory`); // Update the API endpoint as needed
-            const { data, success } = response.data;
-            if (success && Array.isArray(data) && data.length > 1) {
-                const apiHeaders = data[0];
-                const rows = data.slice(1);
-
-                const itemsArray = rows.map(row => {
-                    let item = {};
-                    apiHeaders.forEach((header, index) => {
-                        const desiredKey = DESIRED_HEADERS[header];
-                        if (desiredKey) {
-                            item[desiredKey] = row[index];
-                        }
-                    });
-                    return item;
-                });
-
-                setItems(itemsArray);
-            } else {
-                console.error('Invalid data format:', response.data);
-                setItems([]);
-            }
-        } catch (error) {
-            console.error('Error fetching inventory data:', error);
+            debugger
+          // Include the DivisionId as a query parameter
+          const response = await axios.get(`${config.server.baseUrl}/inventory?divisionId=${user.DivisionID}`);
+          const { data, success } = response.data;
+          if (success && Array.isArray(data) && data.length > 1) {
+            const apiHeaders = data[0];
+            const rows = data.slice(1);
+      
+            const itemsArray = rows.map(row => {
+              let item = {};
+              apiHeaders.forEach((header, index) => {
+                const desiredKey = DESIRED_HEADERS[header];
+                if (desiredKey) {
+                  item[desiredKey] = row[index];
+                }
+              });
+              return item;
+            });
+      
+            setItems(itemsArray);
+          } else {
+            console.error('Invalid data format:', response.data);
             setItems([]);
+          }
+        } catch (error) {
+          console.error('Error fetching inventory data:', error);
+          setItems([]);
         }
-    };
+      };
+      
     const fetchInventoryBySub = async (subId) => {
         try {
             const response = await axios.get(`${config.server.baseUrl}/get-invertorybySub/${subId}`);

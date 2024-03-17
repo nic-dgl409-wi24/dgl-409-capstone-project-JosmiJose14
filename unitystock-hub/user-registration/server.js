@@ -34,7 +34,7 @@ connection.connect(error => {
 
 const spreadsheetId = '1-GYq6o3zJ_MlMCqHCmU9XRFyVCyi2gRx8e-kkN2DIaI'; // Replace with your actual spreadsheet ID
 const subspreadsheetId = '12_hbBZt7NU8nj-JfInDxLMvBjpYps82Vw4k2-SHjEXU';
-const inventoryspreadsheetId='1hO7IajrBcAypA8FKjngv9G65ltq8Uw3VV-EFATdJlZI';
+const inventoryspreadsheetId = '1hO7IajrBcAypA8FKjngv9G65ltq8Uw3VV-EFATdJlZI';
 const filePath = path.join(__dirname, 'unitystock-hub-google.json');
 
 // Set up authentication with the service account
@@ -177,7 +177,7 @@ app.post('/register', (req, res) => {
           }
         });
 
-        if (isDuplicate) {         
+        if (isDuplicate) {
           return res.status(400).json({ success: false, message: `Failed: A user with the given ${duplicateField} already exists.` });
         } else {
           insertUser();
@@ -287,7 +287,7 @@ app.post('/save-division', async (req, res) => {
         };
         // Append the new row
         const response = await sheets.spreadsheets.values.append(appendRequest);
-        res.status(200).json({ success: true, data: response.data ,message: 'Department added successfully'});
+        res.status(200).json({ success: true, data: response.data, message: 'Department added successfully' });
       } catch (error) {
         res.status(500).json({ success: false, error: 'Failed to save to Google Sheets' });
       }
@@ -380,7 +380,7 @@ app.post('/save-subdivision', async (req, res) => {
       }
     } else {
       try {
-         // Assuming subdivision name is in the second column (B column), adjust the index if necessary
+        // Assuming subdivision name is in the second column (B column), adjust the index if necessary
         let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === subdivision.toLowerCase());
 
         // Prevent insertion/updation if subdivision with the same name exists
@@ -414,7 +414,7 @@ app.post('/save-subdivision', async (req, res) => {
         };
         // Append the new row
         const response = await sheets.spreadsheets.values.append(appendRequest);
-        res.status(200).json({ success: true, message: 'Sub-Department added successfully',data: response.data });
+        res.status(200).json({ success: true, message: 'Sub-Department added successfully', data: response.data });
       }
       catch (error) {
         res.status(500).json({ success: false, error: 'Failed to save to Google Sheets', details: error.message });
@@ -427,23 +427,30 @@ app.post('/save-subdivision', async (req, res) => {
 
 app.get('/get-subdivisions/:divisionId', async (req, res) => {
   const divisionId = req.params.divisionId; // Extract divisionId from the request parameters
-  const authClient = await auth.getClient();
-  const request = {
-    spreadsheetId: subspreadsheetId,
-    range: 'Sheet1', // Replace with your actual range
-    auth: authClient,
-  };
   try {
-    const response = await sheets.spreadsheets.values.get(request);
-      const allsubdivisions = response.data.values;
-        // Assuming the DivisionId is in the 3rd column, filter the subdivisions based on divisionId
-    const filteresubdivisions = allsubdivisions.filter(row => row[2] === divisionId);
-    res.status(200).json({ success: true, data: filteresubdivisions});
+    const filteredSubdivisions = await fetchSubdivisionsDetails(divisionId);
+    res.status(200).json({ success: true, data: filteredSubdivisions });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
-
+//Utility to fetch subdivision details
+async function fetchSubdivisionsDetails(divisionId) {
+  const authClient = await auth.getClient();
+  const request = {
+    spreadsheetId: subspreadsheetId,
+    range: 'Sheet1',
+    auth: authClient,
+  };
+  try {
+    const response = await sheets.spreadsheets.values.get(request);
+    const allsubdivisions = response.data.values;
+    return allsubdivisions.filter(row => row[2] === divisionId);
+  } catch (error) {
+    console.error('Error fetching subdivision details:', error);
+    throw new Error('Failed to fetch data from Google Sheets');
+  }
+}
 app.get('/get-subdivision/:Id', async (req, res) => {
   const divisionId = req.params.Id;
   const authClient = await auth.getClient();
@@ -486,23 +493,41 @@ app.get('/get-subdivisions', async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
   }
 });
-
 app.get('/inventory', async (req, res) => {
-  const authClient = await auth.getClient();
-
-  const request = {
-    spreadsheetId: inventoryspreadsheetId,
-    range: 'Sheet1', // Replace with your actual range
-    auth: authClient,
-  };
+  const { divisionId } = req.query; // Access the DivisionId from query parameters
+  // Assume getSubDivisionIdsForDivision is a function that returns an array of SubDivisionIds for a given DivisionId
 
   try {
-    const response = await sheets.spreadsheets.values.get(request);
-    res.status(200).json({ success: true, data: response.data.values });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
-  }
+    const authClient = await auth.getClient();
+    // Fetch the subdivision details (we're assuming this is correctly implemented)
+    const subdivisionDetails = await fetchSubdivisionsDetails(divisionId);
+    // Extract just the subdivision IDs from the first column
+    const subDivisionIds = subdivisionDetails.map(row => row[0]);
+    const headers = [
+      'Id', 'Name', 'Quantity', 'SubdivisionId', 'ExpiryDate', 
+      'ImageUrl', 'Manufacture', 'Supplier', 'LastUpdatedBy', 'LastUpdateTimestamp'
+    ];
+    const request = {
+      spreadsheetId: inventoryspreadsheetId,
+      range: 'Sheet1', 
+      auth: authClient,
+    };
+    const allData = await Promise.all(subDivisionIds.map(async (subDivisionId) => {
+      // ... API call setup
+      const response = await sheets.spreadsheets.values.get(request);
+     // Filter the response to only include items for the current subdivisionId
+     const filteredData = response.data.values.filter(item => item[3] === subDivisionId);
+     return filteredData;
+   }));
+
+   const data = [headers, ...[].concat(...allData)];
+   res.status(200).json({ success: true, data });
+ } catch (error) {
+   console.error('Failed to fetch data:', error);
+   res.status(500).json({ success: false, error: 'Failed to fetch data from Google Sheets' });
+ }
 });
+
 app.get('/inventory/search', async (req, res) => {
   const { name, manufacture, supplier } = req.query;
 
@@ -633,52 +658,52 @@ app.post('/save-inventory', async (req, res) => {
     } else {
       try {
         // Assuming subdivision name is in the second column (B column), adjust the index if necessary
-       let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === name.toLowerCase());
+        let foundRowIndex = rows.findIndex(row => row[1].toLowerCase() === name.toLowerCase());
 
-       // Prevent insertion/updation if subdivision with the same name exists
-       if (foundRowIndex !== -1) {
-         return res.status(400).json({ success: false, error: 'Failed : A sub-department with the same name already exists.' });
-       }
-     const lastIdResponse = await sheets.spreadsheets.values.get({
-       spreadsheetId: inventoryspreadsheetId,
-       range: 'Sheet1!A:A', // Assuming IDs are in column A
-       auth: authClient,
-     });
-     const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
+        // Prevent insertion/updation if subdivision with the same name exists
+        if (foundRowIndex !== -1) {
+          return res.status(400).json({ success: false, error: 'Failed : A sub-department with the same name already exists.' });
+        }
+        const lastIdResponse = await sheets.spreadsheets.values.get({
+          spreadsheetId: inventoryspreadsheetId,
+          range: 'Sheet1!A:A', // Assuming IDs are in column A
+          auth: authClient,
+        });
+        const lastRow = lastIdResponse.data.values ? lastIdResponse.data.values.length : 0;
 
-     // Determine the next ID value
-     let Id;
-     if (lastRow === 0) {
-       Id = 1;
-     } else {
-       const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0], 10);
-       Id = isNaN(lastId) ? 1 : lastId + 1;
-     }
-     // Append a new inventory item
-     const appendRequest = {
-       spreadsheetId: inventoryspreadsheetId,
-       range,
-       valueInputOption: 'USER_ENTERED',
-       resource: {
-         values: [
-           [Id, name,quantity, selectedSubDivision, expiryDate, imageUrl,manufacture,supplier,LastUpdatedBy,LastUpdateTimestamp]
-         ],
-       },
-       auth: authClient,
-     };
+        // Determine the next ID value
+        let Id;
+        if (lastRow === 0) {
+          Id = 1;
+        } else {
+          const lastId = parseInt(lastIdResponse.data.values[lastRow - 1][0], 10);
+          Id = isNaN(lastId) ? 1 : lastId + 1;
+        }
+        // Append a new inventory item
+        const appendRequest = {
+          spreadsheetId: inventoryspreadsheetId,
+          range,
+          valueInputOption: 'USER_ENTERED',
+          resource: {
+            values: [
+              [Id, name, quantity, selectedSubDivision, expiryDate, imageUrl, manufacture, supplier, LastUpdatedBy, LastUpdateTimestamp]
+            ],
+          },
+          auth: authClient,
+        };
 
-     await sheets.spreadsheets.values.append(appendRequest);
-     res.status(200).json({ success: true, message: 'Inventory added successfully.' });
-   }
-   catch (error) {
+        await sheets.spreadsheets.values.append(appendRequest);
+        res.status(200).json({ success: true, message: 'Inventory added successfully.' });
+      }
+      catch (error) {
+        console.error('Error: ', error);
+        res.status(500).json({ success: false, error: 'Failed to save to Google Sheets.' });
+      }
+    }
+  } catch (error) {
     console.error('Error: ', error);
     res.status(500).json({ success: false, error: 'Failed to save to Google Sheets.' });
-    }
-  } 
-}catch (error) {
-  console.error('Error: ', error);
-  res.status(500).json({ success: false, error: 'Failed to save to Google Sheets.' });
-}
+  }
 });
 
 
