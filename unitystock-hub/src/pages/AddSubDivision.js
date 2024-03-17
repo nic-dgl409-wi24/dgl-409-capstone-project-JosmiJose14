@@ -110,6 +110,7 @@ export default function SubDivisionAddEdit() {
             // Replace URL with your endpoint to fetch division details by id
             const response = await axios.get(`${config.server.baseUrl}/get-subdivision/${id}`);
             if (response.data && response.data.data) {
+                // eslint-disable-next-line no-unused-vars
                 const [id, subdivisionName, division, imageUrl] = response.data.data;
                 setSubDivision(subdivisionName || ''); // Provide fallback value
                 setSelectedDivision(division || ''); // Provide fallback value

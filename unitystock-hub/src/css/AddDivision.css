@@ -54,6 +54,9 @@
     margin-top: 30px; /* Space above the buttons */
     display: flex;
 }
+input:disabled, select:disabled {
+    background-color: #f0f0f0;
+}
 /* Responsive styles */
 @media (max-width: 768px) {
     .form-container {

@@ -29,7 +29,7 @@ export default function SubInventoryAddEdit() {
         LastUpdateTimestamp: currentDate
     });
 
-   
+
     useEffect(() => {
         fetchSubDivisions();
         if (id) {
@@ -77,10 +77,10 @@ export default function SubInventoryAddEdit() {
         if (!formData.expiryDate) {
             errors.expiryDate = "Expiry date is required.";
             formIsValid = false;
-        }else {
+        } else {
             const currentDate = new Date();
             const expiryDate = new Date(formData.expiryDate);
-        
+
             if (expiryDate < currentDate) {
                 errors.expiryDate = "Expiry date should not be a previous date.";
                 formIsValid = false;
@@ -198,6 +198,8 @@ export default function SubInventoryAddEdit() {
                             src={formData.imageUrl ? `${config.server.baseUrl}/${formData.imageUrl}` : defaultImage}
                             alt={formData.Name}
                         />
+                         {
+                            user.RoleId !== 2 ? (
                         <input
                             type="file"
                             id="inventoryImage"
@@ -205,6 +207,10 @@ export default function SubInventoryAddEdit() {
                             onChange={handleImageChange}
                             accept="image/*"
                         />
+                        ) : (
+                           <span></span>
+                        )
+                    }
                         {validationErrors.imageUrl && <div className="error-message">{validationErrors.imageUrl}</div>}
                         {uploadMessage && <div className={uploadMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{uploadMessage}</div>}
                     </div>
@@ -214,14 +220,28 @@ export default function SubInventoryAddEdit() {
                         <h2 className='section-heading'>{id ? 'Edit Inventory' : 'Add Inventory'}</h2>
                         {submitMessage && <div className={submitMessage.startsWith('Failed') ? 'error-message' : 'success-message'}>{submitMessage}</div>}
                         <label htmlFor="name">Product Name</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name='name'
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="e.g., Plate"
-                        />
+                        {
+                            user.RoleId !== 2 ? (
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name='name'
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    placeholder="e.g., Plate"
+                                />
+                            ) : (
+                                <input
+                                type="text"
+                                id="name"
+                                name='name'
+                                value={formData.name}
+                                onChange={handleChange}
+                                placeholder="e.g., Plate"
+                                disabled={true} 
+                            />
+                            )
+                        }
                         {validationErrors.name && <div className="error-message">{validationErrors.name}</div>}
                         <label htmlFor="quantity">Quantity</label>
                         <input
@@ -234,33 +254,74 @@ export default function SubInventoryAddEdit() {
                         />
                         {validationErrors.quantity && <div className="error-message">{validationErrors.quantity}</div>}
                         <label htmlFor="manufacture">Manufacture</label>
-                        <input
-                            type="text"
-                            id="manufacture"
-                            name="manufacture"
-                            value={formData.manufacture}
-                            onChange={handleChange}
-                            placeholder="e.g., NA"
-                        />
+                        {
+                            user.RoleId !== 2 ? (
+                                <input
+                                    type="text"
+                                    id="manufacture"
+                                    name="manufacture"
+                                    value={formData.manufacture}
+                                    onChange={handleChange}
+                                    placeholder="e.g., NA"
+                                />
+                            ) : (
+                                <input
+                                type="text"
+                                id="manufacture"
+                                name="manufacture"
+                                value={formData.manufacture}
+                                onChange={handleChange}
+                                placeholder="e.g., NA"
+                                disabled={true}
+                            />
+                            )
+                        }
                         {validationErrors.manufacture && <div className="error-message">{validationErrors.manufacture}</div>}
                         <label htmlFor="supplier">Supplier</label>
-                        <input
-                            type="text"
-                            id="supplier"
-                            name="supplier"
-                            value={formData.supplier}
-                            onChange={handleChange}
-                            placeholder="e.g., NA"
-                        />
+                        {
+                            user.RoleId !== 2 ? (
+                                <input
+                                    type="text"
+                                    id="supplier"
+                                    name="supplier"
+                                    value={formData.supplier}
+                                    onChange={handleChange}
+                                    placeholder="e.g., NA"
+                                />
+                            ) : (
+                                <input
+                                type="text"
+                                id="supplier"
+                                name="supplier"
+                                value={formData.supplier}
+                                onChange={handleChange}
+                                placeholder="e.g., NA"
+                                disabled={true}
+                            />
+                            )
+                        }
                         {validationErrors.supplier && <div className="error-message">{validationErrors.supplier}</div>}
                         <label htmlFor="expiryDate">ExpiryDate</label>
-                        <input
-                            type="date"
-                            id="expiryDate"
-                            name='expiryDate'
-                            value={formData.expiryDate}
-                            onChange={handleChange}
-                        />
+                        {
+                            user.RoleId !== 2 ? (
+                                <input
+                                    type="date"
+                                    id="expiryDate"
+                                    name='expiryDate'
+                                    value={formData.expiryDate}
+                                    onChange={handleChange}
+                                />
+                            ) : (
+                                <input
+                                type="date"
+                                id="expiryDate"
+                                name='expiryDate'
+                                value={formData.expiryDate}
+                                onChange={handleChange}
+                                disabled={true}
+                            />
+                            )
+                        }
                         {validationErrors.expiryDate && <div className="error-message">{validationErrors.expiryDate}</div>}
                         <label htmlFor="subdivisions">Select sub- department</label>
                         <select
@@ -268,17 +329,18 @@ export default function SubInventoryAddEdit() {
                             name="selectedSubDivision"
                             value={formData.selectedSubDivision}
                             onChange={handleChange}
-                            disabled={!!formData.selectedSubDivision}>
-                            <option value="" disabled>Select a Subdivision</option>
+                            disabled={user.RoleId === 2 || formData.selectedSubDivision ? true : false}>
+                            <option value="" disabled>Select a Division</option>
                             {subdivisions.map((division) => (
                                 <option key={division.id} value={division.id}>{division.name}</option>
                             ))}
                         </select>
-                        {/* Include a hidden input to ensure the value is submitted with the form */}
+
                         {formData.selectedSubDivision && (
                             <input type="hidden" name="selectedSubDivision" value={formData.selectedSubDivision} />
                         )}
                         {validationErrors.selectedSubDivision && <div className="error-message">{validationErrors.selectedSubDivision}</div>}
+
                     </div>
                     {/* Include other input fields as needed */}
                     <div className="form-actions">
