@@ -40,3 +40,29 @@ Compress the build folder into a .zip file for easy uploading.
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.html [L]    
 </IfModule>
+## For the Database 
+Step 1. Export  the database from local environment.
+
+Step 1: Create the Database
+* Log in to cPanel: Access the hosting account's cPanel dashboard.
+* Navigate to MySQL Databases: In the "Databases" section, click on the "MySQL Databases" icon.
+* Create a New Database: In the "New Database" field, enter a name for the database and click "Create Database". Remember or note down the database name.
+* Go Back: After the database is created, click the "Go Back" link to return to the main database page.
+
+Step 2: Create a Database User
+* Navigate to Add New User: Scroll down to the "MySQL Users" section.
+* Create a New User: Enter a username and password. Click "Create User".
+* Remember the User Details: Note down the username and password. 
+
+Step 3: Add User to the Database
+* Add User to Database: Scroll to the "Add User to Database" section.
+* Select User and Database: Choose the user and database you just created from the respective drop-down menus.
+* Grant Permissions: Click "Add". On the next page, select "All Privileges" to grant all permissions to the user for this database, and click "Make Changes".
+
+Step 4: Import Database to phpMyAdmin
+* Access phpMyAdmin: Go back to the cPanel homepage, and in the "Databases" section, click on the "phpMyAdmin" icon.
+* Select Your Database: On the left sidebar in phpMyAdmin, click on the new database  created. 
+* Import Database:
+   * Click on the "Import" tab at the top of the page.
+   * Click on "Choose File" and select your database .sql file from your local computer.
+   * Scroll down and click on "Go" to start the import process.
