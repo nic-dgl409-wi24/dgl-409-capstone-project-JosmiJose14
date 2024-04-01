@@ -4,30 +4,34 @@ UnityStock Hub represents a cutting-edge solution designed to modernize and opti
 # To Deploy the UnityStock Hub in cPanel
 ## For the Client-Side (React.js App)
 1. Add the homepage url to package.json
-   >  "homepage": "https://dgl409.jjose.imgd.ca/unitystockhub"
-2. Change the baseurl which connects to server
-3. >   baseUrl: "https://dgl409node.jjose.imgd.ca/userregistration/" 
+
+  ```  "homepage": "https://dgl409.jjose.imgd.ca/unitystockhub" ``` 
+  
+3. Change the baseurl which connects to server
+
+  ```   baseUrl: "https://dgl409node.jjose.imgd.ca/userregistration/" ``` 
+  
 4. Create a Production Build:
-   > npm run build
    
-   Run npm run build in your React app's root directory. This will compile your app into static files optimized for production in a build folder.
+ ```npm run build```
    
-5. Zip the Build Folder:
+* Run npm run build in your React app's root directory. This will compile your app into static files optimized for production in a build folder.
+   
+6. Zip the Build Folder:
+  * Compress the build folder into a .zip file for easy uploading.
 
-Compress the build folder into a .zip file for easy uploading.
-
-5. Upload to cPanel:
+6. Upload to cPanel:
 
 * Log into your cPanel account.
 * Navigate to the File Manager and go to the public_html directory or the directory for your particular domain/subdomain.
 * Upload the .zip file of your build folder.
   
-6. Extract and Move Files:
+7. Extract and Move Files:
    
 * Once uploaded, extract the contents of the zip file.
 * Rename the folder name to 'unitystockhub'.
 
-7. Configure .htaccess for Single Page Applications:
+8. Configure .htaccess for Single Page Applications:
 
 * Modify or create a .htaccess file in  app's root directory to handle routing for a single-page application.
 * .htacces file for client side
@@ -81,7 +85,7 @@ Step 4: Import Database to phpMyAdmin
 
 * Create a Service Account:
 
-1.In the Google Cloud Console, go to the "IAM & Admin" > "Service Accounts" section.
+1. In the Google Cloud Console, go to the "IAM & Admin" > "Service Accounts" section.
 2. Click "Create Service Account".
 3. Give the service account a name and description.
 4. Click "Create and Continue".
@@ -96,7 +100,8 @@ Step 4: Import Database to phpMyAdmin
 
 * Step 3: Install Google API Node.js Client Library
 1. Open your project's Node.js environment and run the following command to install the Google API client library:
- > npm install googleapis
+
+ ``` npm install googleapis``` 
 
 * Step 4: Authenticate Your Application with Google API
 1. Use the downloaded JSON credentials to authenticate your application. Here's a simplified example of how to do this:
@@ -111,3 +116,34 @@ const auth = new google.auth.GoogleAuth({
 });
 const sheets = google.sheets({version: 'v4', auth});
 ```
+
+# For the Server-Side (Node.js App)
+1. Prepare Your Node.js Application:
+  *  Ensure all dependencies are installed and that your app is running smoothly in a development environment.
+  *  Change the sql credentials according to the database credentials created in cPanel.
+    
+2. Transfer Your Node.js App to cPanel:
+ * Zip your Node.js project (excluding the node_modules directory).
+ * Upload and extract it into the appropriate directory on  cPanel hosting.
+3. Install Node.js on cPanel:
+   * navigate to required folder path.
+     
+    ``` cd folder path```
+
+   * use node version that support the hosting environment.
+     
+    ``` nvm use 17``` 
+4. Reverse Proxy Setup:
+ * Set up a reverse proxy to forward requests from your domain to the Node.js app's port using the .htaccess file. Your configuration might look like this:
+```
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^dgl409node.jjose.imgd.ca$ [NC]
+  RewriteRule ^(.*)$ http://localhost:3001/$1 [P,L]
+```
+5. Ensure the Application is Running:
+  * Keep your Node.js app running after closing the terminal.
+    
+ ``` nohup node server.js``` 
+    
+6. Test the Deployment:
+Access the Node.js app via the public-facing URL to ensure it is reachable and functioning as expected.
