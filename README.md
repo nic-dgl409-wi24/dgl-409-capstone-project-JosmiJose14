@@ -40,6 +40,7 @@ Compress the build folder into a .zip file for easy uploading.
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.html [L]    
 </IfModule>
+
 ## For the Database 
 Step 1. Export  the database from local environment.
 
@@ -66,3 +67,47 @@ Step 4: Import Database to phpMyAdmin
    * Click on the "Import" tab at the top of the page.
    * Click on "Choose File" and select your database .sql file from your local computer.
    * Scroll down and click on "Go" to start the import process.
+ 
+# Enable the Google Sheets API
+ 1. Access the Google Cloud Console: Go to the Google Cloud Console.
+ 2. Create a New Project: Click on the project dropdown at the top of the page, then click on "New Project". Give project a name and click "Create".
+
+* Enable the Google Sheets API:
+
+ 1. In the search bar at the top of the dashboard, search for "Google Sheets API".
+ 2. Click on the Google Sheets API in the search results.
+ 3. Click "Enable" to enable the API for your project.
+ 4. Step 2: Create a Service Account and Download Credentials
+
+* Create a Service Account:
+
+1.In the Google Cloud Console, go to the "IAM & Admin" > "Service Accounts" section.
+2. Click "Create Service Account".
+3. Give the service account a name and description.
+4. Click "Create and Continue".
+5. Assign the service account a role. For basic Sheets API access as "Editor".
+6. Click "Done" to create the service account.
+7. Download the JSON Credentials:
+8. Click on the newly created service account in the list.
+9. Go to the "Keys" tab.
+10. Click "Add Key" and choose "Create new key".
+11.Select "JSON" as the key type and click "Create".
+12 The JSON key file will be automatically downloaded. This file contains the necessary credentials your application will use to authenticate with Google APIs.
+
+* Step 3: Install Google API Node.js Client Library
+1. Open your project's Node.js environment and run the following command to install the Google API client library:
+ > npm install googleapis
+
+* Step 4: Authenticate Your Application with Google API
+1. Use the downloaded JSON credentials to authenticate your application. Here's a simplified example of how to do this:
+
+```
+const { google } = require('googleapis');
+const KEYFILEPATH = 'path/to/your/downloaded-service-account-file.json';
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
+const auth = new google.auth.GoogleAuth({
+    keyFile: KEYFILEPATH,   
+    scopes: SCOPES>   
+});
+const sheets = google.sheets({version: 'v4', auth});
+```
