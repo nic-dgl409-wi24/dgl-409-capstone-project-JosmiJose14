@@ -126,6 +126,7 @@ const sheets = google.sheets({version: 'v4', auth});
  * Zip your Node.js project (excluding the node_modules directory).
  * Upload and extract it into the appropriate directory on  cPanel hosting.
 3. Install Node.js on cPanel:
+   * navigate to cpanel -> home -> Terminal
    * navigate to required folder path.
      
     ``` cd folder path```
