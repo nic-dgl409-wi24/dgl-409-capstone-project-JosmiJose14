@@ -171,7 +171,7 @@ const RegistrationForm = () => {
     axios.post(`${config.server.baseUrl}/register`, formData)
       .then(response => {
         setSubmitMessage(response.data.message);      
-        navigate('/Login');      
+        navigate('/unitystockhub/Login');      
         
       })
       .catch(error => {

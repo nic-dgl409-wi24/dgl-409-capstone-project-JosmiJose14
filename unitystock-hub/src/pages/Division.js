@@ -36,11 +36,11 @@ export default function Division() {
     }, []);
     function handleEdit(divisionId) {
         // Logic to handle edit action for the division with the given id
-        navigate(`/AddDivision/edit/${divisionId}`);
+        navigate(`/unitystockhub/AddDivision/edit/${divisionId}`);
     }
     function handleRedirect(divisionId) {
         // Logic to handle edit action for the division with the given id
-        navigate(`/SubDivision/${divisionId}`);
+        navigate(`/unitystockhub/SubDivision/${divisionId}`);
     }
     function handleDelete(divisionId) {
         // Logic to handle delete action for the division with the given id
@@ -54,7 +54,7 @@ export default function Division() {
                 <span className='welcome-text'>Welcome, {user?.Name || 'User'}!</span> {/* Use optional chaining */}
                 {user.RoleId !== 2 && (
                     <span className="add-division-button">
-                        <Link to="/AddDivision/add" className="btn">Add Department</Link>
+                        <Link to="/unitystockhub/AddDivision/add" className="btn">Add Department</Link>
                     </span>
                 )}
             </div>

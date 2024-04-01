@@ -8,6 +8,9 @@ module.exports = {
   dbConfig: {
     host: 'localhost',
     port: 3306,
+    // user: 'n0199376_dgl409',
+    // password: 'dgl409-unitystockhub',
+    // database: 'n0199376_unitystockhub'
     user: 'root',
     password: 'root',
     database: 'user_db'

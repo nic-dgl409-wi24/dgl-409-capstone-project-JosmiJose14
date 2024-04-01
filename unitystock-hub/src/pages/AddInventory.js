@@ -182,10 +182,10 @@ export default function SubInventoryAddEdit() {
     };
     const handleBack = () => {
         if (subId) {
-            navigate(`/Inventories/${subId}`);
+            navigate(`/unitystockhub/Inventories/${subId}`);
         }
         else
-            navigate(`/Inventories`)
+            navigate(`/unitystockhub/Inventories`)
     };
 
     return (

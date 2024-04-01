@@ -12,6 +12,7 @@ const config = require('./config');
 
 const app = express();
 
+// Enable CORS for all 
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -225,7 +226,7 @@ app.post('/save-division', async (req, res) => {
     const getAllResponse = await sheets.spreadsheets.values.get(getAllRequest);
     const rows = getAllResponse.data.values || [];
     // Assuming division name is in the second column (B column), adjust if necessary
-    const divisionIndex = rows.findIndex(row => row[1]?.toLowerCase() === division.toLowerCase());
+    const divisionIndex = rows.findIndex(row => row[1] && row[1].toLowerCase() === division.toLowerCase());
     // Check if a division with the same name exists and it's not an update operation
     if (divisionIndex !== -1 && !id) {
       return res.status(400).json({ success: false, error: 'Failed : A department with the same name already exists.' });

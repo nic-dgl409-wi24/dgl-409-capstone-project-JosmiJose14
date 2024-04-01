@@ -17,27 +17,27 @@ export default function Header() {
     // Clear authentication data (e.g., from localStorage)
     localStorage.removeItem('authToken');
     logout(); // Update global state to reflect logout
-    navigate('/Login'); // Redirect to the login page
+    navigate('/unitystockhub/Login'); // Redirect to the login page
   };
   // Determine if we're on the login or registration page
-  const isLoginOrRegister = location.pathname === '/Login' || location.pathname === '/Signup' || location.pathname === '/Home';
-  const isRegister = location.pathname === '/Signup' || location.pathname === '/Home';
-  const isLogin = location.pathname === '/Login';
+  const isLoginOrRegister = location.pathname === '/unitystockhub/Login' || location.pathname === '/unitystockhub/Signup' || location.pathname === '/unitystockhub/Home';
+  const isRegister = location.pathname === '/unitystockhub/Signup' || location.pathname === '/unitystockhub/Home';
+  const isLogin = location.pathname === '/unitystockhub/Login';
   const shouldShowDepartmentsLink = user && user.RoleId !== 2;
 
   return (
     <header className="header">
       <div className="logo">
         {shouldShowDepartmentsLink ? (
-          <Link to="/Division" className="logo">
+          <Link to="/unitystockhub/Division" className="logo">
             <img src={logo} alt="UnityStock Hub Logo" />
           </Link>
         ) : user && user.RoleId === 2 ? (
-          <Link to="/Inventories" className="logo">
+          <Link to="/unitystockhub/Inventories" className="logo">
             <img src={logo} alt="UnityStock Hub Logo" />
           </Link>
         ) : (
-          <Link to="/" className="logo">
+          <Link to="/unitystockhub/" className="logo">
             <img src={logo} alt="UnityStock Hub Logo" />
           </Link>
         )}
@@ -58,26 +58,32 @@ export default function Header() {
           >
             <div className="navigation-menu">
               <ul>
-                {!isLoginOrRegister && (
+                {isLoginOrRegister ? (
+                  <>
+                    {isRegister && (
+                      <>
+                        <CustomLink to="/unitystockhub/" label="Home" setIsNavExpanded={setIsNavExpanded}>Home</CustomLink>
+                        <CustomLink to="/unitystockhub/Login" label="Login" setIsNavExpanded={setIsNavExpanded}>Login</CustomLink>
+                      </>
+                    )}
+                    {isLogin && (
+                      <>
+                        <CustomLink to="/unitystockhub/" label="Home" setIsNavExpanded={setIsNavExpanded}>Home</CustomLink>
+                        <CustomLink to="/unitystockhub/Signup" label="Signup" setIsNavExpanded={setIsNavExpanded}>Get Started</CustomLink>
+                      </>
+                    )}
+                  </>
+                ) : (
                   <>
                     {shouldShowDepartmentsLink && (
-                      <CustomLink to="/Division" setIsNavExpanded={setIsNavExpanded}>Departments</CustomLink>
+                      <CustomLink to="/unitystockhub/Division" setIsNavExpanded={setIsNavExpanded}>Departments</CustomLink>
                     )}
-                    <CustomLink to="/Inventories" setIsNavExpanded={setIsNavExpanded}>Inventories</CustomLink>
-                    <CustomLink to="/Profile" setIsNavExpanded={setIsNavExpanded}>Profile</CustomLink>
-                    <CustomLink to="/Login" onClick={handleLogout}>Logout</CustomLink>
+                    <CustomLink to="/unitystockhub/Inventories" setIsNavExpanded={setIsNavExpanded}>Inventories</CustomLink>
+                    <CustomLink to="/unitystockhub/Profile" setIsNavExpanded={setIsNavExpanded}>Profile</CustomLink>
+                    <CustomLink to="/unitystockhub/Login" onClick={handleLogout}>Logout</CustomLink>
                   </>
                 )}
-                {isRegister && (<>
-                  <CustomLink to="/" label="Home" setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
-                  <CustomLink to="/Login" label="Login" setIsNavExpanded={setIsNavExpanded} >Login</CustomLink>
-                </>
-                )}
-                {isLogin && (<>
-                  <CustomLink to="/" label="Home" setIsNavExpanded={setIsNavExpanded} >Home</CustomLink>
-                  <CustomLink to="/Signup" label="Signup" setIsNavExpanded={setIsNavExpanded} >Get Started</CustomLink>
-                </>
-                )}
+
               </ul>
             </div>
           </div>

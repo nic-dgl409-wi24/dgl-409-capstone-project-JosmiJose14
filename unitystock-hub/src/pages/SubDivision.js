@@ -37,11 +37,11 @@ export default function SubDivision() {
 
     function handleEdit(Id) {
         // Logic to handle edit action for the division with the given id
-        navigate(`/AddSubDivision/edit/${Id}`);
+        navigate(`/unitystockhub/AddSubDivision/edit/${Id}`);
     }
     function handleRedirect(subId) {
         // Logic to handle edit action for the division with the given id
-        navigate(`/Inventories/${subId}`);
+        navigate(`/unitystockhub/Inventories/${subId}`);
     }
     function handleDelete(divisionId) {
         // Logic to handle delete action for the division with the given id
@@ -55,7 +55,7 @@ export default function SubDivision() {
                 <span className='welcome-text'>Welcome, {user?.Name || 'User'}!</span> {/* Use optional chaining */}
                 {user.RoleId !== 2 && (
                     <span className="add-division-button">
-                        <Link to={`/AddSubDivision/add/${divisionId}`} className="btn">Add Sub-Department</Link>
+                        <Link to={`/unitystockhub/AddSubDivision/add/${divisionId}`} className="btn">Add Sub-Department</Link>
                     </span>
                 )}
             </div>

@@ -42,10 +42,10 @@ const LoginPage = () => {
             if (response.data.message === 'Login successful') {
                 login(response.data.user);
                 if(response.data.user.RoleId===2){
-                    navigate('/Inventories');
+                    navigate('/unitystockhub/Inventories');
                 }
                 else{
-                navigate('/Division');
+                navigate('/unitystockhub/Division');
                 }
                 setMessage('Login successful. Redirecting...');
                 setIsError(false);
@@ -101,7 +101,7 @@ const LoginPage = () => {
             </div>
             <div className="join-container">
                 <p>Don’t you have account?  </p>
-                <Link to="/Signup" className="btn hero-cta">Get Started</Link>
+                <Link to="/unitystockhub/Signup" className="btn hero-cta">Get Started</Link>
             </div>
             <div className="login-footer">
                 <p>Welcome back to UnityStock Hub! Please sign in to access your inventory management dashboard and streamline your business operations. Manage your inventory with ease and efficiency. Let's get started</p>

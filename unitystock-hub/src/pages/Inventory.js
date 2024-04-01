@@ -83,10 +83,10 @@ const InventoryPage = () => {
     };
     const handleEdit = (id) => {
         if(subId){
-        navigate(`/AddInventories/edit/${subId}/${id}`)
+        navigate(`/unitystockhub/AddInventories/edit/${subId}/${id}`)
         }
         else{
-            navigate(`/AddInventories/edit/${id}`)
+            navigate(`/unitystockhub/AddInventories/edit/${id}`)
         }
     };
     const handleDelete = (id) => {
@@ -127,7 +127,7 @@ const InventoryPage = () => {
             <h2 className='section-heading'>Inventories</h2>
            {user.RoleId !== 2 && (
             <span className="add-division-button">
-            <Link to={subId ? `/AddInventories/add/${subId}` : "/AddInventories/add"} className="btn">Add Inventory</Link>
+            <Link to={subId ? `/unitystockhub/AddInventories/add/${subId}` : "/unitystockhub/AddInventories/add"} className="btn">Add Inventory</Link>
             </span>
            )}
             <div className="filter-section">

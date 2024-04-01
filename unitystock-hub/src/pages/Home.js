@@ -13,7 +13,7 @@ const Home = () => {
         <div className="hero-overlay">
           <h1>Effortless Inventory Management</h1>
           <p>Join UnityStock Hub today and take control of your inventory with ease.</p>
-          <Link to="/Signup" className="btn hero-cta">Get Started</Link>
+          <Link to="/unitystockhub/Signup" className="btn hero-cta">Get Started</Link>
         </div>
       </section>
       <div className="home-page-content">

@@ -18,28 +18,35 @@ function App() {
     <Router>
       <Header />
       <Routes>
-        <Route path="/" element={<Navigate to="/Home" replace />} />
-        <Route path="/Home" element={<Home />} />
-        <Route path="/Signup" element={<Registration />} />
-        <Route path="/Profile" element={<Registration />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Division" element={<Division />} />        
-        <Route path="/AddDivision/add" element={<AddDivision />} />
-        <Route path="/AddDivision/edit/:id" element={<AddDivision />} />
-        <Route path="/SubDivision/:divisionId" element={<SubDivision />} />
-        <Route path="/AddSubDivision/add/:divisionId" element={<AddSubDivision />} />
-        <Route path="/AddSubDivision/edit/:id" element={<AddSubDivision />} />
-        <Route path="/Inventories" element={<Inventories />} />
-        <Route path="/Inventories/:subId" element={<Inventories />} />
-        <Route path="/AddInventories/add/" element={<AddInventories />} />
-        <Route path="/AddInventories/add/:subId" element={<AddInventories />} />
-        <Route path="/AddInventories/edit/:id" element={<AddInventories />} />
-        <Route path="/AddInventories/edit/:subId/:id" element={<AddInventories />} />
+        <Route path="/unitystockhub" element={<Navigate to="/unitystockhub/Home" replace />} />
+        <Route path="/unitystockhub/Home" element={<Home />} />
+        <Route path="/unitystockhub/Signup" element={<Registration />} />
+        <Route path="/unitystockhub/Profile" element={<Registration />} />
+        <Route path="/unitystockhub/Login" element={<Login />} />
+        <Route path="/unitystockhub/Division" element={<Division />} />        
+        <Route path="/unitystockhub/AddDivision/add" element={<AddDivision />} />
+        <Route path="/unitystockhub/AddDivision/edit/:id" element={<AddDivision />} />
+        <Route path="/unitystockhub/SubDivision/:divisionId" element={<SubDivision />} />
+        <Route path="/unitystockhub/AddSubDivision/add/:divisionId" element={<AddSubDivision />} />
+        <Route path="/unitystockhub/AddSubDivision/edit/:id" element={<AddSubDivision />} />
+        <Route path="/unitystockhub/Inventories" element={<Inventories />} />
+        <Route path="/unitystockhub/Inventories/:subId" element={<Inventories />} />
+        <Route path="/unitystockhub/AddInventories/add/" element={<AddInventories />} />
+        <Route path="/unitystockhub/AddInventories/add/:subId" element={<AddInventories />} />
+        <Route path="/unitystockhub/AddInventories/edit/:id" element={<AddInventories />} />
+        <Route path="/unitystockhub/AddInventories/edit/:subId/:id" element={<AddInventories />} />
      </Routes>
       <Footer />
     </Router>
     </AuthProvider>
   );
+  
+}
+// In your index.js or App.js
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.ready.then(registration => {
+    registration.unregister();
+  });
 }
 
 export default App;
