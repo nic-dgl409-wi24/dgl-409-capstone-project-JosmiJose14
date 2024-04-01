@@ -134,7 +134,7 @@ const sheets = google.sheets({version: 'v4', auth});
      
     ``` nvm use 17``` 
 4. Reverse Proxy Setup:
- * Set up a reverse proxy to forward requests from your domain to the Node.js app's port using the .htaccess file. Your configuration might look like this:
+ * Set up a reverse proxy to forward requests from the domain to the Node.js app's port using the .htaccess file. 
 ```
   RewriteEngine On
   RewriteCond %{HTTP_HOST} ^dgl409node.jjose.imgd.ca$ [NC]
