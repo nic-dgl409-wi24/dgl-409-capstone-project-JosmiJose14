@@ -148,3 +148,11 @@ const sheets = google.sheets({version: 'v4', auth});
     
 6. Test the Deployment:
 Access the Node.js app via the public-facing URL to ensure it is reachable and functioning as expected.
+
+# Steps to see my project
+Project Link - https://dgl409.jjose.imgd.ca/unitystockhub/
+
+Step 1. Click on the given link, it will redirect you to the home page of my website.
+Step 2. Click on the "Get Started" button, user registration page is open.
+Step 3. Register the user and login using the button
+Step 4. Perform different operation allowed for user login 
