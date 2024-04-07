@@ -92,7 +92,7 @@
 
 /* Welcome Section */
 .welcome-section {
-  background-color: #90bce5; /* Deep blue background */
+  background-color: #C1DAF1; /* Deep blue background */
   color: #000000; /* White text for contrast */
   padding: 2rem 20px; /* Generous padding for airy feel */
   border-top-left-radius: 10px; /* Top left corner radius */
@@ -177,7 +177,7 @@ padding-left: 20px;
   align-items: center; 
   transform: translateY(-36%); 
   width:85%;
-  background-color: #90bce5;
+  background-color: #C1DAF1;
   padding: 20px;
   border-bottom-left-radius: 10px; /* Top left corner radius */
   border-bottom-right-radius: 10px; /* Top right corner radius */

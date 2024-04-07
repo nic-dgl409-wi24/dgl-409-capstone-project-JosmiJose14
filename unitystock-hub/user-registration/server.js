@@ -758,3 +758,51 @@ app.get('/get-invertorybySub/:subId', async (req, res) => {
   }
 
 });
+
+app.get('/deleteInventoryById/:Id', async (req, res) => {
+  const Id = req.params.Id;
+  const authClient = await auth.getClient();
+  const sheets = google.sheets({version: 'v4', auth: authClient});
+
+  const readRequest = {
+    spreadsheetId: config.googleSheetsConfig.inventoryspreadsheetId,
+    range: 'Sheet1', 
+    auth: authClient,
+
+  };
+
+  try {
+    // Fetching the current data
+    const readResponse = await sheets.spreadsheets.values.get(readRequest);
+    const rows = readResponse.data.values || [];
+    const rowIndex = rows.findIndex(row => row[0] === Id) + 1; // +1 since Sheets API is 1-indexed
+
+    if (rowIndex > 0) { // If the item is found
+      // Prepare the request for deleting the row
+      const batchUpdateRequest = {
+        spreadsheetId: config.googleSheetsConfig.inventoryspreadsheetId,
+        resource: {
+          requests: [{
+            deleteDimension: {
+              range: {
+                sheetId: 0, // Update this to your specific sheet ID if necessary
+                dimension: "ROWS",
+                startIndex: rowIndex - 1, // Sheets API uses zero-based indexing, adjust accordingly
+                endIndex: rowIndex
+              }
+            }
+          }]
+        }
+      };
+      // Sending the request to delete the row
+      await sheets.spreadsheets.batchUpdate(batchUpdateRequest);
+
+      res.status(200).json({ success: true, message: 'Inventory item deleted successfully.' });
+    } else {
+      res.status(404).json({ success: false, message: 'Inventory item not found.' });
+    }
+  } catch (error) {
+    console.error('Error deleting inventory item:', error);
+    res.status(500).json({ success: false, error: 'Failed to delete inventory item from Google Sheets.' });
+  }
+});

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect,useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/Division.css'; // Ensure you have the CSS file for styling
 import config from '../common/config';
 import defaultImage from "../images/default.jpg";
@@ -11,7 +11,7 @@ export default function Division() {
     let navigate = useNavigate();
     const { user } = useAuth(); // Access global user data
     // Function to fetch division data
-    const fetchDivisions = async () => {
+    const fetchDivisions = useCallback(async() => {
         try {
             const response = await axios.get(`${config.server.baseUrl}/get-divisions`); // Adjust the URL to your backend endpoint
             // Assuming the first row is headers, skip it
@@ -28,12 +28,13 @@ export default function Division() {
         } catch (error) {
             console.error('Error fetching divisions:', error);
         }
-    };
+    }, [user.DivisionID]);
 
     // useEffect to call fetchDivisions when the component mounts
     useEffect(() => {
         fetchDivisions();
-    }, []);
+    }, [fetchDivisions]);
+    
     function handleEdit(divisionId) {
         // Logic to handle edit action for the division with the given id
         navigate(`/unitystockhub/AddDivision/edit/${divisionId}`);
@@ -42,21 +43,21 @@ export default function Division() {
         // Logic to handle edit action for the division with the given id
         navigate(`/unitystockhub/SubDivision/${divisionId}`);
     }
-    function handleDelete(divisionId) {
-        // Logic to handle delete action for the division with the given id
-        console.log(`Delete division with ID: ${divisionId}`);
-    }
+    // function handleDelete(divisionId) {
+    //     // Logic to handle delete action for the division with the given id
+    //     console.log(`Delete division with ID: ${divisionId}`);
+    // }
 
     return (
         <div className="division-container">
             <div className="division-header">
                 <h2 className='section-heading'>Departments</h2>
                 <span className='welcome-text'>Welcome, {user?.Name || 'User'}!</span> {/* Use optional chaining */}
-                {user.RoleId !== 2 && (
+            {/*user.RoleId !== 2 && (
                     <span className="add-division-button">
                         <Link to="/unitystockhub/AddDivision/add" className="btn">Add Department</Link>
                     </span>
-                )}
+                )*/}
             </div>
 
             {/* Division Cards */}
@@ -69,7 +70,7 @@ export default function Division() {
                             {user.RoleId !== 2 && (
                             <div className="division-actions">
                                 <button className="btn" onClick={() => handleEdit(division.id)}>Edit</button>
-                                <button className="btn" onClick={() => handleDelete(division.id)}>Delete</button>
+                                {/* <button className="btn" onClick={() => handleDelete(division.id)}>Delete</button> */}
                             </div>
                             )}
                         </div>

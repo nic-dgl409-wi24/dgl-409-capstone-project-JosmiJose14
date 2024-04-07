@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import { Link, useNavigate,useParams } from 'react-router-dom';
 import '../css/Inventory.css';
 import config from '../common/config';
@@ -11,7 +11,7 @@ const InventoryPage = () => {
     let navigate = useNavigate();
     const { subId } = useParams();
     const { user } = useAuth(); // Access global user data
-    const DESIRED_HEADERS = {
+    const DESIRED_HEADERS = useMemo(() => ({
         'Id': 'ID',
         'Name': 'Name',
         'Quantity': 'Quantity',
@@ -20,67 +20,65 @@ const InventoryPage = () => {
         'Supplier': 'Supplier',
         'LastUpdatedBy': 'Updated By',
         'LastUpdateTimestamp': 'Update Time'
-    };
+    }), []);
     useEffect(() => {
         // Fetch items when the component is mounted
-       
+        const fetchItems = async () => {
+            try {
+              // Include the DivisionId as a query parameter
+              const response = await axios.get(`${config.server.baseUrl}/inventory?divisionId=${user.DivisionID}`);
+              const { data, success } = response.data;
+              if (success && Array.isArray(data) && data.length > 1) {
+                const apiHeaders = data[0];
+                const rows = data.slice(1);
+          
+                const itemsArray = rows.map(row => {
+                  let item = {};
+                  apiHeaders.forEach((header, index) => {
+                    const desiredKey = DESIRED_HEADERS[header];
+                    if (desiredKey) {
+                      item[desiredKey] = row[index];
+                    }
+                  });
+                  return item;
+                });
+          
+                setItems(itemsArray);
+              } else {
+                console.error('Invalid data format:', response.data);
+                setItems([]);
+              }
+            } catch (error) {
+              console.error('Error fetching inventory data:', error);
+              setItems([]);
+            }
+          };
+          
+        const fetchInventoryBySub = async (subId) => {
+            try {
+                const response = await axios.get(`${config.server.baseUrl}/get-invertorybySub/${subId}`);
+                const { headers, rows } = response.data.data;
+                const itemsArray = rows.map(row => {
+                    let item = {};
+                    headers.forEach((header, index) => {
+                      const key = DESIRED_HEADERS[header] || header; // Use the header as key if not found in DESIRED_HEADERS
+                      item[key] = row[index];
+                    });
+                    return item;
+                  });
+                  
+                  setItems(itemsArray);
+            } catch (error) {
+                console.error('Error fetching divisions:', error);
+            }
+        };
         if(subId){
         fetchInventoryBySub(subId);
         }
         else
         fetchItems();
-    }, [subId]);
-
-    const fetchItems = async () => {
-        try {
-            debugger
-          // Include the DivisionId as a query parameter
-          const response = await axios.get(`${config.server.baseUrl}/inventory?divisionId=${user.DivisionID}`);
-          const { data, success } = response.data;
-          if (success && Array.isArray(data) && data.length > 1) {
-            const apiHeaders = data[0];
-            const rows = data.slice(1);
-      
-            const itemsArray = rows.map(row => {
-              let item = {};
-              apiHeaders.forEach((header, index) => {
-                const desiredKey = DESIRED_HEADERS[header];
-                if (desiredKey) {
-                  item[desiredKey] = row[index];
-                }
-              });
-              return item;
-            });
-      
-            setItems(itemsArray);
-          } else {
-            console.error('Invalid data format:', response.data);
-            setItems([]);
-          }
-        } catch (error) {
-          console.error('Error fetching inventory data:', error);
-          setItems([]);
-        }
-      };
-      
-    const fetchInventoryBySub = async (subId) => {
-        try {
-            const response = await axios.get(`${config.server.baseUrl}/get-invertorybySub/${subId}`);
-            const { headers, rows } = response.data.data;
-            const itemsArray = rows.map(row => {
-                let item = {};
-                headers.forEach((header, index) => {
-                  const key = DESIRED_HEADERS[header] || header; // Use the header as key if not found in DESIRED_HEADERS
-                  item[key] = row[index];
-                });
-                return item;
-              });
-              
-              setItems(itemsArray);
-        } catch (error) {
-            console.error('Error fetching divisions:', error);
-        }
-    };
+    }, [subId, DESIRED_HEADERS, user.DivisionID]); 
+  
     const handleEdit = (id) => {
         if(subId){
         navigate(`/unitystockhub/AddInventories/edit/${subId}/${id}`)
@@ -89,11 +87,25 @@ const InventoryPage = () => {
             navigate(`/unitystockhub/AddInventories/edit/${id}`)
         }
     };
-    const handleDelete = (id) => {
-        // Logic to handle deleting an item with the specified ID
-        console.log('Deleting item with ID:', id);
-        // Perform deletion action, such as making an API call to delete the item
-    };
+    const handleDelete = (Id) => {
+        // Confirm with the user
+        const isConfirmed = window.confirm('Are you sure you want to delete this item?');
+    
+        if (isConfirmed) {
+          // Call your API endpoint to delete the item
+          axios.get(`${config.server.baseUrl}/deleteInventoryById/${Id}`)
+            .then(response => {
+              // If successful, filter out the deleted item from your state
+              setItems(prevItems => prevItems.filter(item => item.ID !== Id));
+              alert('Item deleted successfully');
+            })
+            .catch(error => {
+              console.error('Error deleting item:', error);
+              alert('Failed to delete the item');
+            });
+        }
+      };
+    
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;

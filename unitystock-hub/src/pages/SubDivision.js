@@ -43,10 +43,10 @@ export default function SubDivision() {
         // Logic to handle edit action for the division with the given id
         navigate(`/unitystockhub/Inventories/${subId}`);
     }
-    function handleDelete(divisionId) {
-        // Logic to handle delete action for the division with the given id
-        console.log(`Delete division with ID: ${divisionId}`);
-    }
+    // function handleDelete(divisionId) {
+    //     // Logic to handle delete action for the division with the given id
+    //     console.log(`Delete division with ID: ${divisionId}`);
+    // }
 
     return (
         <div className="division-container">
@@ -70,7 +70,7 @@ export default function SubDivision() {
                                     {/* Bind division.id to the onClick event for the Edit button */}
                                     <button className='btn' onClick={() => handleEdit(division.id)}>Edit</button>
                                     {/* Bind division.id to the onClick event for the Delete button */}
-                                    <button className='btn' onClick={() => handleDelete(division.id)}>Delete</button>
+                                    {/* <button className='btn' onClick={() => handleDelete(division.id)}>Delete</button> */}
                                 </div>
                             )}
                         </div>

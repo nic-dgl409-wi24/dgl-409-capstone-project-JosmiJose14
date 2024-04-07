@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useCallback } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import defaultImage from "../images/default.jpg";
@@ -28,14 +28,35 @@ export default function SubInventoryAddEdit() {
         LastUpdatedBy: user.Name,
         LastUpdateTimestamp: currentDate
     });
-
-
+    const fetchInventory = useCallback(async (id) => {
+        try {
+            // Replace URL with your endpoint to fetch division details by id
+            const response = await axios.get(`${config.server.baseUrl}/get-inventory/${id}`);
+            const inventoryData = response.data.data;
+            // Update the formData state with the fetched data
+            setFormData({
+                id: inventoryData[0],
+                name: inventoryData[1],
+                quantity: inventoryData[2],
+                manufacture: inventoryData[6],
+                supplier: inventoryData[7],
+                expiryDate: inventoryData[4],
+                selectedSubDivision: inventoryData[3], // Make sure this is the correct index for the sub-division
+                imageUrl: inventoryData[5], // Make sure this is the correct index for the image URL
+                LastUpdatedBy: user.Name,
+                LastUpdateTimestamp: currentDate // currentDate should be in the state or fetched from somewhere
+            });
+        } catch (error) {
+            console.error('Error fetching division details:', error);
+        }
+    },  [currentDate, user.Name]); // Add dependencies if needed
     useEffect(() => {
         fetchSubDivisions();
         if (id) {
-            fetchInventory(id); // Fetch division details if id is present
+            fetchInventory(id);
         }
-    }, [id]);
+    }, [id, fetchInventory]);
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -158,28 +179,7 @@ export default function SubInventoryAddEdit() {
             console.error('Error fetching divisions:', error);
         }
     };
-    const fetchInventory = async (id) => {
-        try {
-            // Replace URL with your endpoint to fetch division details by id
-            const response = await axios.get(`${config.server.baseUrl}/get-inventory/${id}`);
-            const inventoryData = response.data.data;
-            // Update the formData state with the fetched data
-            setFormData({
-                id: inventoryData[0],
-                name: inventoryData[1],
-                quantity: inventoryData[2],
-                manufacture: inventoryData[6],
-                supplier: inventoryData[7],
-                expiryDate: inventoryData[4],
-                selectedSubDivision: inventoryData[3], // Make sure this is the correct index for the sub-division
-                imageUrl: inventoryData[5], // Make sure this is the correct index for the image URL
-                LastUpdatedBy: user.Name,
-                LastUpdateTimestamp: currentDate // currentDate should be in the state or fetched from somewhere
-            });
-        } catch (error) {
-            console.error('Error fetching division details:', error);
-        }
-    };
+  
     const handleBack = () => {
         if (subId) {
             navigate(`/unitystockhub/Inventories/${subId}`);

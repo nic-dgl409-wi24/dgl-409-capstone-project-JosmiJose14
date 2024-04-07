@@ -29,7 +29,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #90bce5;
+    background-color: #C1DAF1;
     height: auto;
     margin: auto;
 }
@@ -47,7 +47,7 @@ input,
 }
 
 .login-footer {
-    background-color: #90bce5;
+    background-color: #C1DAF1;
     /* Dark blue background */
     padding: 20px;
     display: flex;
