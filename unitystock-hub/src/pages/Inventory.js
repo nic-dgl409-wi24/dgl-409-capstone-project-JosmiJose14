@@ -1,6 +1,7 @@
 import React, { useState, useEffect,useMemo } from 'react';
 import { Link, useNavigate,useParams } from 'react-router-dom';
 import '../css/Inventory.css';
+import Modal from '../common/modal';
 import config from '../common/config';
 import axios from 'axios';
 import { useAuth } from '../pages/auth/AuthContext'; // Adjust the path as necessary
@@ -21,6 +22,21 @@ const InventoryPage = () => {
         'LastUpdatedBy': 'Updated By',
         'LastUpdateTimestamp': 'Update Time'
     }), []);
+    const [modalInfo, setModalInfo] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: null
+      });
+    
+      const showAlert = (message) => {
+        setModalInfo({
+          isOpen: true,
+          title: 'Alert',
+          message: message,
+          onConfirm: null
+        });
+      };
     useEffect(() => {
         // Fetch items when the component is mounted
         const fetchItems = async () => {
@@ -87,25 +103,27 @@ const InventoryPage = () => {
             navigate(`/unitystockhub/AddInventories/edit/${id}`)
         }
     };
-    const handleDelete = (Id) => {
-        // Confirm with the user
-        const isConfirmed = window.confirm('Are you sure you want to delete this item?');
-    
-        if (isConfirmed) {
-          // Call your API endpoint to delete the item
-          axios.get(`${config.server.baseUrl}/deleteInventoryById/${Id}`)
-            .then(response => {
-              // If successful, filter out the deleted item from your state
-              setItems(prevItems => prevItems.filter(item => item.ID !== Id));
-              alert('Item deleted successfully');
-            })
-            .catch(error => {
-              console.error('Error deleting item:', error);
-              alert('Failed to delete the item');
-            });
-        }
+    const handleDelete = (id) => {
+        setModalInfo({
+          isOpen: true,
+          title: 'Confirm Deletion',
+          message: 'Are you sure you want to delete this item?',
+          onConfirm: () => confirmDelete(id)
+        });
       };
     
+      const confirmDelete = (id) => {
+        axios.get(`${config.server.baseUrl}/deleteInventoryById/${id}`)
+          .then(response => {
+            setItems(prevItems => prevItems.filter(item => item.ID !== id));
+            showAlert('Item deleted successfully');
+          })
+          .catch(error => {
+            console.error('Error deleting item:', error);
+            showAlert('Failed to delete the item');
+          });
+        setModalInfo({ ...modalInfo, isOpen: false });
+      };
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
@@ -136,6 +154,13 @@ const InventoryPage = () => {
 
     return (
         <div className="inventory-page">
+            <Modal
+        isOpen={modalInfo.isOpen}
+        title={modalInfo.title}
+        message={modalInfo.message}
+        onClose={() => setModalInfo({ ...modalInfo, isOpen: false })}
+        onConfirm={modalInfo.onConfirm}
+      />
             <h2 className='section-heading'>Inventories</h2>
            {user.RoleId !== 2 && (
             <span className="add-division-button">
